@@ -5980,7 +5980,7 @@ function getAllStickers(db: ReadableDB): Array<StickerType> {
 function getRecentStickers(
   db: ReadableDB,
   { limit }: { limit?: number } = {}
-): Array<StickerType> {
+): Array<StickerType> { //!
   // Note: we avoid 'IS NOT NULL' here because it does seem to bypass our index
   const rows = db
     .prepare<Query>(

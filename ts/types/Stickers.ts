@@ -54,7 +54,7 @@ export type StickerWithHydratedData = StickerType & {
   data: AttachmentWithHydratedData;
 };
 
-export type RecentStickerType = Readonly<{
+export type RecentStickerType = Readonly<{ //!
   stickerId: number;
   packId: string;
 }>;
@@ -376,7 +376,7 @@ async function getPacksForRedux(): Promise<Record<string, StickerPackType>> {
   return makeLookup(fullSet, 'id');
 }
 
-async function getRecentStickersForRedux(): Promise<Array<RecentStickerType>> {
+async function getRecentStickersForRedux(): Promise<Array<RecentStickerType>> { //!
   const recent = await DataReader.getRecentStickers();
   return recent.map(sticker => ({
     packId: sticker.packId,

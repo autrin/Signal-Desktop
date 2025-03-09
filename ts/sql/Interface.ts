@@ -695,7 +695,7 @@ type ReadableInterface = {
   getUninstalledStickerPacks: () => Array<UninstalledStickerPackType>;
   getStickerPackInfo: (packId: string) => StickerPackInfoType | undefined;
   getAllStickers: () => Array<StickerType>;
-  getRecentStickers: (options?: { limit?: number }) => Array<StickerType>;
+  getRecentStickers: (options?: { limit?: number }) => Array<StickerType>; // !
 
   getRecentEmojis: (limit?: number) => Array<EmojiType>;
 
