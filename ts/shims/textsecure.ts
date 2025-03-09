@@ -35,3 +35,31 @@ export async function sendStickerPackSync(
     );
   }
 }
+
+export async function sendRecentStickerSync(
+  packId: string, 
+  stickerId: number,
+  timestamp: number
+): Promise<void> {
+  if (window.ConversationController.areWePrimaryDevice()) {
+    log.warn(
+      'shims/sendRecentStickerSync: We are primary device; not sending sync'
+    );
+    return;
+  }
+
+  try {
+    await singleProtoJobQueue.add(
+      MessageSender.getStickerUsageSync({
+        packId,
+        stickerId,
+        timestamp,
+      })
+    );
+  } catch (error) {
+    log.error(
+      'sendRecentStickerSync: Failed to queue sync message',
+      Errors.toLogFormat(error)
+    );
+  }
+}
