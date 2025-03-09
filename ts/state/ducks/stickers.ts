@@ -17,7 +17,7 @@ import {
 } from '../../types/Stickers';
 import { drop } from '../../util/drop';
 import { storageServiceUploadJob } from '../../services/storage';
-import { sendStickerPackSync } from '../../shims/textsecure';
+import { sendRecentStickerSync, sendStickerPackSync } from '../../shims/textsecure';
 import { trigger } from '../../shims/events';
 import { ERASE_STORAGE_SERVICE } from './user';
 import type { EraseStorageServiceStateAction } from './user';
@@ -370,6 +370,10 @@ async function doUseSticker(
   time = Date.now()
 ): Promise<UseStickerPayloadType> {
   await updateStickerLastUsed(packId, stickerId, time);
+
+  // Send sync message to other devices
+  // This is similar to how sticker pack installation sync works
+  drop(sendRecentStickerSync(packId, stickerId, time));
 
   return {
     packId,
