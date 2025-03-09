@@ -509,6 +509,15 @@ message SyncMessage {
     optional Type type = 3;
   }
 
+  message StickerUsageSync {
+    optional bytes packId = 1;
+    optional uint32 stickerId = 2;
+    optional int64 timestamp = 3;
+  }
+  
+  optional StickerUsageSync stickerUsageSync = 25;
+}
+
   message ViewOnceOpen {
     reserved /*senderE164*/ 1;
     optional string senderAci = 3;
