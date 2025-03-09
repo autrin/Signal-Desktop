@@ -156,6 +156,8 @@ import { checkOurPniIdentityKey } from '../util/checkOurPniIdentityKey';
 import { CallLinkUpdateSyncType } from '../types/CallLink';
 import { bytesToUuid } from '../util/uuidToBytes';
 import { isBodyTooLong } from '../util/longAttachment';
+import { redactPackId } from '../types/Stickers';
+import { DataWriter } from '../sql/Client';
 
 const GROUPV2_ID_LENGTH = 32;
 const RETRY_TIMEOUT = 2 * 60 * 1000;
@@ -277,6 +279,8 @@ function getEnvelopeId(envelope: ProcessedEnvelope): string {
 
   return `${prefix} ${timestamp} (${envelope.id})`;
 }
+
+const { updateStickerLastUsed } = DataWriter;
 
 /* eslint-disable @typescript-eslint/brace-style -- Prettier conflicts with ESLint */
 export default class MessageReceiver
@@ -3124,6 +3128,25 @@ export default class MessageReceiver
         syncMessage.stickerPackOperation
       );
     }
+
+    if(syncMessage.stickerUsageSync) {
+      const { packId, stickerId, timestamp } = syncMessage.stickerUsageSync;
+  
+      const packIdHex = packId ? Bytes.toHex(packId) : ''; // might need to improve this and the script below which would be conditional on this
+
+      log.info(
+        'MessageReceiver: processing sticker usage sync for',
+        `${redactPackId(packIdHex)} ${stickerId}`
+      );
+
+      // Update the local database with the sticker usage information
+      await updateStickerLastUsed(
+        packIdHex,
+        stickerId || 0,
+        timestamp || Date.now()
+      );
+    }
+
     if (syncMessage.viewOnceOpen) {
       return this.#handleViewOnceOpen(envelope, syncMessage.viewOnceOpen);
     }
