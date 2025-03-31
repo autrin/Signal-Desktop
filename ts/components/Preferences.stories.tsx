@@ -5,16 +5,15 @@ import type { Meta, StoryFn } from '@storybook/react';
 import React from 'react';
 
 import { action } from '@storybook/addon-actions';
-import enMessages from '../../_locales/en/messages.json';
 import type { PropsType } from './Preferences';
 import { Preferences } from './Preferences';
-import { setupI18n } from '../util/setupI18n';
 import { DEFAULT_CONVERSATION_COLOR } from '../types/Colors';
 import { PhoneNumberSharingMode } from '../util/phoneNumberSharingMode';
 import { PhoneNumberDiscoverability } from '../util/phoneNumberDiscoverability';
 import { DurationInSeconds } from '../util/durations';
+import { EmojiSkinTone } from './fun/data/emojis';
 
-const i18n = setupI18n('en', enMessages);
+const { i18n } = window.SignalContext;
 
 const availableMicrophones = [
   {
@@ -50,6 +49,12 @@ export default {
   args: {
     i18n,
 
+    autoDownloadAttachment: {
+      photos: true,
+      videos: false,
+      audio: false,
+      documents: false,
+    },
     availableCameras: [
       {
         deviceId:
@@ -75,6 +80,7 @@ export default {
     customColors: {},
     defaultConversationColor: DEFAULT_CONVERSATION_COLOR,
     deviceName: 'Work Windows ME',
+    emojiSkinToneDefault: EmojiSkinTone.None,
     phoneNumber: '+1 555 123-4567',
     hasAudioNotifications: true,
     hasAutoConvertEmoji: true,
@@ -133,6 +139,7 @@ export default {
     makeSyncRequest: action('makeSyncRequest'),
     onAudioNotificationsChange: action('onAudioNotificationsChange'),
     onAutoConvertEmojiChange: action('onAutoConvertEmojiChange'),
+    onAutoDownloadAttachmentChange: action('onAutoDownloadAttachmentChange'),
     onAutoDownloadUpdateChange: action('onAutoDownloadUpdateChange'),
     onAutoLaunchChange: action('onAutoLaunchChange'),
     onCallNotificationsChange: action('onCallNotificationsChange'),
@@ -140,6 +147,7 @@ export default {
       'onCallRingtoneNotificationChange'
     ),
     onCountMutedConversationsChange: action('onCountMutedConversationsChange'),
+    onEmojiSkinToneDefaultChange: action('onEmojiSkinToneDefaultChange'),
     onHasStoriesDisabledChanged: action('onHasStoriesDisabledChanged'),
     onHideMenuBarChange: action('onHideMenuBarChange'),
     onIncomingCallNotificationsChange: action(

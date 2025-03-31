@@ -123,6 +123,7 @@ import { SafeStorageBackendChangeError } from '../ts/types/SafeStorageBackendCha
 import { LINUX_PASSWORD_STORE_FLAGS } from '../ts/util/linuxPasswordStoreFlags';
 import { getOwn } from '../ts/util/getOwn';
 import { safeParseLoose, safeParseUnknown } from '../ts/util/schemas';
+import { getAppErrorIcon } from '../ts/util/getAppErrorIcon';
 
 const animationSettings = systemPreferences.getAnimationSettings();
 
@@ -1814,12 +1815,14 @@ const onDatabaseError = async (error: Error) => {
 
   const { i18n } = getResolvedMessagesLocale();
 
+  let copyErrorAndQuitButtonIndex: number;
   let deleteAllDataButtonIndex: number | undefined;
+  let goToSupportPageButtonIndex: number | undefined;
+  let defaultButtonId: number;
+  let messageTitle: string;
   let messageDetail: string;
 
-  const buttons = [i18n('icu:copyErrorAndQuit')];
-  const copyErrorAndQuitButtonIndex = 0;
-  const SIGNAL_SUPPORT_LINK = 'https://support.signal.org/error';
+  const buttons = [];
 
   // Note that this error is thrown by the worker process and thus instanceof
   // check won't work.
@@ -1827,13 +1830,18 @@ const onDatabaseError = async (error: Error) => {
     // If the DB version is too new, the user likely opened an older version of Signal,
     // and they would almost never want to delete their data as a result, so we don't show
     // that option
+    messageTitle = i18n('icu:databaseError');
     messageDetail = i18n('icu:databaseError__startOldVersion');
+    buttons.push(i18n('icu:copyErrorAndQuit'));
+    copyErrorAndQuitButtonIndex = 0;
+    defaultButtonId = copyErrorAndQuitButtonIndex;
   } else if (error instanceof SafeStorageBackendChangeError) {
     const { currentBackend, previousBackend } = error;
     const previousBackendFlag = getOwn(
       LINUX_PASSWORD_STORE_FLAGS,
       previousBackend
     );
+    messageTitle = i18n('icu:databaseError');
     messageDetail = previousBackendFlag
       ? i18n('icu:databaseError__safeStorageBackendChangeWithPreviousFlag', {
           currentBackend,
@@ -1844,27 +1852,32 @@ const onDatabaseError = async (error: Error) => {
           currentBackend,
           previousBackend,
         });
+    buttons.push(i18n('icu:copyErrorAndQuit'));
+    copyErrorAndQuitButtonIndex = 0;
+    defaultButtonId = copyErrorAndQuitButtonIndex;
   } else {
-    // Otherwise, this is some other kind of DB error, let's give them the option to
-    // delete.
-    messageDetail = i18n(
-      'icu:databaseError__detail',
-      { link: SIGNAL_SUPPORT_LINK },
-      { bidi: 'strip' }
-    );
-
+    // Otherwise, this is some other kind of DB error, most likely broken safeStorage key.
+    // Let's give them the option to delete and show them the support guide.
+    messageTitle = i18n('icu:cantOpenSignalError');
+    messageDetail = i18n('icu:cantOpenSignalError__detail');
+    buttons.push(i18n('icu:goToSupportPage'));
+    goToSupportPageButtonIndex = 0;
+    // Delete button should be the hardest to click
     buttons.push(i18n('icu:deleteAndRestart'));
     deleteAllDataButtonIndex = 1;
+    buttons.push(i18n('icu:copyErrorAndQuit'));
+    copyErrorAndQuitButtonIndex = 2;
+    defaultButtonId = goToSupportPageButtonIndex;
   }
 
   const buttonIndex = dialog.showMessageBoxSync({
     buttons,
-    defaultId: copyErrorAndQuitButtonIndex,
+    defaultId: defaultButtonId,
     cancelId: copyErrorAndQuitButtonIndex,
-    message: i18n('icu:databaseError'),
+    message: messageTitle,
     detail: messageDetail,
+    icon: getAppErrorIcon(),
     noLink: true,
-    type: 'error',
   });
 
   if (buttonIndex === copyErrorAndQuitButtonIndex) {
@@ -1889,8 +1902,8 @@ const onDatabaseError = async (error: Error) => {
       cancelId: cancelButtonIndex,
       message: i18n('icu:databaseError__deleteDataConfirmation'),
       detail: i18n('icu:databaseError__deleteDataConfirmation__detail'),
+      icon: getAppErrorIcon(),
       noLink: true,
-      type: 'warning',
     });
 
     if (confirmationButtonIndex === confirmDeleteAllDataButtonIndex) {
@@ -1902,6 +1915,12 @@ const onDatabaseError = async (error: Error) => {
       );
       app.relaunch();
     }
+  } else if (buttonIndex === goToSupportPageButtonIndex) {
+    drop(
+      shell.openExternal(
+        'https://support.signal.org/hc/articles/9045714156314-Can-t-Open-Signal-Desktop'
+      )
+    );
   }
 
   getLogger().error('onDatabaseError: Quitting application');
@@ -2658,8 +2677,13 @@ ipc.on('show-debug-log', showDebugLogWindow);
 ipc.on(
   'show-debug-log-save-dialog',
   async (_event: Electron.Event, logText: string) => {
+    // Workaround KDE portal file dialog default path issue
+    const defaultPath = OS.isLinuxUsingKDE()
+      ? '~/debuglog.txt'
+      : 'debuglog.txt';
+
     const { filePath } = await dialog.showSaveDialog({
-      defaultPath: 'debuglog.txt',
+      defaultPath,
       showsTagField: false,
     });
     if (filePath) {
@@ -2988,11 +3012,31 @@ async function ensureFilePermissions(onlyFiles?: Array<string>) {
 ipc.handle('get-media-access-status', async (_event, value) => {
   // This function is not supported on Linux
   if (!systemPreferences.getMediaAccessStatus) {
-    return undefined;
+    return 'unknown';
   }
 
   return systemPreferences.getMediaAccessStatus(value);
 });
+
+ipc.handle(
+  'open-system-media-permissions',
+  async (_event, mediaType: 'camera' | 'microphone') => {
+    if (!OS.isMacOS()) {
+      return;
+    }
+    if (mediaType === 'camera') {
+      await shell.openExternal(
+        'x-apple.systempreferences:com.apple.preference.security?Privacy_Camera'
+      );
+    } else if (mediaType === 'microphone') {
+      await shell.openExternal(
+        'x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone'
+      );
+    } else {
+      throw missingCaseError(mediaType);
+    }
+  }
+);
 
 ipc.handle('get-auto-launch', async () => {
   return app.getLoginItemSettings(await getDefaultLoginItemSettings())
@@ -3023,10 +3067,13 @@ ipc.handle('show-save-dialog', async (_event, { defaultPath }) => {
     return { canceled: true };
   }
 
+  // Workaround KDE portal file dialog default path issue
+  const osDefaultPath = OS.isLinuxUsingKDE() ? `~/${defaultPath}` : defaultPath;
+
   const { canceled, filePath: selectedFilePath } = await dialog.showSaveDialog(
     mainWindow,
     {
-      defaultPath,
+      defaultPath: osDefaultPath,
       showsTagField: false,
     }
   );

@@ -17,6 +17,7 @@ import type { Readable } from 'stream';
 
 import { Net } from '@signalapp/libsignal-client';
 import { assertDev, strictAssert } from '../util/assert';
+import { drop } from '../util/drop';
 import { isRecord } from '../util/isRecord';
 import * as durations from '../util/durations';
 import type { ExplodePromiseResultType } from '../util/explodePromise';
@@ -82,6 +83,8 @@ import { getMockServerPort } from '../util/getMockServerPort';
 import { pemToDer } from '../util/pemToDer';
 import { ToastType } from '../types/Toast';
 import { isProduction } from '../util/version';
+import type { ServerAlert } from '../util/handleServerAlerts';
+import { isAbortError } from '../util/isAbortError';
 
 // Note: this will break some code that expects to be able to use err.response when a
 //   web request fails, because it will force it to text. But it is very useful for
@@ -115,9 +118,6 @@ function resolveLibsignalNet(
       TESTING_localServer_chatPort: parseInt(getMockServerPort(url), 10),
       TESTING_localServer_cdsiPort: DISCARD_PORT,
       TESTING_localServer_svr2Port: DISCARD_PORT,
-      TESTING_localServer_svr3SgxPort: DISCARD_PORT,
-      TESTING_localServer_svr3NitroPort: DISCARD_PORT,
-      TESTING_localServer_svr3Tpm2SnpPort: DISCARD_PORT,
       TESTING_localServer_rootCertificateDer: pemToDer(certificateAuthority),
     });
   }
@@ -398,6 +398,9 @@ async function _promiseAjax(
       ? await socketManager.fetch(url, fetchOptions)
       : await fetch(url, fetchOptions);
   } catch (e) {
+    if (isAbortError(e)) {
+      throw e;
+    }
     log.error(logId, 0, 'Error');
     const stack = `${e.stack}\nInitial stack:\n${options.stack}`;
     throw makeHTTPError('promiseAjax catch', 0, {}, e.toString(), stack);
@@ -467,6 +470,9 @@ async function _promiseAjax(
       result = await response.textConverted();
     }
   } catch (error) {
+    if (isAbortError(error)) {
+      throw error;
+    }
     log.error(logId, response.status, 'Error');
     const stack = `${error.stack}\nInitial stack:\n${options.stack}`;
     throw makeHTTPError(
@@ -783,11 +789,13 @@ export type WebAPIConnectType = {
 export type CapabilitiesType = {
   deleteSync: boolean;
   ssre2: boolean;
+  attachmentBackfill: boolean;
 };
 export type CapabilitiesUploadType = {
   deleteSync: true;
   versionedExpirationTimer: true;
   ssre2: true;
+  attachmentBackfill: true;
 };
 
 type StickerPackManifestType = Uint8Array;
@@ -1338,6 +1346,13 @@ export type GetTransferArchiveOptionsType = Readonly<{
   abortSignal?: AbortSignal;
 }>;
 
+export type ProxiedRequestParams = Readonly<{
+  method: 'GET' | 'HEAD';
+  url: string;
+  headers?: HeaderListType;
+  signal?: AbortSignal;
+}>;
+
 export type WebAPIType = {
   startRegistration(): unknown;
   finishRegistration(baton: unknown): void;
@@ -1462,12 +1477,10 @@ export type WebAPIType = {
   linkDevice: (options: LinkDeviceOptionsType) => Promise<LinkDeviceResultType>;
   unlink: () => Promise<void>;
   fetchJsonViaProxy: (
-    targetUrl: string,
-    signal?: AbortSignal
+    params: ProxiedRequestParams
   ) => Promise<JSONWithDetailsType>;
   fetchBytesViaProxy: (
-    targetUrl: string,
-    signal?: AbortSignal
+    params: ProxiedRequestParams
   ) => Promise<BytesWithDetailsType>;
   makeSfuRequest: (
     targetUrl: string,
@@ -1606,6 +1619,7 @@ export type WebAPIType = {
   getConfig: () => Promise<RemoteConfigResponseType>;
   authenticate: (credentials: WebAPICredentials) => Promise<void>;
   logout: () => Promise<void>;
+  getServerAlerts: () => Array<ServerAlert>;
   getSocketStatus: () => SocketStatuses;
   registerRequestHandler: (handler: IRequestHandler) => void;
   unregisterRequestHandler: (handler: IRequestHandler) => void;
@@ -1690,6 +1704,46 @@ export type TopLevelType = {
 
 type InflightCallback = (error: Error) => unknown;
 
+// `libsignalNet` is an instance of a class from libsignal that is responsible
+// for providing network layer API and related functionality.
+// It's important to have a single instance of this class as it holds
+// resources that are shared across all other use cases.
+let libsignalNet: Net.Net;
+
+// Not definied in tests
+if (window.SignalContext.config?.serverUrl) {
+  const { config } = window.SignalContext;
+
+  libsignalNet = resolveLibsignalNet(
+    config.serverUrl,
+    config.version,
+    config.certificateAuthority
+  );
+
+  libsignalNet.setIpv6Enabled(!config.disableIPv6);
+  if (config.proxyUrl) {
+    log.info('WebAPI: Setting libsignal proxy');
+    try {
+      libsignalNet.setProxyFromUrl(config.proxyUrl);
+    } catch (error) {
+      log.error(`WebAPI: Failed to set proxy: ${error}`);
+      libsignalNet.clearProxy();
+    }
+  }
+
+  drop(
+    (async () => {
+      try {
+        log.info('WebAPI: preconnect start');
+        await libsignalNet.preconnectChat();
+        log.info('WebAPI: preconnect done');
+      } catch (error) {
+        log.error(`WebAPI: Failed to preconnect: ${toLogFormat(error)}`);
+      }
+    })()
+  );
+}
+
 // We first set up the data that won't change during this session of the app
 export function initialize({
   chatServiceUrl,
@@ -1702,7 +1756,6 @@ export function initialize({
   contentProxyUrl,
   proxyUrl,
   version,
-  disableIPv6,
 }: InitializeOptionsType): WebAPIConnectType {
   if (!isString(chatServiceUrl)) {
     throw new Error('WebAPI.initialize: Invalid chatServiceUrl');
@@ -1741,25 +1794,9 @@ export function initialize({
     throw new Error('WebAPI.initialize: Invalid version');
   }
 
-  // `libsignalNet` is an instance of a class from libsignal that is responsible
-  // for providing network layer API and related functionality.
-  // It's important to have a single instance of this class as it holds
-  // resources that are shared across all other use cases.
-  const libsignalNet = resolveLibsignalNet(
-    chatServiceUrl,
-    version,
-    certificateAuthority
-  );
-  libsignalNet.setIpv6Enabled(!disableIPv6);
-  if (proxyUrl) {
-    log.info('Setting libsignal proxy');
-    try {
-      libsignalNet.setProxyFromUrl(proxyUrl);
-    } catch (error) {
-      log.error(`Failed to set proxy: ${error}`);
-      libsignalNet.clearProxy();
-    }
-  }
+  // We store server alerts (returned on the WS upgrade response headers) so that the app
+  // can query them later, which is necessary if they arrive before app state is ready
+  let serverAlerts: Array<ServerAlert> = [];
 
   // Thanks to function-hoisting, we can put this return statement before all of the
   //   below function definitions.
@@ -1810,6 +1847,11 @@ export function initialize({
 
     socketManager.on('firstEnvelope', incoming => {
       window.Whisper.events.trigger('firstEnvelope', incoming);
+    });
+
+    socketManager.on('serverAlerts', alerts => {
+      log.info(`onServerAlerts: number of alerts received: ${alerts.length}`);
+      serverAlerts = alerts;
     });
 
     if (useWebSocket) {
@@ -1935,6 +1977,7 @@ export function initialize({
       getReleaseNoteImageAttachment,
       getTransferArchive,
       getSenderCertificate,
+      getServerAlerts,
       getSocketStatus,
       getSticker,
       getStickerPackManifest,
@@ -2137,6 +2180,10 @@ export function initialize({
 
     function getSocketStatus(): SocketStatuses {
       return socketManager.getStatus();
+    }
+
+    function getServerAlerts(): Array<ServerAlert> {
+      return serverAlerts;
     }
 
     function checkSockets(): void {
@@ -2959,6 +3006,7 @@ export function initialize({
         deleteSync: true,
         versionedExpirationTimer: true,
         ssre2: true,
+        attachmentBackfill: true,
       };
 
       const jsonData = {
@@ -3015,6 +3063,7 @@ export function initialize({
         deleteSync: true,
         versionedExpirationTimer: true,
         ssre2: true,
+        attachmentBackfill: true,
       };
 
       const jsonData = {
@@ -4231,38 +4280,38 @@ export function initialize({
     }
 
     async function fetchJsonViaProxy(
-      targetUrl: string,
-      signal?: AbortSignal
+      params: ProxiedRequestParams
     ): Promise<JSONWithDetailsType> {
-      return _outerAjax(targetUrl, {
+      return _outerAjax(params.url, {
         responseType: 'jsonwithdetails',
         proxyUrl: contentProxyUrl,
-        type: 'GET',
+        type: params.method,
         redirect: 'follow',
         redactUrl: () => '[REDACTED_URL]',
         headers: {
           'X-SignalPadding': getHeaderPadding(),
+          ...params.headers,
         },
         version,
-        abortSignal: signal,
+        abortSignal: params.signal,
       });
     }
 
     async function fetchBytesViaProxy(
-      targetUrl: string,
-      signal?: AbortSignal
+      params: ProxiedRequestParams
     ): Promise<BytesWithDetailsType> {
-      return _outerAjax(targetUrl, {
+      return _outerAjax(params.url, {
         responseType: 'byteswithdetails',
         proxyUrl: contentProxyUrl,
-        type: 'GET',
+        type: params.method,
         redirect: 'follow',
         redactUrl: () => '[REDACTED_URL]',
         headers: {
           'X-SignalPadding': getHeaderPadding(),
+          ...params.headers,
         },
         version,
-        abortSignal: signal,
+        abortSignal: params.signal,
       });
     }
 

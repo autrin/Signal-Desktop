@@ -38,6 +38,9 @@
   "icu:Preferences__sent-media-quality": {
     "messageformat": "ۋاسىتە سۈپىتىنى ئەۋەت"
   },
+  "icu:Preferences__sent-media-quality__description": {
+    "messageformat": "يۇقىرى سۈپەتلىك ۋاسىتە يوللىسىڭىز كۆپرەك مەلۇمات ئىشلىتىسىز"
+  },
   "icu:sentMediaQualityStandard": {
     "messageformat": "ئۆلچەملىك"
   },
@@ -68,6 +71,12 @@
   "icu:unknownGroup": {
     "messageformat": "نامەلۇم گۇرۇپپا"
   },
+  "icu:cantOpenSignalError": {
+    "messageformat": "Can’t Open Signal"
+  },
+  "icu:cantOpenSignalError__detail": {
+    "messageformat": "To help fix the issue, follow the recovery guide on the support page or contact Signal support to help fix the issue.\n\nIf you need to use Signal right away, you can delete your data and relink this desktop. You will have the option to transfer message history from your phone."
+  },
   "icu:databaseError": {
     "messageformat": "ساندان خاتالىقى"
   },
@@ -78,10 +87,10 @@
     "messageformat": "سانلىق مەلۇماتلارنى ئۆچۈرۈپ، قايتا قوزغىتىش"
   },
   "icu:databaseError__deleteDataConfirmation": {
-    "messageformat": "سانلىق مەلۇماتلارنى پۈتۈنلەي ئۆچۈرەمسىز؟"
+    "messageformat": "Permanently Delete All Data"
   },
   "icu:databaseError__deleteDataConfirmation__detail": {
-    "messageformat": "بارلىق ئۇچۇر خاتىرىڭىز ۋە مېديالىرىڭىز بۇ ئۈسكۈنىدىن مەڭگۈلۈككە ئۆچۈرىلىۋېتىدۇ. ئۇنى قايتا ئۇلىغاندىن كېيىن Signalنى بۇ ئۈسكۈنىدە ئىشلىتەلەيسىز. بۇ سىزنىڭ تېلېفونىڭىزدىكى ھېچقانداق سانلىق مەلۇماتنى ئۆچۈرمەيدۇ."
+    "messageformat": "All of your message history and media will be permanently deleted from this device. This will not delete any data from your phone.\n\nYou will be able to use Signal on this device after relinking it. You will have the option to transfer message history from your phone."
   },
   "icu:databaseError__startOldVersion": {
     "messageformat": "سىزنىڭ ساندانىڭىزنىڭ نەشرى Signalنىڭ بۇ نەشرىگە ماس كەلمەيدۇ. كومپيۇتېرىڭىزدا Signalنىڭ ئەڭ يېڭى نەشىرىنى ئېچىۋاتقانلىقىڭىزنى جەزملەشتۈرۈڭ."
@@ -214,9 +223,6 @@
   },
   "icu:optimizingApplication": {
     "messageformat": "ئەپنى ئەلالاشتۇرۇۋاتىدۇ..."
-  },
-  "icu:migratingToSQLCipher": {
-    "messageformat": "ئۇچۇرلارنى ئەلالاشتۇرۇۋاتىدۇ...{status} تاماملاندى."
   },
   "icu:archivedConversations": {
     "messageformat": "ئارخىپلانغان پاراڭلار"
@@ -407,9 +413,6 @@
   "icu:unreadMessages": {
     "messageformat": "{count, plural, other {{count,number} ئوقۇلمىغان ئۇچۇر}}"
   },
-  "icu:messageHistoryUnsynced": {
-    "messageformat": "بىخەتەرلىكىڭىز ئۈچۈن پاراڭلىشىش خاتىرىسى يېڭى ئۇلانغان ئۈسكۈنىلەرگە يۆتكەلمەيدۇ."
-  },
   "icu:youMarkedAsVerified": {
     "messageformat": "سىز {name} بىلەن بولغان بىخەتەرلىك نومۇرىڭىزغا «دەلىللەنگەن» دەپ بەلگە سالدىڭىز"
   },
@@ -588,7 +591,7 @@
     "messageformat": "Failed to send message with endorsements"
   },
   "icu:Toast--InvalidStorageServiceHeaders": {
-    "messageformat": "Received invalid response from storage service. Please share your logs."
+    "messageformat": "ئىناۋەتسىز مۇلازىمەت ئىنكاسى. خاتىرىللىرىڭىزنى ئورتاقلىشىڭ."
   },
   "icu:Toast--FailedToImportBackup": {
     "messageformat": "Failed to process some frames during backup import. Please share your logs."
@@ -706,9 +709,6 @@
   },
   "icu:noSearchResultsOnlyUnreadFilter": {
     "messageformat": "ئوقۇلمىغان پاراڭ يوق"
-  },
-  "icu:noSearchResults--sms-only": {
-    "messageformat": "ئۈستەليۈزى نەشرىدە SMS/MMS ئالاقىداشلىرى ئىقتىدارىنى ئىشلەتكىلى بولمايدۇ."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "«{conversationName}» دە «{searchTerm}» ئۈچۈن ئىزدەش نەتىجىسى تېپىلمىدى"
@@ -1145,9 +1145,6 @@
   "icu:mediaNotAvailable": {
     "messageformat": "بۇ مېدىيانى ئىشلەتكىلى بولمايدۇ"
   },
-  "icu:mediaNotAvailable--short": {
-    "messageformat": "مېدىيانى ئىشلەتكىلى بولمايدۇ"
-  },
   "icu:attachmentNoLongerAvailable__learnMore": {
     "messageformat": "تەپسىلاتى"
   },
@@ -1162,6 +1159,12 @@
   },
   "icu:attachmentNotAvailable__voice": {
     "messageformat": "ئاۋازلىق ئۇچۇرنى ئىشلەتكىلى بولمايدۇ"
+  },
+  "icu:attachmentNotAvailable__tapToView": {
+    "messageformat": "بىر قېتىملا كۆرۈلىدىغان مېدىيانى ئەمدى ئىشلەتكىلى بولمايدۇ"
+  },
+  "icu:attachmentNotAvailable__tapToViewCannotDownload": {
+    "messageformat": "بىر قېتىملا كۆرۈلىدىغان مېدىيانى چۈشۈرگىلى بولمايدۇ"
   },
   "icu:AttachmentNotAvailableModal__title--file": {
     "messageformat": "ھۆججەتنى ئىشلەتكىلى بولمايدۇ"
@@ -1192,6 +1195,21 @@
   },
   "icu:AttachmentNotAvailableModal__body--voice-message": {
     "messageformat": "بۇ ئۈسكۈنە ئۇلانغان ۋاقىتتا بۇ ئاۋازلىق ئۇچۇر تېلېفونىڭىزدىن يۆتكەلمىگەن. ئۈسكۈنە ئۇلىنىۋاتقان ۋاقىتتا ، 45 كۈندىن ئاشقان ھۆججەتلەر ۋە مېدىيانى ماسقەدەملىگىلى بولمايدۇ."
+  },
+  "icu:TapToViewNotAvailableModal__body--expired": {
+    "messageformat": "بۇ بىر قېتىملا كۆرۈلىدىغان مېدىيانى ئەمدى چۈشۈرگىلى بولمايدۇ. {name} دىن قايتا ئەۋەتىشنى سوراڭ."
+  },
+  "icu:TapToViewNotAvailableModal__body--error": {
+    "messageformat": "بىر قېتىملا كۆرۈلىدىغان مېدىيانى چۈشۈرگىلى بولمايدۇ. {name} ئۇنى قايتا يوللىشى كېرەك."
+  },
+  "icu:BackfillFailureModal__title": {
+    "messageformat": "Can’t download media"
+  },
+  "icu:BackfillFailureModal__body--timeout": {
+    "messageformat": "Check your desktop and phone’s internet connection. Open Signal on your phone, then try downloading again."
+  },
+  "icu:BackfillFailureModal__body--not-found": {
+    "messageformat": "This media is no longer available on your phone and can’t be downloaded."
   },
   "icu:save": {
     "messageformat": "ساقلا"
@@ -1258,6 +1276,9 @@
   },
   "icu:Preferences--device-name__description": {
     "messageformat": "بۇ ئۈسكۈنىنىڭ نامىنى ئۆزگەرتىش ئۈچۈن تېلېفونىڭىزدا Signal نى ئېچىڭ ۋە «تەڭشەك»> «ئۇلانغان ئۈسكۈنىلەر» گە يۆتكىڭ"
+  },
+  "icu:Preferences__EmojiSkinToneDefaultSetting__Label": {
+    "messageformat": "Emoji skin tone"
   },
   "icu:chooseDeviceName": {
     "messageformat": "بۇ ئۈسكۈنىنىڭ نامىنى تاللاڭ"
@@ -1814,6 +1835,18 @@
   "icu:ConversationDetails__HeaderButton--Message": {
     "messageformat": "ئۇچۇر"
   },
+  "icu:ConversationDetails--help-section": {
+    "messageformat": "Help"
+  },
+  "icu:ConversationDetails--support-center": {
+    "messageformat": "Support Center"
+  },
+  "icu:ConversationDetails--contact-us": {
+    "messageformat": "Contact us"
+  },
+  "icu:ConversationDetails--donate": {
+    "messageformat": "Donate to Signal"
+  },
   "icu:SafetyNumberNotification__viewSafetyNumber": {
     "messageformat": "بىخەتەرلىك نومۇرىنى كۆرۈڭ"
   },
@@ -1873,6 +1906,9 @@
   },
   "icu:Toast--failed-to-fetch-phone-number": {
     "messageformat": "تېلېفون نومۇرىغا ئېرىشەلمىدى. تور ئۇلىنىشىڭىزنى تەكشۈرۈپ قايتا سىناڭ."
+  },
+  "icu:Toast--download-failed": {
+    "messageformat": "چۈشۈرۈش مەغلۇب بولدى"
   },
   "icu:ToastManager__CannotEditMessage_24": {
     "messageformat": "بۇ ئۇچۇرنى يوللاپ 24 سائەت ئىچىدىلا تەھرىرلەشكە بولىدۇ."
@@ -2252,6 +2288,189 @@
   "icu:EmojiPicker__button--flag": {
     "messageformat": "بايراق"
   },
+  "icu:FunPicker__Tab--Emojis": {
+    "messageformat": "چىراي بەلگە"
+  },
+  "icu:FunPicker__Tab--Stickers": {
+    "messageformat": "چاپلاقلار"
+  },
+  "icu:FunPicker__Tab--Gifs": {
+    "messageformat": "GIF"
+  },
+  "icu:FunPanelEmojis__SearchLabel": {
+    "messageformat": "چىراي بەلگە ئىزدە"
+  },
+  "icu:FunPanelEmojis__SearchPlaceholder": {
+    "messageformat": "چىراي بەلگە ئىزدە"
+  },
+  "icu:FunPanelEmojis__SubNavLabel": {
+    "messageformat": "Emoji كاتېگورىيەلىرى"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Recents": {
+    "messageformat": "يېقىندا ئىشلىتىلدى"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--SmileysAndPeople": {
+    "messageformat": "كۈلۈمسىرەش& كىشىلەر"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--AnimalsAndNature": {
+    "messageformat": "ھايۋاناتلار & تەبىئەت"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--FoodAndDrink": {
+    "messageformat": "يېمەك-ئىچمەك"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Activities": {
+    "messageformat": "پائالىيەت"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--TravelAndPlaces": {
+    "messageformat": "ساياھەت & يەرلەر"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Objects": {
+    "messageformat": "نەرسە"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Symbols": {
+    "messageformat": "بەلگە"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Flags": {
+    "messageformat": "بايراق"
+  },
+  "icu:FunPanelEmojis__SearchResults__EmptyHeading": {
+    "messageformat": "Emoji تېپىلمىدى"
+  },
+  "icu:FunPanelEmojis__ChangeSkinToneButtonLabel": {
+    "messageformat": "تېرە رەڭگىگە بولغان مايىللىقىڭىزنى ئۆزگەرتىڭ"
+  },
+  "icu:FunPanelEmojis__SkinTonePicker__ChooseDefaultLabel": {
+    "messageformat": "ئىشلەتكۈچى تېرە رەڭگىڭىزنى تاللاڭ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SearchResults": {
+    "messageformat": "ئىزدەش نەتىجىللىرى"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Recents": {
+    "messageformat": "يېقىندا ئىشلىتىلدى"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SmileysAndPeople": {
+    "messageformat": "كۈلۈمسىرەش& كىشىلەر"
+  },
+  "icu:FunPanelEmojis__SectionTitle--AnimalsAndNature": {
+    "messageformat": "ھايۋاناتلار & تەبىئەت"
+  },
+  "icu:FunPanelEmojis__SectionTitle--FoodAndDrink": {
+    "messageformat": "يېمەك-ئىچمەك"
+  },
+  "icu:FunPanelEmojis__SectionTitle--TravelAndPlaces": {
+    "messageformat": "ساياھەت & يەرلەر"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Activities": {
+    "messageformat": "پائالىيەت"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Objects": {
+    "messageformat": "نەرسە"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Symbols": {
+    "messageformat": "بەلگە"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Flags": {
+    "messageformat": "بايراق"
+  },
+  "icu:FunPanelStickers__SearchLabel": {
+    "messageformat": "چاپلاق ئىزدە"
+  },
+  "icu:FunPanelStickers__SearchPlaceholder": {
+    "messageformat": "چاپلاق ئىزدە"
+  },
+  "icu:FunPanelSticker__SubNavLabel": {
+    "messageformat": "چاپلاق بولاقلىرى"
+  },
+  "icu:FunPanelStickers__SubNavCategoryLabel--Recents": {
+    "messageformat": "يېقىندا ئىشلىتىلدى"
+  },
+  "icu:FunPanelStickers__SectionTitle--SearchResults": {
+    "messageformat": "ئىزدەش نەتىجىللىرى"
+  },
+  "icu:FunPanelStickers__SectionTitle--Recents": {
+    "messageformat": "يېقىندا ئىشلىتىلدى"
+  },
+  "icu:FunPanelStickers__SearchResults__EmptyHeading": {
+    "messageformat": "چاپلاق تېپىلمىدى"
+  },
+  "icu:FunPanelStickers__LightboxDialog__Label": {
+    "messageformat": "Sticker Preview"
+  },
+  "icu:FunPanelGifs__SearchLabel--Tenor": {
+    "messageformat": "Tenor ئارقىلىق GIF لارنى ئىزدەڭ"
+  },
+  "icu:FunPanelGifs__SearchPlaceholder--Tenor": {
+    "messageformat": "Tenor دىن ئىزدەڭ"
+  },
+  "icu:FunPanelGifs__SubNavLabel": {
+    "messageformat": "GIF كاتېگورىيەلىرى"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Recents": {
+    "messageformat": "يېقىندا ئىشلىتىلدى"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Trending": {
+    "messageformat": "مودا بولۇش"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Celebrate": {
+    "messageformat": "تەبرىكلەش"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Love": {
+    "messageformat": "مۇھەببەت"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--ThumbsUp": {
+    "messageformat": "خو بېرىش"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Surprised": {
+    "messageformat": "ھەيران قېلىش"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Excited": {
+    "messageformat": "ھاياجانلىنىش"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Sad": {
+    "messageformat": "كۆڭلى يېرىم بولۇش"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Angry": {
+    "messageformat": "ئاچچىقلاش"
+  },
+  "icu:FunPanelGifs__SearchResults__LoadingLabel": {
+    "messageformat": "GIF لارنى يۈكلەۋاتىدۇ"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorHeading": {
+    "messageformat": "GIF لارنى يۈكلىيەلمىدى. تور ئۇلىنىشىڭىزنى تەكشۈرۈپ قايتا سىناڭ"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorRetryButton": {
+    "messageformat": "قايتا سىنا"
+  },
+  "icu:FunPanelGifs__SearchResults__EmptyHeading": {
+    "messageformat": "GIF لار تېپىلمىدى"
+  },
+  "icu:FunPanelGifs__LightboxDialog__Label": {
+    "messageformat": "GIF Preview"
+  },
+  "icu:FunSearch__ClearButtonLabel": {
+    "messageformat": "Clear Search"
+  },
+  "icu:FunSkinTones__List": {
+    "messageformat": "Skin tone"
+  },
+  "icu:FunSkinTones__ListItem--None": {
+    "messageformat": "None"
+  },
+  "icu:FunSkinTones__ListItem--Light": {
+    "messageformat": "Light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumLight": {
+    "messageformat": "Medium-light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Medium": {
+    "messageformat": "Medium skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumDark": {
+    "messageformat": "Medium-dark skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Dark": {
+    "messageformat": "Dark skin tone"
+  },
   "icu:confirmation-dialog--Cancel": {
     "messageformat": "بىكار قىلىش"
   },
@@ -2291,8 +2510,14 @@
   "icu:Message--tap-to-view-expired": {
     "messageformat": "كۆرگەن"
   },
+  "icu:Message--tap-to-view--viewed": {
+    "messageformat": "كۆرگەن"
+  },
   "icu:Message--tap-to-view--outgoing": {
     "messageformat": "ۋاسىتە"
+  },
+  "icu:Message--tap-to-view--media": {
+    "messageformat": "بىرلا قېتىم كۆرۈلىدىغان مېدىيا"
   },
   "icu:Message--tap-to-view--incoming--expired-toast": {
     "messageformat": "بۇ ئۇچۇرنى كۆرۈپ بولدىڭىز."
@@ -2305,6 +2530,15 @@
   },
   "icu:Message--tap-to-view--incoming-video": {
     "messageformat": "سىن كۆرسەت"
+  },
+  "icu:Message--tap-to-view--video": {
+    "messageformat": "بىر قېتىملا كۆرۈلىدىغان سىن"
+  },
+  "icu:Message--tap-to-view--photo": {
+    "messageformat": "بىر قېتىملا كۆرۈلىدىغان رەسىم"
+  },
+  "icu:Message--tap-to-view--helper-text": {
+    "messageformat": "كۆرۈش ئۈچۈن چېكىڭ"
   },
   "icu:Conversation--getDraftPreview--attachment": {
     "messageformat": "(يۈكلەنمە)"
@@ -2498,6 +2732,9 @@
   "icu:Keyboard--toggle-video": {
     "messageformat": "سىن ئوچۇق ياكى تاقاقنى ئالماشتۇر"
   },
+  "icu:Keyboard--toggle-preview": {
+    "messageformat": "كېڭەيتىلگەن ئالدىن كۆرەكنى ئېچىش ۋە تاقاشنى ئالماشتۇرۇش"
+  },
   "icu:Keyboard--accept-video-call": {
     "messageformat": "چاقىرىقنى ۋىدېيولۇق قوبۇل قىلىش (ۋىدېيولۇق چاقىرىق ئۈچۈنلا)"
   },
@@ -2560,6 +2797,12 @@
   },
   "icu:SafetyTipsModal__Description": {
     "messageformat": "سىز تونۇمايدىغان كىشىلەرنىڭ ئۇچۇر تەلىپىنى قوبۇل قىلغاندا ئېھتىياتچان بولۇڭ. تۆۋەندىكى نۇقتىلارغا دىققەت قىلىڭ:"
+  },
+  "icu:SafetyTipsModal__TipTitle--Fake": {
+    "messageformat": "Fake names and accounts"
+  },
+  "icu:SafetyTipsModal__TipDescription--Fake": {
+    "messageformat": "Signal will never contact you for your registration code or PIN. Be cautious of requests that impersonate others. Profile names are chosen by their account holder and aren't verified."
   },
   "icu:SafetyTipsModal__TipTitle--Crypto": {
     "messageformat": "Crypto ياكى پۇل ئالدامچىلىقى"
@@ -2693,6 +2936,12 @@
   "icu:MessageRequests--accept": {
     "messageformat": "قوبۇل قىل"
   },
+  "icu:MessageRequests--accept-confirm-title": {
+    "messageformat": "Accept Request?"
+  },
+  "icu:MessageRequests--accept-confirm-body": {
+    "messageformat": "Review requests carefully. Profile names are chosen by their account owner and aren't verified."
+  },
   "icu:MessageRequests--continue": {
     "messageformat": "داۋاملاشتۇرۇش"
   },
@@ -2704,6 +2953,21 @@
   },
   "icu:ConversationHero--members": {
     "messageformat": "{count, plural, other {{count,number} ئەزا}}"
+  },
+  "icu:ConversationHero--review-carefully": {
+    "messageformat": "Review carefully"
+  },
+  "icu:ConversationHero--group-names": {
+    "messageformat": "<clickable>Group names</clickable> are not verified"
+  },
+  "icu:ConversationHero--profile-names": {
+    "messageformat": "<clickable>Profile names</clickable> are not verified"
+  },
+  "icu:ConversationHero--signal-official-chat": {
+    "messageformat": "This is the official and only chat from Signal"
+  },
+  "icu:ConversationHero--release-notes": {
+    "messageformat": "Keep up to date with news and release notes."
   },
   "icu:member-of-1-group": {
     "messageformat": "{group} ئەزاسى"
@@ -2917,6 +3181,12 @@
   },
   "icu:calling__pip--off": {
     "messageformat": "چاقىرىقنى پۈتۈن ئېكرانلاشتۇرۇش"
+  },
+  "icu:calling__preview--maximize": {
+    "messageformat": "ئالدىن كۆرەكنى چوڭايتىڭ"
+  },
+  "icu:calling__preview--minimize": {
+    "messageformat": "ئالدىن كۆرەكنى كىچىكلىتىش"
   },
   "icu:calling__change-view": {
     "messageformat": "كۆرۈنۈشنى ئۆزگەرتىش"
@@ -3698,18 +3968,6 @@
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "قايتا سىنا"
   },
-  "icu:BackupImportScreen__skip": {
-    "messageformat": "ئاتلا"
-  },
-  "icu:BackupImportScreen__skip-confirmation__title": {
-    "messageformat": "ئۇچۇر يوللاشتىن ۋاز كېچەمسىز؟"
-  },
-  "icu:BackupImportScreen__skip-confirmation__body": {
-    "messageformat": "ئەگەر ئاتلاشنى تاللىسىڭىز ، بۇ ئۈسكۈنىدىكى ھېچقانداق ئۇچۇر ياكى مېدىياغا ئېرىشەلمەيسىز. تەڭشەكلەر> پاراڭلار> يۆتكەش نى ئاتلاپ بولغاندىن كېيىن يېڭى يۆتكەشنى باشلىيالايسىز."
-  },
-  "icu:BackupImportScreen__skip-confirmation__cancel": {
-    "messageformat": "بىكار قىلىش"
-  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "مېدىيانى ئەسلىگە كەلتۈرىۋاتىدۇ"
   },
@@ -3772,6 +4030,18 @@
   },
   "icu:CompositionArea__edit-action--send": {
     "messageformat": "تەھرىرلەنگەن ئۇچۇرنى يوللاش"
+  },
+  "icu:CompositionArea__FunButtonLabel": {
+    "messageformat": "Emoji ، چىراي ئىپادە ياكى GIF نى قوشۇڭ"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Title": {
+    "messageformat": "Replace attachment?"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Body": {
+    "messageformat": "Adding this GIF will replace the item in your current draft message."
+  },
+  "icu:CompositionArea__ConfirmGifSelection__ReplaceButton": {
+    "messageformat": "Replace"
   },
   "icu:CompositionInput__editing-message": {
     "messageformat": "ئۇچۇر تەھرىرلەش"
@@ -4193,9 +4463,6 @@
   "icu:ShareCallLinkViaSignal__DraftMessageText": {
     "messageformat": "بۇ ئۇلانما بىلەن بىر سىگنال چاقىرىقىغا قېتىلىڭ: {url}"
   },
-  "icu:MessageRequestWarning__learn-more": {
-    "messageformat": "كۆپرەك ئۆگىنىش"
-  },
   "icu:MessageRequestWarning__safety-tips": {
     "messageformat": "بىخەتەرلىك ئەسكەرتىشلىرى"
   },
@@ -4350,7 +4617,7 @@
     "messageformat": "يانتۇلۇق ئاخىرى"
   },
   "icu:GIF--download": {
-    "messageformat": "Download GIF attachment"
+    "messageformat": "GIF قوشۇمچە ھۆججىتىنى چۈشۈرۈڭ"
   },
   "icu:customDisappearingTimeOption": {
     "messageformat": "خاسلاشتۇرۇلغان ۋاقىت..."
@@ -4655,6 +4922,27 @@
   "icu:Preferences__button--privacy": {
     "messageformat": "مەخپىيەتلىك"
   },
+  "icu:Preferences__button--data-usage": {
+    "messageformat": "مەلۇمات ئىشلىتىلىشى"
+  },
+  "icu:Preferences__media-auto-download": {
+    "messageformat": "ۋاسىتەلەرنى ئاپتۇماتىك چۈشۈر"
+  },
+  "icu:Preferences__media-auto-download__photos": {
+    "messageformat": "رەسىم"
+  },
+  "icu:Preferences__media-auto-download__videos": {
+    "messageformat": "سىن"
+  },
+  "icu:Preferences__media-auto-download__audio": {
+    "messageformat": "ئۈن"
+  },
+  "icu:Preferences__media-auto-download__documents": {
+    "messageformat": "پۈتۈكلەر"
+  },
+  "icu:Preferences__media-auto-download__description": {
+    "messageformat": "ئاۋازلىق ئۇچۇرلار ۋە چاپلاقلار ھەمىشە ئاپتوماتىك چۈشۈرۈلىدۇ."
+  },
   "icu:Preferences--lastSynced": {
     "messageformat": "ئاخىرقى ئەكىرىلگەن ۋاقىت {date} {time}"
   },
@@ -4811,6 +5099,18 @@
   "icu:DialogUpdate__downloaded": {
     "messageformat": "يېڭىلانما چۈشۈرۈلدى"
   },
+  "icu:CriticalIdlePrimaryDevice__title": {
+    "messageformat": "تېلېفونىڭىزدا Signal نى ئېچىڭ"
+  },
+  "icu:CriticalIdlePrimaryDevice__body": {
+    "messageformat": "تېلېفونىڭىزدا Signal ئاچمىسىڭىز ھېساباتىڭىز تېزلا ئۆچۈرۈلىدۇ. ئەگەر مۇۋەپپەقىيەتلىك قىلغان بولسىڭىز بۇ ئۇچۇر يوقىلىدۇ. <learnMoreLink>تەپسىلاتى</learnMoreLink>"
+  },
+  "icu:IdlePrimaryDevice__body": {
+    "messageformat": "ھېساباتىڭىزنى ئاكتىپ ھالەتتە ساقلاش ئۈچۈن تېلېفونىڭىزدا Signal نى ئېچىپ تۇرۇڭ"
+  },
+  "icu:IdlePrimaryDevice__learnMore": {
+    "messageformat": "تەپسىلاتى"
+  },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal دا تېخنىكىلىق قىيىنچىلىق كۆرۈلدى. بىز ئامالنىڭ بارىچە تىرىشىپ ئىشلەپ مۇلازىمەتنى ئەڭ تېز سۈرئەتتە ئەسلىگە كەلتۈرىمىز."
   },
@@ -4951,6 +5251,30 @@
   },
   "icu:MediaEditor__crop-preset--9-16": {
     "messageformat": "9:16"
+  },
+  "icu:MediaPermissionsModal__title--microphone": {
+    "messageformat": "مىكروفوننى ئىشلىتىشكە رۇخسەت قىلىڭ"
+  },
+  "icu:MediaPermissionsModal__title--camera": {
+    "messageformat": "كامېرا ھوقۇقىغا ئىجازەت قىلىش"
+  },
+  "icu:MediaPermissionsModal__subtitle--call": {
+    "messageformat": "چاقىرىشقا قاتنىشىش ياكى باشلاش:"
+  },
+  "icu:MediaPermissionsModal__subtitle--call--camera": {
+    "messageformat": "ۋىدېيونى قوزغىتىش ئۈچۈن:"
+  },
+  "icu:MediaPermissionsModal__subtitle--voice-note": {
+    "messageformat": "ئاۋازلىق ئۇچۇر يوللاش:"
+  },
+  "icu:MediaPermissionsModal__step-1": {
+    "messageformat": "تۆۋەندىكى « {buttonName} » نى چېكىڭ"
+  },
+  "icu:MediaPermissionsModal__step-2": {
+    "messageformat": "«Signal» نى ئېچىڭ"
+  },
+  "icu:MediaPermissionsModal__open": {
+    "messageformat": "تەڭشەكلەرگە يۆتكەل"
   },
   "icu:MyStories__title": {
     "messageformat": "ھېكايىلىرىم"
@@ -5610,6 +5934,15 @@
   "icu:MessageMetadata__edited": {
     "messageformat": "تەھرىرلەنگەن"
   },
+  "icu:DraftGifMessageSendModal__Title": {
+    "messageformat": "Add a message"
+  },
+  "icu:DraftGifMessageSendModal__SendButtonLabel": {
+    "messageformat": "Send"
+  },
+  "icu:DraftGifMessageSendModal__CancelButtonLabel": {
+    "messageformat": "Cancel"
+  },
   "icu:EditHistoryMessagesModal__title": {
     "messageformat": "تەھرىرلەش تارىخى"
   },
@@ -5829,6 +6162,30 @@
   "icu:WhoCanFindMeReadOnlyToast": {
     "messageformat": "بۇ تەڭشەكنى ئۆزگەرتىش ئۈچۈن «تېلېفون نومۇرۇمنى كۆرەلەيدىغانلار» نى «ھېچكىم» گە تەڭشەڭ."
   },
+  "icu:ProfileNameWarningModal__description--direct": {
+    "messageformat": "Profile names on Signal are chosen by their account holder:"
+  },
+  "icu:ProfileNameWarningModal__list--item1--direct": {
+    "messageformat": "Profile names aren't verified"
+  },
+  "icu:ProfileNameWarningModal__list--item2--direct": {
+    "messageformat": "Be cautious of accounts that impersonate others"
+  },
+  "icu:ProfileNameWarningModal__list--item3--direct": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
+  "icu:ProfileNameWarningModal__description--group": {
+    "messageformat": "Group names are chosen by members of the group."
+  },
+  "icu:ProfileNameWarningModal__list--item1--group": {
+    "messageformat": "Be cautious of groups that impersonate organizations and businesses"
+  },
+  "icu:ProfileNameWarningModal__list--item2--group": {
+    "messageformat": "Profile names of members in groups are not verified"
+  },
+  "icu:ProfileNameWarningModal__list--item3--group": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
   "icu:WhatsNew__modal-title": {
     "messageformat": "يېڭىلىقلار"
   },
@@ -5860,10 +6217,13 @@
     "messageformat": "كىچىك ئۆزگەرتىشلەر كىرگۈزۈلدى، كاشىلا ھەل قىلىندى ۋە ئىقتىدار ئەلالاشتۇرۇلدى. Signal نى ئىشلەتكەنلىكىڭىزگە رەھمەت!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.44--0": {
-    "messageformat": "گۇرۇپپا چاقىرىقلىرى جەريانىدا كارتونلاردا كۆرۈلىدىغان كىچىك خاتالىقىنى تۈزەتتۇق. گۇرۇپپا چاقىرىقلىرى جەريانىدا كارتونلاردا كۆرۈلىدىغان كىچىك خاتالىقىنى تۈزەتتۇق."
+  "icu:WhatsNew__v7.47--0": {
+    "messageformat": "ھازىر ئۆزىڭىزنى تېخىمۇ ياخشى كۆرۈش ئۈچۈن چاقىرىق جەريانىدا تېلېفونىڭىزدىكى سىن ئالدىن كۆرەكنى كېڭەيتەلەيسىز."
   },
-  "icu:WhatsNew__v7.45--0": {
-    "messageformat": "Stickers should feel sticky, not stuck, so now you can click on a sticker on a newly linked Signal Desktop and that sticker download will automatically get prioritized even when other attachments are downloading too."
+  "icu:WhatsNew__v7.48--0": {
+    "messageformat": "Signal گۇرۇپپا چاقىرىقى جەريانىدا سۆزلەشكە باشلىغاندىن كېيىنلا قولىڭىزنى تېزلىكتە قۇيۇپ بېرىش ئۈچۈن قۇلايلىق تېزلەتمە قوشتۇق. بۇ بىز بۇ قېتىملىق نەشىردىكى ئەڭ ياقتۇرىدىغان ئىقتىدار."
+  },
+  "icu:WhatsNew__v7.49--0": {
+    "messageformat": "If you link a new Desktop on Signal Android and choose to transfer your message history, now you can also selectively transfer old attachments from your primary device too. Bring the past into the present by scrolling back in time and clicking on the download icon. As always, the transfer process is end-to-end encrypted and secure."
   }
 }

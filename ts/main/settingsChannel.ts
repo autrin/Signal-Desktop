@@ -65,6 +65,8 @@ export class SettingsChannel extends EventEmitter {
     this.#installCallback('getAvailableIODevices');
     this.#installCallback('isPrimary');
     this.#installCallback('syncRequest');
+    this.#installCallback('setEmojiSkinToneDefault');
+    this.#installCallback('getEmojiSkinToneDefault');
 
     // Getters only. These are set by the primary device
     this.#installSetting('blockedCount', { setter: false });
@@ -84,6 +86,7 @@ export class SettingsChannel extends EventEmitter {
 
     this.#installSetting('autoConvertEmoji');
     this.#installSetting('autoDownloadUpdate');
+    this.#installSetting('autoDownloadAttachment');
     this.#installSetting('autoLaunch');
 
     this.#installSetting('alwaysRelayCalls');
@@ -118,7 +121,9 @@ export class SettingsChannel extends EventEmitter {
       return userConfig.get('mediaPermissions') || false;
     });
     ipc.handle('settings:get:mediaCameraPermissions', () => {
-      return userConfig.get('mediaCameraPermissions') || false;
+      // Intentionally returning `undefined` when unset to let app properly
+      // onboard the user.
+      return userConfig.get('mediaCameraPermissions');
     });
     ipc.handle('settings:set:mediaPermissions', (_event, value) => {
       userConfig.set('mediaPermissions', value);

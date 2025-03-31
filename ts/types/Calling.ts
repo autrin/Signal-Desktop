@@ -57,6 +57,7 @@ export type ActiveCallBaseType = {
   presentingSource?: PresentedSource;
   presentingSourcesAvailable?: ReadonlyArray<PresentableSource>;
   settingsDialogOpen: boolean;
+  selfViewExpanded: boolean;
   showNeedsScreenRecordingPermissionsWarning?: boolean;
   showParticipantsList: boolean;
   reactions?: ActiveCallReactionsType;
@@ -78,6 +79,7 @@ export type ActiveDirectCallType = ActiveCallBaseType & {
       serviceId?: ServiceIdString;
     },
   ];
+  remoteAudioLevel: number;
 };
 
 export type ActiveGroupCallType = ActiveCallBaseType & {

@@ -36,12 +36,15 @@ installSetting('typingIndicatorSetting', {
 installCallback('deleteAllMyStories');
 installCallback('isPrimary');
 installCallback('syncRequest');
+installCallback('getEmojiSkinToneDefault');
+installCallback('setEmojiSkinToneDefault');
 
 installSetting('alwaysRelayCalls');
 installSetting('audioMessage');
 installSetting('audioNotification');
 installSetting('autoConvertEmoji');
 installSetting('autoDownloadUpdate');
+installSetting('autoDownloadAttachment');
 installSetting('autoLaunch');
 installSetting('callRingtoneNotification');
 installSetting('callSystemNotification');

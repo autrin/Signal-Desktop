@@ -40,6 +40,7 @@ import {
   SignedPreKeys,
 } from '../LibSignalStores';
 import { verifySignature } from '../Curve';
+import { createName } from '../util/attachmentPath';
 import { assertDev, strictAssert } from '../util/assert';
 import type { BatcherType } from '../util/batcher';
 import { createBatcher } from '../util/batcher';
@@ -97,14 +98,17 @@ import type {
   UnprocessedType,
 } from './Types.d';
 import type {
-  ConversationToDelete,
+  ConversationIdentifier,
   DeleteForMeSyncEventData,
+  AttachmentBackfillAttachmentType,
+  AttachmentBackfillResponseSyncEventData,
   DeleteForMeSyncTarget,
-  MessageToDelete,
+  AddressableMessage,
   ReadSyncEventData,
   ViewSyncEventData,
 } from './messageReceiverEvents';
 import {
+  AttachmentBackfillResponseSyncEvent,
   CallEventSyncEvent,
   CallLinkUpdateSyncEvent,
   CallLogEventSyncEvent,
@@ -680,6 +684,11 @@ export default class MessageReceiver
   public override addEventListener(
     name: 'deleteForMeSync',
     handler: (ev: DeleteForMeSyncEvent) => void
+  ): void;
+
+  public override addEventListener(
+    name: 'attachmentBackfillResponseSync',
+    handler: (ev: AttachmentBackfillResponseSyncEvent) => void
   ): void;
 
   public override addEventListener(
@@ -3183,6 +3192,12 @@ export default class MessageReceiver
         syncMessage.deviceNameChange
       );
     }
+    if (syncMessage.attachmentBackfillResponse) {
+      return this.#handleAttachmentBackfillResponse(
+        envelope,
+        syncMessage.attachmentBackfillResponse
+      );
+    }
 
     this.#removeFromCache(envelope);
     const envelopeId = getEnvelopeId(envelope);
@@ -3624,10 +3639,10 @@ export default class MessageReceiver
           deleteSync.messageDeletes
             .flatMap((item): Array<DeleteForMeSyncTarget> | undefined => {
               const messages = item.messages
-                ?.map(message => processMessageToDelete(message, logId))
+                ?.map(message => processAddressableMessage(message, logId))
                 .filter(isNotNil);
               const conversation = item.conversation
-                ? processConversationToDelete(item.conversation, logId)
+                ? processConversationIdentifier(item.conversation, logId)
                 : undefined;
 
               if (!conversation) {
@@ -3662,14 +3677,14 @@ export default class MessageReceiver
           deleteSync.conversationDeletes
             .map(item => {
               const mostRecentMessages = item.mostRecentMessages
-                ?.map(message => processMessageToDelete(message, logId))
+                ?.map(message => processAddressableMessage(message, logId))
                 .filter(isNotNil);
               const mostRecentNonExpiringMessages =
                 item.mostRecentNonExpiringMessages
-                  ?.map(message => processMessageToDelete(message, logId))
+                  ?.map(message => processAddressableMessage(message, logId))
                   .filter(isNotNil);
               const conversation = item.conversation
-                ? processConversationToDelete(item.conversation, logId)
+                ? processConversationIdentifier(item.conversation, logId)
                 : undefined;
 
               if (!conversation) {
@@ -3703,7 +3718,7 @@ export default class MessageReceiver
           deleteSync.localOnlyConversationDeletes
             .map(item => {
               const conversation = item.conversation
-                ? processConversationToDelete(item.conversation, logId)
+                ? processConversationIdentifier(item.conversation, logId)
                 : undefined;
 
               if (!conversation) {
@@ -3735,10 +3750,10 @@ export default class MessageReceiver
                 targetMessage,
               } = item;
               const conversation = targetConversation
-                ? processConversationToDelete(targetConversation, logId)
+                ? processConversationIdentifier(targetConversation, logId)
                 : undefined;
               const message = targetMessage
-                ? processMessageToDelete(targetMessage, logId)
+                ? processAddressableMessage(targetMessage, logId)
                 : undefined;
 
               if (!conversation) {
@@ -3803,6 +3818,84 @@ export default class MessageReceiver
     await this.#dispatchAndWait(logId, deleteSyncEventSync);
 
     log.info('handleDeleteForMeSync: finished');
+  }
+
+  async #handleAttachmentBackfillResponse(
+    envelope: ProcessedEnvelope,
+    response: Proto.SyncMessage.IAttachmentBackfillResponse
+  ): Promise<void> {
+    const logId = getEnvelopeId(envelope);
+    log.info('MessageReceiver.handleAttachmentBackfillResponse', logId);
+
+    logUnexpectedUrgentValue(envelope, 'attachmentBackfillResponseSync');
+
+    strictAssert(
+      response.targetMessage != null,
+      'MessageReceiver.handleAttachmentBackfillResponse: no target message'
+    );
+    strictAssert(
+      response.targetConversation != null,
+      'MessageReceiver.handleAttachmentBackfillResponse: no target conversation'
+    );
+
+    const targetMessage = processAddressableMessage(
+      response.targetMessage,
+      logId
+    );
+
+    const targetConversation = processConversationIdentifier(
+      response.targetConversation,
+      logId
+    );
+
+    strictAssert(
+      targetMessage != null,
+      'MessageReceiver.handleAttachmentBackfillResponse: invalid target message'
+    );
+    strictAssert(
+      targetConversation != null,
+      'MessageReceiver.handleAttachmentBackfillResponse: ' +
+        'invalid target conversation'
+    );
+
+    let eventData: AttachmentBackfillResponseSyncEventData;
+    if (response.error != null) {
+      eventData = {
+        error: response.error,
+        targetMessage,
+        targetConversation,
+      };
+    } else {
+      const { attachments } = response;
+      strictAssert(
+        attachments != null,
+        'MessageReceiver.handleAttachmentBackfillResponse: no attachments'
+      );
+
+      eventData = {
+        targetMessage,
+        targetConversation,
+        longText:
+          attachments.longText == null
+            ? undefined
+            : processBackfilledAttachment(attachments.longText),
+        attachments: (attachments.attachments ?? []).map(
+          processBackfilledAttachment
+        ),
+      };
+    }
+
+    const attachmentBackfillResponseSync =
+      new AttachmentBackfillResponseSyncEvent(
+        eventData,
+        envelope.timestamp,
+        envelope.id,
+        this.#removeFromCache.bind(this, envelope)
+      );
+
+    await this.#dispatchAndWait(logId, attachmentBackfillResponseSync);
+
+    log.info('handleAttachmentBackfillResponse: finished');
   }
 
   async #handleDeviceNameChangeSync(
@@ -4053,14 +4146,14 @@ function envelopeTypeToCiphertextType(type: number | undefined): number {
   throw new Error(`envelopeTypeToCiphertextType: Unknown type ${type}`);
 }
 
-function processMessageToDelete(
-  target: Proto.SyncMessage.DeleteForMe.IAddressableMessage,
+function processAddressableMessage(
+  target: Proto.IAddressableMessage,
   logId: string
-): MessageToDelete | undefined {
+): AddressableMessage | undefined {
   const sentAt = target.sentTimestamp?.toNumber();
   if (!isNumber(sentAt)) {
     log.warn(
-      `${logId}/processMessageToDelete: No sentTimestamp found! Dropping AddressableMessage.`
+      `${logId}/processAddressableMessage: No sentTimestamp found! Dropping AddressableMessage.`
     );
     return undefined;
   }
@@ -4072,7 +4165,7 @@ function processMessageToDelete(
         type: 'aci' as const,
         authorAci: normalizeAci(
           authorServiceId,
-          `${logId}/processMessageToDelete/aci`
+          `${logId}/processAddressableMessage/aci`
         ),
         sentAt,
       };
@@ -4082,13 +4175,13 @@ function processMessageToDelete(
         type: 'pni' as const,
         authorPni: normalizePni(
           authorServiceId,
-          `${logId}/processMessageToDelete/pni`
+          `${logId}/processAddressableMessage/pni`
         ),
         sentAt,
       };
     }
     log.error(
-      `${logId}/processMessageToDelete: invalid authorServiceId, Dropping AddressableMessage.`
+      `${logId}/processAddressableMessage: invalid authorServiceId, Dropping AddressableMessage.`
     );
     return undefined;
   }
@@ -4101,15 +4194,15 @@ function processMessageToDelete(
   }
 
   log.warn(
-    `${logId}/processMessageToDelete: No author field found! Dropping AddressableMessage.`
+    `${logId}/processAddressableMessage: No author field found! Dropping AddressableMessage.`
   );
   return undefined;
 }
 
-function processConversationToDelete(
-  target: Proto.SyncMessage.DeleteForMe.IConversationIdentifier,
+function processConversationIdentifier(
+  target: Proto.IConversationIdentifier,
   logId: string
-): ConversationToDelete | undefined {
+): ConversationIdentifier | undefined {
   const { threadServiceId, threadGroupId, threadE164 } = target;
 
   if (threadServiceId) {
@@ -4126,7 +4219,7 @@ function processConversationToDelete(
       };
     }
     log.error(
-      `${logId}/processConversationToDelete: Invalid threadServiceId, dropping ConversationIdentifier.`
+      `${logId}/processConversationIdentifier: Invalid threadServiceId, dropping ConversationIdentifier.`
     );
     return undefined;
   }
@@ -4144,7 +4237,30 @@ function processConversationToDelete(
   }
 
   log.warn(
-    `${logId}/processConversationToDelete: No identifier field found! Dropping ConversationIdentifier.`
+    `${logId}/processConversationIdentifier: No identifier field found! Dropping ConversationIdentifier.`
   );
   return undefined;
+}
+
+function processBackfilledAttachment(
+  data: Proto.SyncMessage.AttachmentBackfillResponse.IAttachmentData
+): AttachmentBackfillAttachmentType {
+  if (data.status != null) {
+    return { status: data.status };
+  }
+
+  const attachment = processAttachment(data.attachment);
+  strictAssert(
+    attachment != null,
+    'MessageReceiver.handleAttachmentBackfillResponse: ' +
+      'invalid attachment pointer'
+  );
+  return {
+    attachment: {
+      ...attachment,
+
+      // Resumable downloads
+      downloadPath: createName(),
+    },
+  };
 }
