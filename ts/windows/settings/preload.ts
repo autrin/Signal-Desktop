@@ -16,6 +16,7 @@ import { awaitObject } from '../../util/awaitObject';
 import { DurationInSeconds } from '../../util/durations';
 import { createSetting, createCallback } from '../../util/preload';
 import { findBestMatchingAudioDeviceIndex } from '../../calling/findBestMatchingDevice';
+import type { EmojiSkinTone } from '../../components/fun/data/emojis';
 
 function doneRendering() {
   ipcRenderer.send('settings-done-rendering');
@@ -25,6 +26,7 @@ const settingMessageAudio = createSetting('audioMessage');
 const settingAudioNotification = createSetting('audioNotification');
 const settingAutoConvertEmoji = createSetting('autoConvertEmoji');
 const settingAutoDownloadUpdate = createSetting('autoDownloadUpdate');
+const settingAutoDownloadAttachment = createSetting('autoDownloadAttachment');
 const settingAutoLaunch = createSetting('autoLaunch');
 const settingCallRingtoneNotification = createSetting(
   'callRingtoneNotification'
@@ -82,6 +84,7 @@ const settingUniversalExpireTimer = createSetting('universalExpireTimer');
 // Callbacks
 const ipcGetAvailableIODevices = createCallback('getAvailableIODevices');
 const ipcGetCustomColors = createCallback('getCustomColors');
+const ipcGetEmojiSkinToneDefault = createCallback('getEmojiSkinToneDefault');
 const ipcIsSyncNotSupported = createCallback('isPrimary');
 const ipcMakeSyncRequest = createCallback('syncRequest');
 const ipcDeleteAllMyStories = createCallback('deleteAllMyStories');
@@ -105,6 +108,7 @@ const ipcResetDefaultChatColor = createCallback('resetDefaultChatColor');
 const ipcSetGlobalDefaultConversationColor = createCallback(
   'setGlobalDefaultConversationColor'
 );
+const ipcSetEmojiSkinToneDefault = createCallback('setEmojiSkinToneDefault');
 
 const DEFAULT_NOTIFICATION_SETTING = 'message';
 
@@ -139,8 +143,10 @@ function attachRenderCallback<Value>(f: (value: Value) => Promise<Value>) {
 
 async function renderPreferences() {
   const {
+    autoDownloadAttachment,
     blockedCount,
     deviceName,
+    emojiSkinToneDefault,
     hasAudioNotifications,
     hasAutoConvertEmoji,
     hasAutoDownloadUpdate,
@@ -181,6 +187,7 @@ async function renderPreferences() {
     defaultConversationColor,
     isSyncNotSupported,
   } = await awaitObject({
+    autoDownloadAttachment: settingAutoDownloadAttachment.getValue(),
     blockedCount: settingBlockedCount.getValue(),
     deviceName: settingDeviceName.getValue(),
     hasAudioNotifications: settingAudioNotification.getValue(),
@@ -222,6 +229,7 @@ async function renderPreferences() {
     availableIODevices: ipcGetAvailableIODevices(),
     customColors: ipcGetCustomColors(),
     defaultConversationColor: ipcGetDefaultConversationColor(),
+    emojiSkinToneDefault: ipcGetEmojiSkinToneDefault(),
     isSyncNotSupported: ipcIsSyncNotSupported(),
   });
 
@@ -264,8 +272,9 @@ async function renderPreferences() {
       ? availableSpeakers[selectedSpeakerIndex]
       : undefined;
 
-  const props = {
+  const props: PropsPreloadType = {
     // Settings
+    autoDownloadAttachment,
     availableCameras,
     availableLocales,
     availableMicrophones,
@@ -274,6 +283,7 @@ async function renderPreferences() {
     customColors,
     defaultConversationColor,
     deviceName,
+    emojiSkinToneDefault,
     hasAudioNotifications,
     hasAutoConvertEmoji,
     hasAutoDownloadUpdate,
@@ -352,6 +362,9 @@ async function renderPreferences() {
     onAutoDownloadUpdateChange: attachRenderCallback(
       settingAutoDownloadUpdate.setValue
     ),
+    onAutoDownloadAttachmentChange: attachRenderCallback(
+      settingAutoDownloadAttachment.setValue
+    ),
     onAutoLaunchChange: attachRenderCallback(settingAutoLaunch.setValue),
     onCallNotificationsChange: attachRenderCallback(
       settingCallSystemNotification.setValue
@@ -361,6 +374,12 @@ async function renderPreferences() {
     ),
     onCountMutedConversationsChange: attachRenderCallback(
       settingCountMutedConversations.setValue
+    ),
+    onEmojiSkinToneDefaultChange: attachRenderCallback(
+      async (emojiSkinTone: EmojiSkinTone) => {
+        await ipcSetEmojiSkinToneDefault(emojiSkinTone);
+        return emojiSkinTone;
+      }
     ),
     onHasStoriesDisabledChanged: attachRenderCallback(
       async (value: boolean) => {

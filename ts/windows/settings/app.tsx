@@ -25,6 +25,7 @@ setEnvironment(
 SettingsWindowProps.onRender(
   ({
     addCustomColor,
+    autoDownloadAttachment,
     availableCameras,
     availableLocales,
     availableMicrophones,
@@ -34,6 +35,7 @@ SettingsWindowProps.onRender(
     customColors,
     defaultConversationColor,
     deviceName,
+    emojiSkinToneDefault,
     phoneNumber,
     doDeleteAllData,
     doneRendering,
@@ -75,11 +77,13 @@ SettingsWindowProps.onRender(
     notificationContent,
     onAudioNotificationsChange,
     onAutoConvertEmojiChange,
+    onAutoDownloadAttachmentChange,
     onAutoDownloadUpdateChange,
     onAutoLaunchChange,
     onCallNotificationsChange,
     onCallRingtoneNotificationChange,
     onCountMutedConversationsChange,
+    onEmojiSkinToneDefaultChange,
     onHasStoriesDisabledChanged,
     onHideMenuBarChange,
     onIncomingCallNotificationsChange,
@@ -126,6 +130,7 @@ SettingsWindowProps.onRender(
     ReactDOM.render(
       <Preferences
         addCustomColor={addCustomColor}
+        autoDownloadAttachment={autoDownloadAttachment}
         availableCameras={availableCameras}
         availableLocales={availableLocales}
         availableMicrophones={availableMicrophones}
@@ -135,6 +140,7 @@ SettingsWindowProps.onRender(
         customColors={customColors}
         defaultConversationColor={defaultConversationColor}
         deviceName={deviceName}
+        emojiSkinToneDefault={emojiSkinToneDefault}
         phoneNumber={phoneNumber}
         doDeleteAllData={doDeleteAllData}
         doneRendering={doneRendering}
@@ -180,11 +186,13 @@ SettingsWindowProps.onRender(
         notificationContent={notificationContent}
         onAudioNotificationsChange={onAudioNotificationsChange}
         onAutoConvertEmojiChange={onAutoConvertEmojiChange}
+        onAutoDownloadAttachmentChange={onAutoDownloadAttachmentChange}
         onAutoDownloadUpdateChange={onAutoDownloadUpdateChange}
         onAutoLaunchChange={onAutoLaunchChange}
         onCallNotificationsChange={onCallNotificationsChange}
         onCallRingtoneNotificationChange={onCallRingtoneNotificationChange}
         onCountMutedConversationsChange={onCountMutedConversationsChange}
+        onEmojiSkinToneDefaultChange={onEmojiSkinToneDefaultChange}
         onHasStoriesDisabledChanged={onHasStoriesDisabledChanged}
         onHideMenuBarChange={onHideMenuBarChange}
         onIncomingCallNotificationsChange={onIncomingCallNotificationsChange}

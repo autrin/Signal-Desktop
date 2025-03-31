@@ -19,11 +19,9 @@ import {
 import { CallMode } from '../types/CallDisposition';
 import { getDefaultConversation } from '../test-both/helpers/getDefaultConversation';
 import { fakeGetGroupCallVideoFrameSource } from '../test-both/helpers/fakeGetGroupCallVideoFrameSource';
-import { setupI18n } from '../util/setupI18n';
-import enMessages from '../../_locales/en/messages.json';
 import { MINUTE } from '../util/durations';
 
-const i18n = setupI18n('en', enMessages);
+const { i18n } = window.SignalContext;
 
 const conversation: ConversationType = getDefaultConversation({
   id: '3051234567',
@@ -51,6 +49,7 @@ const getCommonActiveCallData = (overrides: Overrides) => ({
   joinedAt: Date.now() - MINUTE,
   outgoingRing: true,
   pip: true,
+  selfViewExpanded: false,
   settingsDialogOpen: false,
   showParticipantsList: false,
 });
@@ -61,6 +60,7 @@ const getDefaultCall = (overrides: Overrides): ActiveDirectCallType => {
     callMode: CallMode.Direct as CallMode.Direct,
     callState: CallState.Accepted,
     peekedParticipants: [],
+    remoteAudioLevel: 0,
     remoteParticipants: [
       { hasRemoteVideo: true, presenting: false, title: 'Arsene' },
     ],

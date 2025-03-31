@@ -38,6 +38,9 @@
   "icu:Preferences__sent-media-quality": {
     "messageformat": "Siunčiamos medijos kokybė"
   },
+  "icu:Preferences__sent-media-quality__description": {
+    "messageformat": "Aukštos kokybės medijos siuntimas naudos daugiau tinklo duomenų."
+  },
   "icu:sentMediaQualityStandard": {
     "messageformat": "Standartinė"
   },
@@ -68,6 +71,12 @@
   "icu:unknownGroup": {
     "messageformat": "Nežinoma grupė"
   },
+  "icu:cantOpenSignalError": {
+    "messageformat": "Can’t Open Signal"
+  },
+  "icu:cantOpenSignalError__detail": {
+    "messageformat": "To help fix the issue, follow the recovery guide on the support page or contact Signal support to help fix the issue.\n\nIf you need to use Signal right away, you can delete your data and relink this desktop. You will have the option to transfer message history from your phone."
+  },
   "icu:databaseError": {
     "messageformat": "Duomenų bazės klaida"
   },
@@ -78,10 +87,10 @@
     "messageformat": "Ištrinti duomenis ir paleisti iš naujo"
   },
   "icu:databaseError__deleteDataConfirmation": {
-    "messageformat": "Ištrinti visus duomenis visam laikui?"
+    "messageformat": "Permanently Delete All Data"
   },
   "icu:databaseError__deleteDataConfirmation__detail": {
-    "messageformat": "Visa tavo žinučių istorija ir įrašai bus ištrinti iš šio įrenginio visam laikui. Galėsi naudoti „Signal“ šiame įrenginyje po to, kai iš naujo susiesi. Iš tavo telefono nebus ištrinti jokie duomenys."
+    "messageformat": "All of your message history and media will be permanently deleted from this device. This will not delete any data from your phone.\n\nYou will be able to use Signal on this device after relinking it. You will have the option to transfer message history from your phone."
   },
   "icu:databaseError__startOldVersion": {
     "messageformat": "Tavo duomenų bazės versija neatitinka šios „Signal“ versijos. Įsitikink, kad savo kompiuteryje bandai atidaryti naujausią „Signal“ versiją."
@@ -214,9 +223,6 @@
   },
   "icu:optimizingApplication": {
     "messageformat": "Programėlė optimizuojama…"
-  },
-  "icu:migratingToSQLCipher": {
-    "messageformat": "Žinutės optimizuojamos… {status} atlikta."
   },
   "icu:archivedConversations": {
     "messageformat": "Archyvuoti pokalbiai"
@@ -407,9 +413,6 @@
   "icu:unreadMessages": {
     "messageformat": "{count, plural, one {{count,number} neskaityta žinutė} few {{count,number} neskaitytos žinutės} many {{count,number} neskaitytų žinučių} other {{count,number} neskaitytų žinučių}}"
   },
-  "icu:messageHistoryUnsynced": {
-    "messageformat": "Tavo saugumui pokalbio istorija neperkeliama į naujus susietus įrenginius."
-  },
   "icu:youMarkedAsVerified": {
     "messageformat": "Jūs pažymėjote savo saugumo numerį su {name} kaip patvirtintą"
   },
@@ -588,7 +591,7 @@
     "messageformat": "Failed to send message with endorsements"
   },
   "icu:Toast--InvalidStorageServiceHeaders": {
-    "messageformat": "Received invalid response from storage service. Please share your logs."
+    "messageformat": "Neteisingas atsakymas iš serverio. Pasidalinkite savo žurnalais."
   },
   "icu:Toast--FailedToImportBackup": {
     "messageformat": "Failed to process some frames during backup import. Please share your logs."
@@ -706,9 +709,6 @@
   },
   "icu:noSearchResultsOnlyUnreadFilter": {
     "messageformat": "Nėra neskaitytų pokalbių"
-  },
-  "icu:noSearchResults--sms-only": {
-    "messageformat": "SMS/MMS adresatai nėra prieinami Signal Desktop programoje."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "Užklausa „{searchTerm}“, pokalbyje {conversationName}, negrąžino jokių rezultatų"
@@ -1145,9 +1145,6 @@
   "icu:mediaNotAvailable": {
     "messageformat": "Šis įrašas neprieinamas"
   },
-  "icu:mediaNotAvailable--short": {
-    "messageformat": "Įrašas nepasiekiamas"
-  },
   "icu:attachmentNoLongerAvailable__learnMore": {
     "messageformat": "Sužinoti daugiau"
   },
@@ -1162,6 +1159,12 @@
   },
   "icu:attachmentNotAvailable__voice": {
     "messageformat": "Balso žinutė nepasiekiama"
+  },
+  "icu:attachmentNotAvailable__tapToView": {
+    "messageformat": "Medija, kurią galima peržiūrėti vieną kartą, nepasiekiama"
+  },
+  "icu:attachmentNotAvailable__tapToViewCannotDownload": {
+    "messageformat": "Nepavyksta atsisiųsti medijos, kurią galima peržiūrėti vieną kartą"
   },
   "icu:AttachmentNotAvailableModal__title--file": {
     "messageformat": "Failas nepasiekiamas"
@@ -1192,6 +1195,21 @@
   },
   "icu:AttachmentNotAvailableModal__body--voice-message": {
     "messageformat": "Ši balso žinutė nebuvo perkelta iš jūsų telefono susiejus šį įrenginį. Įrašų ir failų, kurie įrenginio susiejimo metu yra senesni nei 45 dienos, sinchronizuoti negalima."
+  },
+  "icu:TapToViewNotAvailableModal__body--expired": {
+    "messageformat": "Ši medija, kurią galima peržiūrėti vieną kartą, nebeprieinama. Paprašykite, kad {name} išsiųstų ją dar kartą."
+  },
+  "icu:TapToViewNotAvailableModal__body--error": {
+    "messageformat": "Nepavyksta atsisiųsti medijos, kurią galima peržiūrėti vieną kartą. {name} turės dar kartą ją išsiųsti."
+  },
+  "icu:BackfillFailureModal__title": {
+    "messageformat": "Can’t download media"
+  },
+  "icu:BackfillFailureModal__body--timeout": {
+    "messageformat": "Check your desktop and phone’s internet connection. Open Signal on your phone, then try downloading again."
+  },
+  "icu:BackfillFailureModal__body--not-found": {
+    "messageformat": "This media is no longer available on your phone and can’t be downloaded."
   },
   "icu:save": {
     "messageformat": "Įrašyti"
@@ -1258,6 +1276,9 @@
   },
   "icu:Preferences--device-name__description": {
     "messageformat": "Norėdami pakeisti šio įrenginio pavadinimą, savo telefone atidarykite „Signal“ ir eikite į Nustatymai > Susieti įrenginiai"
+  },
+  "icu:Preferences__EmojiSkinToneDefaultSetting__Label": {
+    "messageformat": "Emoji skin tone"
   },
   "icu:chooseDeviceName": {
     "messageformat": "Pasirinkite šio įrenginio pavadinimą"
@@ -1814,6 +1835,18 @@
   "icu:ConversationDetails__HeaderButton--Message": {
     "messageformat": "Siųsk žinutę"
   },
+  "icu:ConversationDetails--help-section": {
+    "messageformat": "Help"
+  },
+  "icu:ConversationDetails--support-center": {
+    "messageformat": "Support Center"
+  },
+  "icu:ConversationDetails--contact-us": {
+    "messageformat": "Contact us"
+  },
+  "icu:ConversationDetails--donate": {
+    "messageformat": "Donate to Signal"
+  },
   "icu:SafetyNumberNotification__viewSafetyNumber": {
     "messageformat": "Rodyti saugumo numerį"
   },
@@ -1873,6 +1906,9 @@
   },
   "icu:Toast--failed-to-fetch-phone-number": {
     "messageformat": "Nepavyko gauti telefono numerio. Patikrinkite interneto ryšį ir bandykite dar kartą."
+  },
+  "icu:Toast--download-failed": {
+    "messageformat": "Atsisiųsti nepavyko"
   },
   "icu:ToastManager__CannotEditMessage_24": {
     "messageformat": "Redaguoti galima ne vėliau kaip per 24 val. nuo šios žinutės išsiuntimo."
@@ -2252,6 +2288,189 @@
   "icu:EmojiPicker__button--flag": {
     "messageformat": "Vėliavos"
   },
+  "icu:FunPicker__Tab--Emojis": {
+    "messageformat": "Šypsenėlės"
+  },
+  "icu:FunPicker__Tab--Stickers": {
+    "messageformat": "Lipdukai"
+  },
+  "icu:FunPicker__Tab--Gifs": {
+    "messageformat": "GIF"
+  },
+  "icu:FunPanelEmojis__SearchLabel": {
+    "messageformat": "Ieškoti šypsenėlių"
+  },
+  "icu:FunPanelEmojis__SearchPlaceholder": {
+    "messageformat": "Ieškoti šypsenėlių"
+  },
+  "icu:FunPanelEmojis__SubNavLabel": {
+    "messageformat": "Jaustukų kategorijos"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Recents": {
+    "messageformat": "Paskiausi"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--SmileysAndPeople": {
+    "messageformat": "Šypsenėlės ir žmonės"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--AnimalsAndNature": {
+    "messageformat": "Gyvūnai ir gamta"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--FoodAndDrink": {
+    "messageformat": "Maistas ir gėrimai"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Activities": {
+    "messageformat": "Veiklos"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--TravelAndPlaces": {
+    "messageformat": "Kelionės ir vietos"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Objects": {
+    "messageformat": "Objektai"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Symbols": {
+    "messageformat": "Simboliai"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Flags": {
+    "messageformat": "Vėliavos"
+  },
+  "icu:FunPanelEmojis__SearchResults__EmptyHeading": {
+    "messageformat": "Nerasta jokių šypsenėlių"
+  },
+  "icu:FunPanelEmojis__ChangeSkinToneButtonLabel": {
+    "messageformat": "Keisti odos atspalvio nuostatą"
+  },
+  "icu:FunPanelEmojis__SkinTonePicker__ChooseDefaultLabel": {
+    "messageformat": "Pasirinkite numatytąjį odos atspalvį"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SearchResults": {
+    "messageformat": "Paieškos rezultatai"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Recents": {
+    "messageformat": "Paskiausi"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SmileysAndPeople": {
+    "messageformat": "Šypsenėlės ir žmonės"
+  },
+  "icu:FunPanelEmojis__SectionTitle--AnimalsAndNature": {
+    "messageformat": "Gyvūnai ir gamta"
+  },
+  "icu:FunPanelEmojis__SectionTitle--FoodAndDrink": {
+    "messageformat": "Maistas ir gėrimai"
+  },
+  "icu:FunPanelEmojis__SectionTitle--TravelAndPlaces": {
+    "messageformat": "Kelionės ir vietos"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Activities": {
+    "messageformat": "Veiklos"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Objects": {
+    "messageformat": "Objektai"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Symbols": {
+    "messageformat": "Simboliai"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Flags": {
+    "messageformat": "Vėliavos"
+  },
+  "icu:FunPanelStickers__SearchLabel": {
+    "messageformat": "Ieškoti lipdukų"
+  },
+  "icu:FunPanelStickers__SearchPlaceholder": {
+    "messageformat": "Ieškoti lipdukų"
+  },
+  "icu:FunPanelSticker__SubNavLabel": {
+    "messageformat": "Lipdukų paketai"
+  },
+  "icu:FunPanelStickers__SubNavCategoryLabel--Recents": {
+    "messageformat": "Paskiausi"
+  },
+  "icu:FunPanelStickers__SectionTitle--SearchResults": {
+    "messageformat": "Paieškos rezultatai"
+  },
+  "icu:FunPanelStickers__SectionTitle--Recents": {
+    "messageformat": "Paskiausi"
+  },
+  "icu:FunPanelStickers__SearchResults__EmptyHeading": {
+    "messageformat": "Nerasta jokių lipdukų"
+  },
+  "icu:FunPanelStickers__LightboxDialog__Label": {
+    "messageformat": "Sticker Preview"
+  },
+  "icu:FunPanelGifs__SearchLabel--Tenor": {
+    "messageformat": "Ieškoti GIF „Tenor“"
+  },
+  "icu:FunPanelGifs__SearchPlaceholder--Tenor": {
+    "messageformat": "Ieškoti „Tenor“"
+  },
+  "icu:FunPanelGifs__SubNavLabel": {
+    "messageformat": "GIF kategorijos"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Recents": {
+    "messageformat": "Paskiausi"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Trending": {
+    "messageformat": "Populiaru"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Celebrate": {
+    "messageformat": "Šventė"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Love": {
+    "messageformat": "Meilė"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--ThumbsUp": {
+    "messageformat": "Patinka"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Surprised": {
+    "messageformat": "Nustebęs"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Excited": {
+    "messageformat": "Linksmas"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Sad": {
+    "messageformat": "Liūdnas"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Angry": {
+    "messageformat": "Piktas"
+  },
+  "icu:FunPanelGifs__SearchResults__LoadingLabel": {
+    "messageformat": "Įkeliami GIF"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorHeading": {
+    "messageformat": "Nepavyko įkelti GIF. Patikrinkite ryšį ir bandykite vėl"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorRetryButton": {
+    "messageformat": "Bandyti dar kartą"
+  },
+  "icu:FunPanelGifs__SearchResults__EmptyHeading": {
+    "messageformat": "Jokių GIF nerasta"
+  },
+  "icu:FunPanelGifs__LightboxDialog__Label": {
+    "messageformat": "GIF Preview"
+  },
+  "icu:FunSearch__ClearButtonLabel": {
+    "messageformat": "Clear Search"
+  },
+  "icu:FunSkinTones__List": {
+    "messageformat": "Skin tone"
+  },
+  "icu:FunSkinTones__ListItem--None": {
+    "messageformat": "None"
+  },
+  "icu:FunSkinTones__ListItem--Light": {
+    "messageformat": "Light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumLight": {
+    "messageformat": "Medium-light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Medium": {
+    "messageformat": "Medium skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumDark": {
+    "messageformat": "Medium-dark skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Dark": {
+    "messageformat": "Dark skin tone"
+  },
   "icu:confirmation-dialog--Cancel": {
     "messageformat": "Atšaukti"
   },
@@ -2291,8 +2510,14 @@
   "icu:Message--tap-to-view-expired": {
     "messageformat": "Peržiūrėta"
   },
+  "icu:Message--tap-to-view--viewed": {
+    "messageformat": "Peržiūrėta"
+  },
   "icu:Message--tap-to-view--outgoing": {
     "messageformat": "Medija"
+  },
+  "icu:Message--tap-to-view--media": {
+    "messageformat": "Medija, kurią galima peržiūrėti vieną kartą"
   },
   "icu:Message--tap-to-view--incoming--expired-toast": {
     "messageformat": "Jūs jau žiūrėjote šią žinutę."
@@ -2305,6 +2530,15 @@
   },
   "icu:Message--tap-to-view--incoming-video": {
     "messageformat": "Rodyti vaizdo įrašą"
+  },
+  "icu:Message--tap-to-view--video": {
+    "messageformat": "Vienkartinės peržiūros vaizdo įrašas"
+  },
+  "icu:Message--tap-to-view--photo": {
+    "messageformat": "Vienkartinės peržiūros nuotrauka"
+  },
+  "icu:Message--tap-to-view--helper-text": {
+    "messageformat": "Spustelėkite norėdami peržiūrėti"
   },
   "icu:Conversation--getDraftPreview--attachment": {
     "messageformat": "(priedas)"
@@ -2498,6 +2732,9 @@
   "icu:Keyboard--toggle-video": {
     "messageformat": "Perjungti vaizdą"
   },
+  "icu:Keyboard--toggle-preview": {
+    "messageformat": "Perjungti išskleistą peržiūrą"
+  },
   "icu:Keyboard--accept-video-call": {
     "messageformat": "Atsiliepti su vaizdu (tik vaizdo skambučiams)"
   },
@@ -2560,6 +2797,12 @@
   },
   "icu:SafetyTipsModal__Description": {
     "messageformat": "Atsargiai vertinkite žinučių užklausas iš nepažįstamų žmonių. Štai į ką reikia atkreipti dėmesį:"
+  },
+  "icu:SafetyTipsModal__TipTitle--Fake": {
+    "messageformat": "Fake names and accounts"
+  },
+  "icu:SafetyTipsModal__TipDescription--Fake": {
+    "messageformat": "Signal will never contact you for your registration code or PIN. Be cautious of requests that impersonate others. Profile names are chosen by their account holder and aren't verified."
   },
   "icu:SafetyTipsModal__TipTitle--Crypto": {
     "messageformat": "Kriptovaliutų ar pinigų sukčiai"
@@ -2693,6 +2936,12 @@
   "icu:MessageRequests--accept": {
     "messageformat": "Priimti"
   },
+  "icu:MessageRequests--accept-confirm-title": {
+    "messageformat": "Accept Request?"
+  },
+  "icu:MessageRequests--accept-confirm-body": {
+    "messageformat": "Review requests carefully. Profile names are chosen by their account owner and aren't verified."
+  },
   "icu:MessageRequests--continue": {
     "messageformat": "Tęsti"
   },
@@ -2704,6 +2953,21 @@
   },
   "icu:ConversationHero--members": {
     "messageformat": "{count, plural, one {1 narys} few {{count,number} nariai} many {{count,number} nario} other {{count,number} narių}}"
+  },
+  "icu:ConversationHero--review-carefully": {
+    "messageformat": "Review carefully"
+  },
+  "icu:ConversationHero--group-names": {
+    "messageformat": "<clickable>Group names</clickable> are not verified"
+  },
+  "icu:ConversationHero--profile-names": {
+    "messageformat": "<clickable>Profile names</clickable> are not verified"
+  },
+  "icu:ConversationHero--signal-official-chat": {
+    "messageformat": "This is the official and only chat from Signal"
+  },
+  "icu:ConversationHero--release-notes": {
+    "messageformat": "Keep up to date with news and release notes."
   },
   "icu:member-of-1-group": {
     "messageformat": "{group} grupės narys"
@@ -2917,6 +3181,12 @@
   },
   "icu:calling__pip--off": {
     "messageformat": "Skambutis visame ekrane"
+  },
+  "icu:calling__preview--maximize": {
+    "messageformat": "Padidinti peržiūrą"
+  },
+  "icu:calling__preview--minimize": {
+    "messageformat": "Sumažinti peržiūrą"
   },
   "icu:calling__change-view": {
     "messageformat": "Keisti rodinį"
@@ -3698,18 +3968,6 @@
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Bandyti dar kartą"
   },
-  "icu:BackupImportScreen__skip": {
-    "messageformat": "Praleisti"
-  },
-  "icu:BackupImportScreen__skip-confirmation__title": {
-    "messageformat": "Praleisti žinučių perkėlimą?"
-  },
-  "icu:BackupImportScreen__skip-confirmation__body": {
-    "messageformat": "Jei nuspręsite praleisti, neturėsite prieigos prie jokių žinučių ar įrašų šiame įrenginyje. Praleidę, naują perkėlimą galite pradėti Nustatymai > Pokalbiai > Perkėlimas."
-  },
-  "icu:BackupImportScreen__skip-confirmation__cancel": {
-    "messageformat": "Atšaukti"
-  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Įrašai atkuriami"
   },
@@ -3772,6 +4030,18 @@
   },
   "icu:CompositionArea__edit-action--send": {
     "messageformat": "Siųsti redaguotą žinutę"
+  },
+  "icu:CompositionArea__FunButtonLabel": {
+    "messageformat": "Pridėti jaustuką, lipduką arba GIF"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Title": {
+    "messageformat": "Replace attachment?"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Body": {
+    "messageformat": "Adding this GIF will replace the item in your current draft message."
+  },
+  "icu:CompositionArea__ConfirmGifSelection__ReplaceButton": {
+    "messageformat": "Replace"
   },
   "icu:CompositionInput__editing-message": {
     "messageformat": "Redaguoti žinutę"
@@ -4193,9 +4463,6 @@
   "icu:ShareCallLinkViaSignal__DraftMessageText": {
     "messageformat": "Naudok šią nuorodą prisijungti prie „Signal“ skambučio: {url}"
   },
-  "icu:MessageRequestWarning__learn-more": {
-    "messageformat": "Sužinoti daugiau"
-  },
   "icu:MessageRequestWarning__safety-tips": {
     "messageformat": "Saugos patarimai"
   },
@@ -4350,7 +4617,7 @@
     "messageformat": "Gradiento pabaiga"
   },
   "icu:GIF--download": {
-    "messageformat": "Download GIF attachment"
+    "messageformat": "Atsisiųsti GIF priedą"
   },
   "icu:customDisappearingTimeOption": {
     "messageformat": "Tinkintas laikas…"
@@ -4655,6 +4922,27 @@
   "icu:Preferences__button--privacy": {
     "messageformat": "Privatumas"
   },
+  "icu:Preferences__button--data-usage": {
+    "messageformat": "Duomenų naudojimas"
+  },
+  "icu:Preferences__media-auto-download": {
+    "messageformat": "Automatinis medijos atsisiuntimas"
+  },
+  "icu:Preferences__media-auto-download__photos": {
+    "messageformat": "Nuotraukos"
+  },
+  "icu:Preferences__media-auto-download__videos": {
+    "messageformat": "Vaizdo įrašai"
+  },
+  "icu:Preferences__media-auto-download__audio": {
+    "messageformat": "Garso įrašas"
+  },
+  "icu:Preferences__media-auto-download__documents": {
+    "messageformat": "Dokumentai"
+  },
+  "icu:Preferences__media-auto-download__description": {
+    "messageformat": "Balso žinutės ir lipdukai visada atsisiunčiami automatiškai."
+  },
   "icu:Preferences--lastSynced": {
     "messageformat": "Paskutinis importavimas {date} {time}"
   },
@@ -4811,6 +5099,18 @@
   "icu:DialogUpdate__downloaded": {
     "messageformat": "Naujinys atsisiųstas"
   },
+  "icu:CriticalIdlePrimaryDevice__title": {
+    "messageformat": "Atverkite savo telefone Signal programėlę"
+  },
+  "icu:CriticalIdlePrimaryDevice__body": {
+    "messageformat": "Jūsų paskyra netrukus bus ištrinta, nebent telefone atidarysite „Signal“. Tai atlikus ši žinutė išnyks. <learnMoreLink>Sužinoti daugiau</learnMoreLink>"
+  },
+  "icu:IdlePrimaryDevice__body": {
+    "messageformat": "Atidarykite „Signal“ telefone, kad paskyra liktų aktyvi"
+  },
+  "icu:IdlePrimaryDevice__learnMore": {
+    "messageformat": "Sužinoti daugiau"
+  },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal patiria techninius nesklandumus. Mes sunkiai dirbame, kad kaip įmanoma greičiau atkurtume paslaugą."
   },
@@ -4951,6 +5251,30 @@
   },
   "icu:MediaEditor__crop-preset--9-16": {
     "messageformat": "9:16"
+  },
+  "icu:MediaPermissionsModal__title--microphone": {
+    "messageformat": "Leisti prieigą prie mikrofono"
+  },
+  "icu:MediaPermissionsModal__title--camera": {
+    "messageformat": "Leiskite prieigą prie kameros"
+  },
+  "icu:MediaPermissionsModal__subtitle--call": {
+    "messageformat": "Norėdami prisijungti prie skambučio arba jį pradėti:"
+  },
+  "icu:MediaPermissionsModal__subtitle--call--camera": {
+    "messageformat": "Jei norite įjungti vaizdą:"
+  },
+  "icu:MediaPermissionsModal__subtitle--voice-note": {
+    "messageformat": "Norėdami siųsti balso žinutes:"
+  },
+  "icu:MediaPermissionsModal__step-1": {
+    "messageformat": "Spustelėkite „{buttonName}“ toliau"
+  },
+  "icu:MediaPermissionsModal__step-2": {
+    "messageformat": "Įjunkite \"Signal\""
+  },
+  "icu:MediaPermissionsModal__open": {
+    "messageformat": "Eiti į nustatymus"
   },
   "icu:MyStories__title": {
     "messageformat": "Mano istorijos"
@@ -5610,6 +5934,15 @@
   "icu:MessageMetadata__edited": {
     "messageformat": "Redaguota"
   },
+  "icu:DraftGifMessageSendModal__Title": {
+    "messageformat": "Add a message"
+  },
+  "icu:DraftGifMessageSendModal__SendButtonLabel": {
+    "messageformat": "Send"
+  },
+  "icu:DraftGifMessageSendModal__CancelButtonLabel": {
+    "messageformat": "Cancel"
+  },
   "icu:EditHistoryMessagesModal__title": {
     "messageformat": "Redagavimo istorija"
   },
@@ -5829,6 +6162,30 @@
   "icu:WhoCanFindMeReadOnlyToast": {
     "messageformat": "Jei norite pakeisti šį nustatymą, nustatykite „Kas gali matyti mano numerį“ vertę į „Niekas“."
   },
+  "icu:ProfileNameWarningModal__description--direct": {
+    "messageformat": "Profile names on Signal are chosen by their account holder:"
+  },
+  "icu:ProfileNameWarningModal__list--item1--direct": {
+    "messageformat": "Profile names aren't verified"
+  },
+  "icu:ProfileNameWarningModal__list--item2--direct": {
+    "messageformat": "Be cautious of accounts that impersonate others"
+  },
+  "icu:ProfileNameWarningModal__list--item3--direct": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
+  "icu:ProfileNameWarningModal__description--group": {
+    "messageformat": "Group names are chosen by members of the group."
+  },
+  "icu:ProfileNameWarningModal__list--item1--group": {
+    "messageformat": "Be cautious of groups that impersonate organizations and businesses"
+  },
+  "icu:ProfileNameWarningModal__list--item2--group": {
+    "messageformat": "Profile names of members in groups are not verified"
+  },
+  "icu:ProfileNameWarningModal__list--item3--group": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
   "icu:WhatsNew__modal-title": {
     "messageformat": "Kas naujo"
   },
@@ -5860,10 +6217,13 @@
     "messageformat": "Smulkūs patobulinimai, klaidų pataisymai ir veikimo pagerinimas. Ačiū, kad naudoji „Signal“!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.44--0": {
-    "messageformat": "Ištaisėme nedidelę animacijos klaidą, iškylančią per grupės skambučius."
+  "icu:WhatsNew__v7.47--0": {
+    "messageformat": "Dabar skambučio metu gali išplėsti savo vietinio vaizdo peržiūrą, kad geriau matytum save."
   },
-  "icu:WhatsNew__v7.45--0": {
-    "messageformat": "Stickers should feel sticky, not stuck, so now you can click on a sticker on a newly linked Signal Desktop and that sticker download will automatically get prioritized even when other attachments are downloading too."
+  "icu:WhatsNew__v7.48--0": {
+    "messageformat": "Pridėjome patogų spartųjį klavišą, leidžiantį greitai nuleisti ranką pradėjus kalbėti „Signal“ grupės skambučio metu."
+  },
+  "icu:WhatsNew__v7.49--0": {
+    "messageformat": "If you link a new Desktop on Signal Android and choose to transfer your message history, now you can also selectively transfer old attachments from your primary device too. Bring the past into the present by scrolling back in time and clicking on the download icon. As always, the transfer process is end-to-end encrypted and secure."
   }
 }

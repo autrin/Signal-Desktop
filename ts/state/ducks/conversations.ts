@@ -29,6 +29,7 @@ import { drop } from '../../util/drop';
 import type { DurationInSeconds } from '../../util/durations';
 import * as universalExpireTimer from '../../util/universalExpireTimer';
 import * as Attachment from '../../types/Attachment';
+import { AttachmentDownloadUrgency } from '../../types/AttachmentDownload';
 import { isFileDangerous } from '../../util/isFileDangerous';
 import { getLocalAttachmentUrl } from '../../util/getLocalAttachmentUrl';
 import { instance as libphonenumberInstance } from '../../util/libphonenumberInstance';
@@ -96,6 +97,7 @@ import {
   getConversationSelector,
   getMe,
   getMessagesByConversation,
+  getPendingAvatarDownloadSelector,
 } from '../selectors/conversations';
 import { getIntl } from '../selectors/user';
 import type {
@@ -191,18 +193,15 @@ import {
 } from '../../util/idForLogging';
 import { singleProtoJobQueue } from '../../jobs/singleProtoJobQueue';
 import MessageSender from '../../textsecure/SendMessage';
-import {
-  AttachmentDownloadManager,
-  AttachmentDownloadUrgency,
-} from '../../jobs/AttachmentDownloadManager';
+import { AttachmentDownloadManager } from '../../jobs/AttachmentDownloadManager';
 import type {
   DeleteForMeSyncEventData,
-  MessageToDelete,
+  AddressableMessage,
 } from '../../textsecure/messageReceiverEvents';
 import {
-  getConversationToDelete,
-  getMessageToDelete,
-} from '../../util/deleteForMe';
+  getConversationIdentifier,
+  getAddressableMessage,
+} from '../../util/syncIdentifiers';
 import { MAX_MESSAGE_COUNT } from '../../util/deleteForMe.types';
 import { markCallHistoryReadInConversation } from './callHistory';
 import type { CapabilitiesType } from '../../textsecure/WebAPI';
@@ -304,8 +303,9 @@ export type ConversationType = ReadonlyDeep<
     avatarUrl?: string;
     rawAvatarPath?: string;
     avatarHash?: string;
+    avatarPlaceholderGradient?: Readonly<[string, string]>;
     profileAvatarUrl?: string;
-    unblurredAvatarUrl?: string;
+    hasAvatar?: boolean;
     areWeAdmin?: boolean;
     areWePending?: boolean;
     areWePendingApproval?: boolean;
@@ -580,6 +580,10 @@ export type ConversationsStateType = ReadonlyDeep<{
   messagesLookup: MessageLookupType;
   messagesByConversation: MessagesByConversationType;
 
+  // Map of conversation IDs to a boolean indicating whether an avatar download
+  // was requested
+  pendingRequestedAvatarDownload: Record<string, boolean>;
+
   preloadData?: ConversationPreloadDataType;
 }>;
 
@@ -642,6 +646,8 @@ export const SET_VOICE_NOTE_PLAYBACK_RATE =
   'conversations/SET_VOICE_NOTE_PLAYBACK_RATE';
 export const CONVERSATION_UNLOADED = 'CONVERSATION_UNLOADED';
 export const SHOW_SPOILER = 'conversations/SHOW_SPOILER';
+export const SET_PENDING_REQUESTED_AVATAR_DOWNLOAD =
+  'conversations/SET_PENDING_REQUESTED_AVATAR_DOWNLOAD';
 
 export type CancelVerificationDataByConversationActionType = ReadonlyDeep<{
   type: typeof CANCEL_CONVERSATION_PENDING_VERIFICATION;
@@ -829,6 +835,14 @@ export type ShowSpoilerActionType = ReadonlyDeep<{
   payload: {
     id: string;
     data: Record<number, boolean>;
+  };
+}>;
+
+export type SetPendingRequestedAvatarDownloadActionType = ReadonlyDeep<{
+  type: typeof SET_PENDING_REQUESTED_AVATAR_DOWNLOAD;
+  payload: {
+    conversationId: string;
+    value: boolean;
   };
 }>;
 
@@ -1066,6 +1080,7 @@ export type ConversationActionType =
   | ReplaceAvatarsActionType
   | ReviewConversationNameCollisionActionType
   | ScrollToMessageActionType
+  | SetPendingRequestedAvatarDownloadActionType
   | TargetedConversationChangedActionType
   | SetComposeGroupAvatarActionType
   | SetComposeGroupExpireTimerActionType
@@ -1181,6 +1196,8 @@ export const actions = {
   saveAvatarToDisk,
   scrollToMessage,
   scrollToOldestUnreadMention,
+  setPendingRequestedAvatarDownload,
+  startAvatarDownload,
   showSpoiler,
   targetMessage,
   setAccessControlAddFromInviteLinkSetting,
@@ -1222,7 +1239,6 @@ export const actions = {
   toggleHideStories,
   toggleSelectMessage,
   toggleSelectMode,
-  unblurAvatar,
   updateConversationModelSharedGroups,
   updateGroupAttributes,
   updateLastMessage,
@@ -1467,19 +1483,7 @@ function removeMember(
     payload: null,
   };
 }
-function unblurAvatar(conversationId: string): NoopActionType {
-  const conversation = window.ConversationController.get(conversationId);
-  if (!conversation) {
-    throw new Error('unblurAvatar: Conversation not found!');
-  }
 
-  conversation.unblurAvatar();
-
-  return {
-    type: 'NOOP',
-    payload: null,
-  };
-}
 function updateSharedGroups(conversationId: string): NoopActionType {
   const conversation = window.ConversationController.get(conversationId);
   if (!conversation) {
@@ -1782,7 +1786,7 @@ function deleteMessages({
     const messages = (
       await Promise.all(
         messageIds.map(
-          async (messageId): Promise<MessageToDelete | undefined> => {
+          async (messageId): Promise<AddressableMessage | undefined> => {
             const message = await getMessageById(messageId);
             if (!message) {
               throw new Error(`deleteMessages: Message ${messageId} missing!`);
@@ -1795,7 +1799,7 @@ function deleteMessages({
               );
             }
 
-            return getMessageToDelete(message.attributes);
+            return getAddressableMessage(message.attributes);
           }
         )
       )
@@ -1839,7 +1843,7 @@ function deleteMessages({
     }
 
     const chunks = chunk(messages, MAX_MESSAGE_COUNT);
-    const conversationToDelete = getConversationToDelete(
+    const conversationToDelete = getConversationIdentifier(
       conversation.attributes
     );
     const timestamp = Date.now();
@@ -2308,10 +2312,10 @@ function kickOffAttachmentDownload(
         `kickOffAttachmentDownload: Message ${options.messageId} missing!`
       );
     }
-    const didUpdateValues = await queueAttachmentDownloadsForMessage(
-      message,
-      AttachmentDownloadUrgency.IMMEDIATE
-    );
+    const didUpdateValues = await queueAttachmentDownloadsForMessage(message, {
+      urgency: AttachmentDownloadUrgency.IMMEDIATE,
+      isManualDownload: true,
+    });
 
     if (didUpdateValues) {
       drop(window.MessageCache.saveMessage(message.attributes));
@@ -4875,6 +4879,73 @@ function doubleCheckMissingQuoteReference(messageId: string): NoopActionType {
   };
 }
 
+function setPendingRequestedAvatarDownload(
+  conversationId: string,
+  value: boolean
+): SetPendingRequestedAvatarDownloadActionType {
+  return {
+    type: SET_PENDING_REQUESTED_AVATAR_DOWNLOAD,
+    payload: {
+      conversationId,
+      value,
+    },
+  };
+}
+
+function startAvatarDownload(
+  conversationId: string
+): ThunkAction<
+  void,
+  RootStateType,
+  unknown,
+  SetPendingRequestedAvatarDownloadActionType
+> {
+  return async (dispatch, getState) => {
+    const isAlreadyLoading =
+      getPendingAvatarDownloadSelector(getState())(conversationId);
+    if (isAlreadyLoading) {
+      return;
+    }
+    dispatch(setPendingRequestedAvatarDownload(conversationId, true));
+
+    try {
+      const conversation = window.ConversationController.get(conversationId);
+      if (!conversation) {
+        throw new Error('startAvatarDownload: Conversation not found');
+      }
+
+      if (!conversation.attributes.remoteAvatarUrl) {
+        throw new Error('startAvatarDownload: no avatar URL');
+      }
+
+      if (isGroup(conversation.attributes)) {
+        const updateAttrs = await groups.applyNewAvatar({
+          newAvatarUrl: conversation.attributes.remoteAvatarUrl,
+          attributes: conversation.attributes,
+          logId: 'startAvatarDownload',
+          forceDownload: true,
+        });
+        conversation.set(updateAttrs);
+      } else {
+        await conversation.setAndMaybeFetchProfileAvatar({
+          avatarUrl: conversation.attributes.remoteAvatarUrl,
+          decryptionKey: null,
+          forceFetch: true,
+        });
+      }
+
+      await DataWriter.updateConversation(conversation.attributes);
+    } catch (error) {
+      log.error(
+        'startAvatarDownload: Failed to download avatar',
+        Errors.toLogFormat(error)
+      );
+    } finally {
+      dispatch(setPendingRequestedAvatarDownload(conversationId, false));
+    }
+  };
+}
+
 // Reducer
 
 export function getEmptyState(): ConversationsStateType {
@@ -4894,6 +4965,7 @@ export function getEmptyState(): ConversationsStateType {
     selectedMessageIds: undefined,
     showArchived: false,
     hasContactSpoofingReview: false,
+    pendingRequestedAvatarDownload: {},
     targetedConversationPanels: {
       isAnimating: false,
       wasAnimated: false,
@@ -7230,6 +7302,18 @@ export function reducer(
           ...existingConversation,
           isNearBottom: true,
         },
+      },
+    };
+  }
+
+  if (action.type === SET_PENDING_REQUESTED_AVATAR_DOWNLOAD) {
+    const { conversationId, value } = action.payload;
+
+    return {
+      ...state,
+      pendingRequestedAvatarDownload: {
+        ...state.pendingRequestedAvatarDownload,
+        [conversationId]: value,
       },
     };
   }

@@ -181,6 +181,7 @@ const mapStateToActiveCallProp = (
     presentingSource: activeCallState.presentingSource,
     presentingSourcesAvailable: activeCallState.presentingSourcesAvailable,
     settingsDialogOpen: activeCallState.settingsDialogOpen,
+    selfViewExpanded: activeCallState.selfViewExpanded,
     showNeedsScreenRecordingPermissionsWarning: Boolean(
       activeCallState.showNeedsScreenRecordingPermissionsWarning
     ),
@@ -204,6 +205,7 @@ const mapStateToActiveCallProp = (
         callMode: CallMode.Direct,
         callState: call.callState,
         peekedParticipants: [],
+        remoteAudioLevel: call.remoteAudioLevel,
         remoteParticipants: [
           {
             hasRemoteVideo: Boolean(call.hasRemoteVideo),
@@ -464,6 +466,7 @@ export const SmartCallManager = memo(function SmartCallManager() {
     hangUpActiveCall,
     togglePip,
     toggleScreenRecordingPermissionsDialog,
+    toggleSelfViewExpanded,
     toggleSettings,
   } = useCallingActions();
   const { pauseVoiceNotePlayer } = useAudioPlayerActions();
@@ -532,6 +535,7 @@ export const SmartCallManager = memo(function SmartCallManager() {
       toggleScreenRecordingPermissionsDialog={
         toggleScreenRecordingPermissionsDialog
       }
+      toggleSelfViewExpanded={toggleSelfViewExpanded}
       toggleSettings={toggleSettings}
     />
   );

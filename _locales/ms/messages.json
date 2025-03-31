@@ -38,6 +38,9 @@
   "icu:Preferences__sent-media-quality": {
     "messageformat": "Kualiti media yang dihantar"
   },
+  "icu:Preferences__sent-media-quality__description": {
+    "messageformat": "Menghantar media berkualiti tinggi akan menggunakan lebih banyak data."
+  },
   "icu:sentMediaQualityStandard": {
     "messageformat": "Standard"
   },
@@ -68,6 +71,12 @@
   "icu:unknownGroup": {
     "messageformat": "Kumpulan tidak diketahui"
   },
+  "icu:cantOpenSignalError": {
+    "messageformat": "Can’t Open Signal"
+  },
+  "icu:cantOpenSignalError__detail": {
+    "messageformat": "To help fix the issue, follow the recovery guide on the support page or contact Signal support to help fix the issue.\n\nIf you need to use Signal right away, you can delete your data and relink this desktop. You will have the option to transfer message history from your phone."
+  },
   "icu:databaseError": {
     "messageformat": "Ralat Pangkalan Data"
   },
@@ -78,10 +87,10 @@
     "messageformat": "Padam data dan mula semula"
   },
   "icu:databaseError__deleteDataConfirmation": {
-    "messageformat": "Padamkan semua data secara kekal?"
+    "messageformat": "Permanently Delete All Data"
   },
   "icu:databaseError__deleteDataConfirmation__detail": {
-    "messageformat": "Semua sejarah mesej dan media anda akan dipadamkan secara kekal daripada peranti ini. Anda akan dapat menggunakan Signal pada peranti ini selepas memautkannya semula. Ini tidak akan memadamkan sebarang data daripada telefon anda."
+    "messageformat": "All of your message history and media will be permanently deleted from this device. This will not delete any data from your phone.\n\nYou will be able to use Signal on this device after relinking it. You will have the option to transfer message history from your phone."
   },
   "icu:databaseError__startOldVersion": {
     "messageformat": "Versi pangkalan data anda tidak sepadan dengan versi Signal ini. Pastikan anda membuka versi terbaru Signal pada komputer anda."
@@ -214,9 +223,6 @@
   },
   "icu:optimizingApplication": {
     "messageformat": "Mengoptimumkan aplikasi..."
-  },
-  "icu:migratingToSQLCipher": {
-    "messageformat": "Mengoptimumkan mesej... {status} selesai."
   },
   "icu:archivedConversations": {
     "messageformat": "Sembang Diarkibkan"
@@ -407,9 +413,6 @@
   "icu:unreadMessages": {
     "messageformat": "{count, plural, other {{count,number} mesej yang belum dibaca}}"
   },
-  "icu:messageHistoryUnsynced": {
-    "messageformat": "Untuk keselamatan anda, sejarah perbualan tidak dipindahkan kepada peranti dipautkan yang baharu."
-  },
   "icu:youMarkedAsVerified": {
     "messageformat": "Anda telah menandakan sah kepada nombor keselamatan anda dengan {name}."
   },
@@ -588,7 +591,7 @@
     "messageformat": "Failed to send message with endorsements"
   },
   "icu:Toast--InvalidStorageServiceHeaders": {
-    "messageformat": "Received invalid response from storage service. Please share your logs."
+    "messageformat": "Menerima respons tidak sah daripada perkhidmatan storan. Sila kongsi log anda."
   },
   "icu:Toast--FailedToImportBackup": {
     "messageformat": "Failed to process some frames during backup import. Please share your logs."
@@ -706,9 +709,6 @@
   },
   "icu:noSearchResultsOnlyUnreadFilter": {
     "messageformat": "Tiada sembang belum dibaca"
-  },
-  "icu:noSearchResults--sms-only": {
-    "messageformat": "Kenalan SMS/MMS tidak tersedia di Desktop."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "Tiada keputusan untuk \"{searchTerm}\" dalam {conversationName}"
@@ -1145,9 +1145,6 @@
   "icu:mediaNotAvailable": {
     "messageformat": "Media ini tidak tersedia"
   },
-  "icu:mediaNotAvailable--short": {
-    "messageformat": "Media tidak tersedia"
-  },
   "icu:attachmentNoLongerAvailable__learnMore": {
     "messageformat": "Ketahui lebih lanjut"
   },
@@ -1162,6 +1159,12 @@
   },
   "icu:attachmentNotAvailable__voice": {
     "messageformat": "Mesej suara tidak tersedia"
+  },
+  "icu:attachmentNotAvailable__tapToView": {
+    "messageformat": "Media lihat sekali tidak tersedia"
+  },
+  "icu:attachmentNotAvailable__tapToViewCannotDownload": {
+    "messageformat": "Tidak boleh memuat turun media lihat sekali"
   },
   "icu:AttachmentNotAvailableModal__title--file": {
     "messageformat": "Fail tidak tersedia"
@@ -1192,6 +1195,21 @@
   },
   "icu:AttachmentNotAvailableModal__body--voice-message": {
     "messageformat": "Mesej suara ini tidak dipindahkan daripada telefon anda apabila peranti ini dipautkan. Media dan fail lebih lama daripada 45 hari pada masa pemautan peranti tidak boleh disegerakkan."
+  },
+  "icu:TapToViewNotAvailableModal__body--expired": {
+    "messageformat": "Media lihat sekali tidak lagi tersedia untuk dimuat turun. Minta {name} menghantarnya semula."
+  },
+  "icu:TapToViewNotAvailableModal__body--error": {
+    "messageformat": "Tidak boleh memuat turun media lihat sekali. {name} perlu menghantarnya semula."
+  },
+  "icu:BackfillFailureModal__title": {
+    "messageformat": "Can’t download media"
+  },
+  "icu:BackfillFailureModal__body--timeout": {
+    "messageformat": "Check your desktop and phone’s internet connection. Open Signal on your phone, then try downloading again."
+  },
+  "icu:BackfillFailureModal__body--not-found": {
+    "messageformat": "This media is no longer available on your phone and can’t be downloaded."
   },
   "icu:save": {
     "messageformat": "Simpan"
@@ -1258,6 +1276,9 @@
   },
   "icu:Preferences--device-name__description": {
     "messageformat": "Untuk menukar nama peranti ini, buka Signal pada telefon anda dan pergi ke Tetapan > Peranti dipautkan"
+  },
+  "icu:Preferences__EmojiSkinToneDefaultSetting__Label": {
+    "messageformat": "Emoji skin tone"
   },
   "icu:chooseDeviceName": {
     "messageformat": "Pilih nama peranti ini"
@@ -1814,6 +1835,18 @@
   "icu:ConversationDetails__HeaderButton--Message": {
     "messageformat": "Mesej"
   },
+  "icu:ConversationDetails--help-section": {
+    "messageformat": "Help"
+  },
+  "icu:ConversationDetails--support-center": {
+    "messageformat": "Support Center"
+  },
+  "icu:ConversationDetails--contact-us": {
+    "messageformat": "Contact us"
+  },
+  "icu:ConversationDetails--donate": {
+    "messageformat": "Donate to Signal"
+  },
   "icu:SafetyNumberNotification__viewSafetyNumber": {
     "messageformat": "Lihat Nombor Keselamatan"
   },
@@ -1873,6 +1906,9 @@
   },
   "icu:Toast--failed-to-fetch-phone-number": {
     "messageformat": "Gagal mengambil nombor telefon. Periksa sambungan anda dan cuba lagi."
+  },
+  "icu:Toast--download-failed": {
+    "messageformat": "Muat turun gagal"
   },
   "icu:ToastManager__CannotEditMessage_24": {
     "messageformat": "Edit hanya boleh digunakan dalam masa 24 jam dari masa anda menghantar mesej ini."
@@ -2252,6 +2288,189 @@
   "icu:EmojiPicker__button--flag": {
     "messageformat": "Bendera"
   },
+  "icu:FunPicker__Tab--Emojis": {
+    "messageformat": "Emoji"
+  },
+  "icu:FunPicker__Tab--Stickers": {
+    "messageformat": "Pelekat"
+  },
+  "icu:FunPicker__Tab--Gifs": {
+    "messageformat": "GIF"
+  },
+  "icu:FunPanelEmojis__SearchLabel": {
+    "messageformat": "Cari emoji"
+  },
+  "icu:FunPanelEmojis__SearchPlaceholder": {
+    "messageformat": "Cari emoji"
+  },
+  "icu:FunPanelEmojis__SubNavLabel": {
+    "messageformat": "Kategori Emoji"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Recents": {
+    "messageformat": "Digunakan Baru-baru Ini"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--SmileysAndPeople": {
+    "messageformat": "Smiley & Orang"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--AnimalsAndNature": {
+    "messageformat": "Haiwan & Alam Semula Jadi"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--FoodAndDrink": {
+    "messageformat": "Makanan & Minuman"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Activities": {
+    "messageformat": "Aktiviti"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--TravelAndPlaces": {
+    "messageformat": "Perjalanan & Tempat"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Objects": {
+    "messageformat": "Objek"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Symbols": {
+    "messageformat": "Simbol"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Flags": {
+    "messageformat": "Bendera"
+  },
+  "icu:FunPanelEmojis__SearchResults__EmptyHeading": {
+    "messageformat": "Tiada emoji dijumpai"
+  },
+  "icu:FunPanelEmojis__ChangeSkinToneButtonLabel": {
+    "messageformat": "Tukar Keutamaan Tona Kulit"
+  },
+  "icu:FunPanelEmojis__SkinTonePicker__ChooseDefaultLabel": {
+    "messageformat": "Pilih tona kulit lalai anda"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SearchResults": {
+    "messageformat": "Hasil Carian"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Recents": {
+    "messageformat": "Digunakan Baru-baru Ini"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SmileysAndPeople": {
+    "messageformat": "Smiley & Orang"
+  },
+  "icu:FunPanelEmojis__SectionTitle--AnimalsAndNature": {
+    "messageformat": "Haiwan & Alam Semula Jadi"
+  },
+  "icu:FunPanelEmojis__SectionTitle--FoodAndDrink": {
+    "messageformat": "Makanan & Minuman"
+  },
+  "icu:FunPanelEmojis__SectionTitle--TravelAndPlaces": {
+    "messageformat": "Perjalanan & Tempat"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Activities": {
+    "messageformat": "Aktiviti"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Objects": {
+    "messageformat": "Objek"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Symbols": {
+    "messageformat": "Simbol"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Flags": {
+    "messageformat": "Bendera"
+  },
+  "icu:FunPanelStickers__SearchLabel": {
+    "messageformat": "Cari pelekat"
+  },
+  "icu:FunPanelStickers__SearchPlaceholder": {
+    "messageformat": "Cari pelekat"
+  },
+  "icu:FunPanelSticker__SubNavLabel": {
+    "messageformat": "Pek Pelekat"
+  },
+  "icu:FunPanelStickers__SubNavCategoryLabel--Recents": {
+    "messageformat": "Digunakan Baru-baru Ini"
+  },
+  "icu:FunPanelStickers__SectionTitle--SearchResults": {
+    "messageformat": "Hasil Carian"
+  },
+  "icu:FunPanelStickers__SectionTitle--Recents": {
+    "messageformat": "Digunakan Baru-baru Ini"
+  },
+  "icu:FunPanelStickers__SearchResults__EmptyHeading": {
+    "messageformat": "Tiada pelekat dicari"
+  },
+  "icu:FunPanelStickers__LightboxDialog__Label": {
+    "messageformat": "Sticker Preview"
+  },
+  "icu:FunPanelGifs__SearchLabel--Tenor": {
+    "messageformat": "Cari GIF melalui Tenor"
+  },
+  "icu:FunPanelGifs__SearchPlaceholder--Tenor": {
+    "messageformat": "Cari dalam Tenor"
+  },
+  "icu:FunPanelGifs__SubNavLabel": {
+    "messageformat": "Kategori GIF"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Recents": {
+    "messageformat": "Digunakan Baru-baru Ini"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Trending": {
+    "messageformat": "Popular"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Celebrate": {
+    "messageformat": "Rai"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Love": {
+    "messageformat": "Cinta"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--ThumbsUp": {
+    "messageformat": "Tanda Bagus"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Surprised": {
+    "messageformat": "Terkejut"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Excited": {
+    "messageformat": "Teruja"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Sad": {
+    "messageformat": "Sedih"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Angry": {
+    "messageformat": "Marah"
+  },
+  "icu:FunPanelGifs__SearchResults__LoadingLabel": {
+    "messageformat": "Memuatkan GIF"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorHeading": {
+    "messageformat": "Tidak dapat memuatkan GIF. Periksa sambungan anda dan cuba lagi"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorRetryButton": {
+    "messageformat": "Cuba Semula"
+  },
+  "icu:FunPanelGifs__SearchResults__EmptyHeading": {
+    "messageformat": "Tiada GIF ditemui"
+  },
+  "icu:FunPanelGifs__LightboxDialog__Label": {
+    "messageformat": "GIF Preview"
+  },
+  "icu:FunSearch__ClearButtonLabel": {
+    "messageformat": "Clear Search"
+  },
+  "icu:FunSkinTones__List": {
+    "messageformat": "Skin tone"
+  },
+  "icu:FunSkinTones__ListItem--None": {
+    "messageformat": "None"
+  },
+  "icu:FunSkinTones__ListItem--Light": {
+    "messageformat": "Light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumLight": {
+    "messageformat": "Medium-light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Medium": {
+    "messageformat": "Medium skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumDark": {
+    "messageformat": "Medium-dark skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Dark": {
+    "messageformat": "Dark skin tone"
+  },
   "icu:confirmation-dialog--Cancel": {
     "messageformat": "Batal"
   },
@@ -2291,8 +2510,14 @@
   "icu:Message--tap-to-view-expired": {
     "messageformat": "Dilihat"
   },
+  "icu:Message--tap-to-view--viewed": {
+    "messageformat": "Dilihat"
+  },
   "icu:Message--tap-to-view--outgoing": {
     "messageformat": "Media"
+  },
+  "icu:Message--tap-to-view--media": {
+    "messageformat": "Media Lihat Sekali"
   },
   "icu:Message--tap-to-view--incoming--expired-toast": {
     "messageformat": "Anda telah melihat mesej ini."
@@ -2305,6 +2530,15 @@
   },
   "icu:Message--tap-to-view--incoming-video": {
     "messageformat": "Lihat Video"
+  },
+  "icu:Message--tap-to-view--video": {
+    "messageformat": "Video Lihat Sekali"
+  },
+  "icu:Message--tap-to-view--photo": {
+    "messageformat": "Foto Lihat Sekali"
+  },
+  "icu:Message--tap-to-view--helper-text": {
+    "messageformat": "Klik untuk melihat"
   },
   "icu:Conversation--getDraftPreview--attachment": {
     "messageformat": "(lampiran)"
@@ -2498,6 +2732,9 @@
   "icu:Keyboard--toggle-video": {
     "messageformat": "Togol hidupkan dan matikan video"
   },
+  "icu:Keyboard--toggle-preview": {
+    "messageformat": "Togol pratonton diperbesar dihidupkan dan dimatikan"
+  },
   "icu:Keyboard--accept-video-call": {
     "messageformat": "Jawab panggilan dengan video (panggilan video sahaja)"
   },
@@ -2560,6 +2797,12 @@
   },
   "icu:SafetyTipsModal__Description": {
     "messageformat": "Berhati-hati apabila menerima permintaan mesej daripada orang yang tidak dikenali. Berhati-hati dengan:"
+  },
+  "icu:SafetyTipsModal__TipTitle--Fake": {
+    "messageformat": "Fake names and accounts"
+  },
+  "icu:SafetyTipsModal__TipDescription--Fake": {
+    "messageformat": "Signal will never contact you for your registration code or PIN. Be cautious of requests that impersonate others. Profile names are chosen by their account holder and aren't verified."
   },
   "icu:SafetyTipsModal__TipTitle--Crypto": {
     "messageformat": "Kripto atau penipuan wang"
@@ -2693,6 +2936,12 @@
   "icu:MessageRequests--accept": {
     "messageformat": "Terima"
   },
+  "icu:MessageRequests--accept-confirm-title": {
+    "messageformat": "Accept Request?"
+  },
+  "icu:MessageRequests--accept-confirm-body": {
+    "messageformat": "Review requests carefully. Profile names are chosen by their account owner and aren't verified."
+  },
   "icu:MessageRequests--continue": {
     "messageformat": "Teruskan"
   },
@@ -2704,6 +2953,21 @@
   },
   "icu:ConversationHero--members": {
     "messageformat": "{count, plural, other {{count,number} ahli}}"
+  },
+  "icu:ConversationHero--review-carefully": {
+    "messageformat": "Review carefully"
+  },
+  "icu:ConversationHero--group-names": {
+    "messageformat": "<clickable>Group names</clickable> are not verified"
+  },
+  "icu:ConversationHero--profile-names": {
+    "messageformat": "<clickable>Profile names</clickable> are not verified"
+  },
+  "icu:ConversationHero--signal-official-chat": {
+    "messageformat": "This is the official and only chat from Signal"
+  },
+  "icu:ConversationHero--release-notes": {
+    "messageformat": "Keep up to date with news and release notes."
   },
   "icu:member-of-1-group": {
     "messageformat": "Ahli kepada {group}"
@@ -2917,6 +3181,12 @@
   },
   "icu:calling__pip--off": {
     "messageformat": "Panggilan skrin penuh"
+  },
+  "icu:calling__preview--maximize": {
+    "messageformat": "Maksimumkan pratonton"
+  },
+  "icu:calling__preview--minimize": {
+    "messageformat": "Minimumkan pratonton"
   },
   "icu:calling__change-view": {
     "messageformat": "Tukar pandangan"
@@ -3698,18 +3968,6 @@
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "Cuba Semula"
   },
-  "icu:BackupImportScreen__skip": {
-    "messageformat": "Langkau"
-  },
-  "icu:BackupImportScreen__skip-confirmation__title": {
-    "messageformat": "Langkau pemindahan mesej?"
-  },
-  "icu:BackupImportScreen__skip-confirmation__body": {
-    "messageformat": "Jika anda memilih untuk melangkau, anda tidak akan mempunyai akses kepada mana-mana mesej atau media anda pada peranti ini. Anda boleh memulakan pemindahan baharu selepas melangkau daripada Tetapan > Sembang > Pemindahan."
-  },
-  "icu:BackupImportScreen__skip-confirmation__cancel": {
-    "messageformat": "Batal"
-  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "Memulihkan media"
   },
@@ -3772,6 +4030,18 @@
   },
   "icu:CompositionArea__edit-action--send": {
     "messageformat": "Hantar mesej yang diedit"
+  },
+  "icu:CompositionArea__FunButtonLabel": {
+    "messageformat": "Tambahkan Emoji, Pelekat atau GIF"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Title": {
+    "messageformat": "Replace attachment?"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Body": {
+    "messageformat": "Adding this GIF will replace the item in your current draft message."
+  },
+  "icu:CompositionArea__ConfirmGifSelection__ReplaceButton": {
+    "messageformat": "Replace"
   },
   "icu:CompositionInput__editing-message": {
     "messageformat": "Edit mesej"
@@ -4193,9 +4463,6 @@
   "icu:ShareCallLinkViaSignal__DraftMessageText": {
     "messageformat": "Gunakan pautan ini untuk menyertai Panggilan Signal: {url}"
   },
-  "icu:MessageRequestWarning__learn-more": {
-    "messageformat": "Ketahui lebih lanjut"
-  },
   "icu:MessageRequestWarning__safety-tips": {
     "messageformat": "Tip Keselamatan"
   },
@@ -4350,7 +4617,7 @@
     "messageformat": "Kecerunan berakhir"
   },
   "icu:GIF--download": {
-    "messageformat": "Download GIF attachment"
+    "messageformat": "Muat turun lampiran GIF"
   },
   "icu:customDisappearingTimeOption": {
     "messageformat": "Masa tersuai..."
@@ -4655,6 +4922,27 @@
   "icu:Preferences__button--privacy": {
     "messageformat": "Privasi"
   },
+  "icu:Preferences__button--data-usage": {
+    "messageformat": "Penggunaan Data"
+  },
+  "icu:Preferences__media-auto-download": {
+    "messageformat": "Memuat turun media secara automatik"
+  },
+  "icu:Preferences__media-auto-download__photos": {
+    "messageformat": "Foto"
+  },
+  "icu:Preferences__media-auto-download__videos": {
+    "messageformat": "Video"
+  },
+  "icu:Preferences__media-auto-download__audio": {
+    "messageformat": "Audio`"
+  },
+  "icu:Preferences__media-auto-download__documents": {
+    "messageformat": "Dokumen"
+  },
+  "icu:Preferences__media-auto-download__description": {
+    "messageformat": "Mesej suara dan pelekat sentiasa dimuat turun secara automatik."
+  },
   "icu:Preferences--lastSynced": {
     "messageformat": "Terakhir diimport pada {date} {time}"
   },
@@ -4811,6 +5099,18 @@
   "icu:DialogUpdate__downloaded": {
     "messageformat": "Kemas Kini Dimuat Turun"
   },
+  "icu:CriticalIdlePrimaryDevice__title": {
+    "messageformat": "Buka Signal di telefon anda"
+  },
+  "icu:CriticalIdlePrimaryDevice__body": {
+    "messageformat": "Akaun anda akan dipadamkan tidak lama lagi melainkan anda membuka Signal pada telefon anda. Mesej ini akan hilang jika anda berjaya melakukannya. <learnMoreLink>Ketahui lebih lanjut</learnMoreLink>"
+  },
+  "icu:IdlePrimaryDevice__body": {
+    "messageformat": "Buka Signal di telefon untuk pastikan akaun anda kekal aktif"
+  },
+  "icu:IdlePrimaryDevice__learnMore": {
+    "messageformat": "Ketahui lebih lanjut"
+  },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal sedang mengalami masalah teknikal. Kami sedang berusaha untuk memulihkan perkhidmatan dengan secepat mungkin."
   },
@@ -4951,6 +5251,30 @@
   },
   "icu:MediaEditor__crop-preset--9-16": {
     "messageformat": "9:16"
+  },
+  "icu:MediaPermissionsModal__title--microphone": {
+    "messageformat": "Benarkan akses kepada mikrofon anda"
+  },
+  "icu:MediaPermissionsModal__title--camera": {
+    "messageformat": "Benarkan akses kepada kamera anda"
+  },
+  "icu:MediaPermissionsModal__subtitle--call": {
+    "messageformat": "Untuk menyertai atau memulakan panggilan:"
+  },
+  "icu:MediaPermissionsModal__subtitle--call--camera": {
+    "messageformat": "Untuk mendayakan video anda:"
+  },
+  "icu:MediaPermissionsModal__subtitle--voice-note": {
+    "messageformat": "Untuk menghantar mesej suara:"
+  },
+  "icu:MediaPermissionsModal__step-1": {
+    "messageformat": "Klik “{buttonName}” di bawah"
+  },
+  "icu:MediaPermissionsModal__step-2": {
+    "messageformat": "Hidupkan \"Signal\""
+  },
+  "icu:MediaPermissionsModal__open": {
+    "messageformat": "Pergi ke tetapan"
   },
   "icu:MyStories__title": {
     "messageformat": "Cerita Saya"
@@ -5610,6 +5934,15 @@
   "icu:MessageMetadata__edited": {
     "messageformat": "Diedit"
   },
+  "icu:DraftGifMessageSendModal__Title": {
+    "messageformat": "Add a message"
+  },
+  "icu:DraftGifMessageSendModal__SendButtonLabel": {
+    "messageformat": "Send"
+  },
+  "icu:DraftGifMessageSendModal__CancelButtonLabel": {
+    "messageformat": "Cancel"
+  },
   "icu:EditHistoryMessagesModal__title": {
     "messageformat": "Sejarah edit"
   },
@@ -5829,6 +6162,30 @@
   "icu:WhoCanFindMeReadOnlyToast": {
     "messageformat": "Untuk menukar tetapan ini, tetapkan \"Siapa yang boleh lihat nombor saya\" kepada \"Tiada sesiapa\"."
   },
+  "icu:ProfileNameWarningModal__description--direct": {
+    "messageformat": "Profile names on Signal are chosen by their account holder:"
+  },
+  "icu:ProfileNameWarningModal__list--item1--direct": {
+    "messageformat": "Profile names aren't verified"
+  },
+  "icu:ProfileNameWarningModal__list--item2--direct": {
+    "messageformat": "Be cautious of accounts that impersonate others"
+  },
+  "icu:ProfileNameWarningModal__list--item3--direct": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
+  "icu:ProfileNameWarningModal__description--group": {
+    "messageformat": "Group names are chosen by members of the group."
+  },
+  "icu:ProfileNameWarningModal__list--item1--group": {
+    "messageformat": "Be cautious of groups that impersonate organizations and businesses"
+  },
+  "icu:ProfileNameWarningModal__list--item2--group": {
+    "messageformat": "Profile names of members in groups are not verified"
+  },
+  "icu:ProfileNameWarningModal__list--item3--group": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
   "icu:WhatsNew__modal-title": {
     "messageformat": "Perkara Baharu"
   },
@@ -5860,10 +6217,13 @@
     "messageformat": "Sedikit pengubahsuaian, pembaikan pepijat dan peningkatan prestasi. Terima kasih kerana menggunakan Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.44--0": {
-    "messageformat": "Kami membetulkan pepijat animasi kecil semasa panggilan kumpulan."
+  "icu:WhatsNew__v7.47--0": {
+    "messageformat": "Kini, anda boleh memperbesar pratonton video semasa panggilan untuk melihat diri anda dengan lebih baik."
   },
-  "icu:WhatsNew__v7.45--0": {
-    "messageformat": "Stickers should feel sticky, not stuck, so now you can click on a sticker on a newly linked Signal Desktop and that sticker download will automatically get prioritized even when other attachments are downloading too."
+  "icu:WhatsNew__v7.48--0": {
+    "messageformat": "Kami menambah pintasan mudah untuk menurunkan tangan dengan cepat selepas anda mula bercakap dalam panggilan kumpulan di Signal."
+  },
+  "icu:WhatsNew__v7.49--0": {
+    "messageformat": "If you link a new Desktop on Signal Android and choose to transfer your message history, now you can also selectively transfer old attachments from your primary device too. Bring the past into the present by scrolling back in time and clicking on the download icon. As always, the transfer process is end-to-end encrypted and secure."
   }
 }

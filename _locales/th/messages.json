@@ -38,6 +38,9 @@
   "icu:Preferences__sent-media-quality": {
     "messageformat": "ส่งคุณภาพสื่อแล้ว"
   },
+  "icu:Preferences__sent-media-quality__description": {
+    "messageformat": "การส่งสื่อคุณภาพสูงจะใช้ข้อมูลมากขึ้น"
+  },
   "icu:sentMediaQualityStandard": {
     "messageformat": "มาตรฐาน"
   },
@@ -68,6 +71,12 @@
   "icu:unknownGroup": {
     "messageformat": "กลุ่มที่ไม่รู้จัก"
   },
+  "icu:cantOpenSignalError": {
+    "messageformat": "Can’t Open Signal"
+  },
+  "icu:cantOpenSignalError__detail": {
+    "messageformat": "To help fix the issue, follow the recovery guide on the support page or contact Signal support to help fix the issue.\n\nIf you need to use Signal right away, you can delete your data and relink this desktop. You will have the option to transfer message history from your phone."
+  },
   "icu:databaseError": {
     "messageformat": "ฐานข้อมูลผิดพลาด"
   },
@@ -78,10 +87,10 @@
     "messageformat": "ลบข้อมูลและรีสตาร์ท"
   },
   "icu:databaseError__deleteDataConfirmation": {
-    "messageformat": "ลบข้อมูลทั้งหมดอย่างถาวรใช่หรือไม่"
+    "messageformat": "Permanently Delete All Data"
   },
   "icu:databaseError__deleteDataConfirmation__detail": {
-    "messageformat": "ประวัติการส่งข้อความและสื่อทั้งหมดของคุณจะถูกลบออกจากอุปกรณ์นี้อย่างถาวร คุณจะสามารถใช้ Signal บนอุปกรณ์นี้ได้หลังจากเชื่อมโยงอุปกรณ์อีกครั้ง โดยการดำเนินการนี้จะไม่ลบข้อมูลออกจากโทรศัพท์ของคุณ"
+    "messageformat": "All of your message history and media will be permanently deleted from this device. This will not delete any data from your phone.\n\nYou will be able to use Signal on this device after relinking it. You will have the option to transfer message history from your phone."
   },
   "icu:databaseError__startOldVersion": {
     "messageformat": "เวอร์ชันฐานข้อมูลของคุณไม่ตรงกับ Signal เวอร์ชันนี้ ตรวจสอบให้แน่ใจว่า Signal ที่คุณเปิดอยู่บนคอมพิวเตอร์เป็นเวอร์ชันล่าสุด"
@@ -214,9 +223,6 @@
   },
   "icu:optimizingApplication": {
     "messageformat": "กำลังเพิ่มประสิทธิภาพแอปพลิเคชัน…"
-  },
-  "icu:migratingToSQLCipher": {
-    "messageformat": "กำลังเพิ่มประสิทธิภาพข้อความ… {status} สำเร็จ"
   },
   "icu:archivedConversations": {
     "messageformat": "แชทที่ถูกเก็บในที่เก็บถาวร"
@@ -407,9 +413,6 @@
   "icu:unreadMessages": {
     "messageformat": "{count, plural, other {{count,number} ข้อความที่ยังไม่ได้อ่าน}}"
   },
-  "icu:messageHistoryUnsynced": {
-    "messageformat": "เพื่อความปลอดภัยของคุณ ประวัติการแชทจะไม่ถูกโอนถ่ายไปยังอุปกรณ์ที่ถูกเชื่อมโยงเครื่องใหม่"
-  },
   "icu:youMarkedAsVerified": {
     "messageformat": "คุณทำเครื่องหมายว่า หมายเลขความปลอดภัยของคุณกับ {name} ถูกตรวจยืนยันแล้ว"
   },
@@ -588,7 +591,7 @@
     "messageformat": "Failed to send message with endorsements"
   },
   "icu:Toast--InvalidStorageServiceHeaders": {
-    "messageformat": "Received invalid response from storage service. Please share your logs."
+    "messageformat": "การตอบรับจากเซิร์ฟเวอร์ไม่ถูกต้อง โปรดแชร์บันทึกดีบักของคุณ"
   },
   "icu:Toast--FailedToImportBackup": {
     "messageformat": "Failed to process some frames during backup import. Please share your logs."
@@ -706,9 +709,6 @@
   },
   "icu:noSearchResultsOnlyUnreadFilter": {
     "messageformat": "ไม่มีแชทที่ยังไม่ได้อ่าน"
-  },
-  "icu:noSearchResults--sms-only": {
-    "messageformat": "ไม่มีผู้ติดต่อ SMS/MMS บนเดสก์ท็อป"
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "ไม่มีผลลัพ์สำหรับ \"{searchTerm}\" ใน  {conversationName}"
@@ -1145,9 +1145,6 @@
   "icu:mediaNotAvailable": {
     "messageformat": "ไม่พบไฟล์สื่อนี้"
   },
-  "icu:mediaNotAvailable--short": {
-    "messageformat": "ไม่พบไฟล์สื่อ"
-  },
   "icu:attachmentNoLongerAvailable__learnMore": {
     "messageformat": "เรียนรู้เพิ่มเติม"
   },
@@ -1162,6 +1159,12 @@
   },
   "icu:attachmentNotAvailable__voice": {
     "messageformat": "ไม่พบข้อความเสียง"
+  },
+  "icu:attachmentNotAvailable__tapToView": {
+    "messageformat": "ไม่พบไฟล์สื่อแบบที่ดูได้ครั้งเดียวนี้"
+  },
+  "icu:attachmentNotAvailable__tapToViewCannotDownload": {
+    "messageformat": "ไม่สามารถดาวน์โหลดไฟล์สื่อแบบที่ดูได้ครั้งเดียวนี้"
   },
   "icu:AttachmentNotAvailableModal__title--file": {
     "messageformat": "ไม่พบไฟล์"
@@ -1192,6 +1195,21 @@
   },
   "icu:AttachmentNotAvailableModal__body--voice-message": {
     "messageformat": "ข้อความเสียงนี้ไม่ได้ถูกถ่ายโอนจากโทรศัพท์ของคุณในขั้นตอนการเชื่อมโยงอุปกรณ์ ระบบไม่สามารถซิงค์ไฟล์และสื่อที่เก่ากว่า 45 วันนับจากวันที่เชื่อมโยงอุปกรณ์ได้"
+  },
+  "icu:TapToViewNotAvailableModal__body--expired": {
+    "messageformat": "ไม่สามารถดาวน์โหลดไฟล์สื่อแบบที่ดูได้ครั้งเดียวนี้ได้แล้ว ลองขอให้ {name} ส่งใหม่อีกครั้ง"
+  },
+  "icu:TapToViewNotAvailableModal__body--error": {
+    "messageformat": "ไม่สามารถดาวน์โหลดไฟล์สื่อแบบที่ดูได้ครั้งเดียว {name} จะต้องส่งใหม่อีกครั้ง"
+  },
+  "icu:BackfillFailureModal__title": {
+    "messageformat": "Can’t download media"
+  },
+  "icu:BackfillFailureModal__body--timeout": {
+    "messageformat": "Check your desktop and phone’s internet connection. Open Signal on your phone, then try downloading again."
+  },
+  "icu:BackfillFailureModal__body--not-found": {
+    "messageformat": "This media is no longer available on your phone and can’t be downloaded."
   },
   "icu:save": {
     "messageformat": "บันทึก"
@@ -1258,6 +1276,9 @@
   },
   "icu:Preferences--device-name__description": {
     "messageformat": "หากต้องการเปลี่ยนชื่ออุปกรณ์นี้ ให้เปิดแอป Signal บนโทรศัพท์ แล้วไปที่การตั้งค่า > อุปกรณ์ที่เชื่อมโยงอยู่"
+  },
+  "icu:Preferences__EmojiSkinToneDefaultSetting__Label": {
+    "messageformat": "Emoji skin tone"
   },
   "icu:chooseDeviceName": {
     "messageformat": "เลือกชื่อของอุปกรณ์นี้"
@@ -1814,6 +1835,18 @@
   "icu:ConversationDetails__HeaderButton--Message": {
     "messageformat": "ส่งข้อความ"
   },
+  "icu:ConversationDetails--help-section": {
+    "messageformat": "Help"
+  },
+  "icu:ConversationDetails--support-center": {
+    "messageformat": "Support Center"
+  },
+  "icu:ConversationDetails--contact-us": {
+    "messageformat": "Contact us"
+  },
+  "icu:ConversationDetails--donate": {
+    "messageformat": "Donate to Signal"
+  },
   "icu:SafetyNumberNotification__viewSafetyNumber": {
     "messageformat": "ดูหมายเลขความปลอดภัย"
   },
@@ -1873,6 +1906,9 @@
   },
   "icu:Toast--failed-to-fetch-phone-number": {
     "messageformat": "ไม่สามารถดึงหมายเลขโทรศัพท์ได้ ตรวจสอบการเชื่อมต่อของคุณแล้วลองอีกครั้ง"
+  },
+  "icu:Toast--download-failed": {
+    "messageformat": "ดาวน์โหลดไม่สำเร็จ"
   },
   "icu:ToastManager__CannotEditMessage_24": {
     "messageformat": "สามารถแก้ไขข้อความนี้ได้ภายใน 24 ชั่วโมงนับจากเวลาที่คุณส่ง"
@@ -2252,6 +2288,189 @@
   "icu:EmojiPicker__button--flag": {
     "messageformat": "ธง"
   },
+  "icu:FunPicker__Tab--Emojis": {
+    "messageformat": "อีโมจิ"
+  },
+  "icu:FunPicker__Tab--Stickers": {
+    "messageformat": "สติกเกอร์"
+  },
+  "icu:FunPicker__Tab--Gifs": {
+    "messageformat": "GIF"
+  },
+  "icu:FunPanelEmojis__SearchLabel": {
+    "messageformat": "หาอีโมจิ"
+  },
+  "icu:FunPanelEmojis__SearchPlaceholder": {
+    "messageformat": "หาอีโมจิ"
+  },
+  "icu:FunPanelEmojis__SubNavLabel": {
+    "messageformat": "หมวดหมู่ของอีโมจิ"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Recents": {
+    "messageformat": "เพิ่งใช้"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--SmileysAndPeople": {
+    "messageformat": "หน้ายิ้มและผู้คน"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--AnimalsAndNature": {
+    "messageformat": "สัตว์และธรรมชาติ"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--FoodAndDrink": {
+    "messageformat": "อาหารและเครื่องดื่ม"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Activities": {
+    "messageformat": "กิจกรรม"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--TravelAndPlaces": {
+    "messageformat": "เดินทางและสถานที่"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Objects": {
+    "messageformat": "วัตถุ"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Symbols": {
+    "messageformat": "สัญลักษณ์"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Flags": {
+    "messageformat": "ธง"
+  },
+  "icu:FunPanelEmojis__SearchResults__EmptyHeading": {
+    "messageformat": "ไม่พบอีโมจิ"
+  },
+  "icu:FunPanelEmojis__ChangeSkinToneButtonLabel": {
+    "messageformat": "เปลี่ยนการตั้งค่าโทนสีผิว"
+  },
+  "icu:FunPanelEmojis__SkinTonePicker__ChooseDefaultLabel": {
+    "messageformat": "เลือกค่าเริ่มต้นของโทนสีผิว"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SearchResults": {
+    "messageformat": "ผลการค้นหา"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Recents": {
+    "messageformat": "เพิ่งใช้"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SmileysAndPeople": {
+    "messageformat": "หน้ายิ้มและผู้คน"
+  },
+  "icu:FunPanelEmojis__SectionTitle--AnimalsAndNature": {
+    "messageformat": "สัตว์และธรรมชาติ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--FoodAndDrink": {
+    "messageformat": "อาหารและเครื่องดื่ม"
+  },
+  "icu:FunPanelEmojis__SectionTitle--TravelAndPlaces": {
+    "messageformat": "เดินทางและสถานที่"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Activities": {
+    "messageformat": "กิจกรรม"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Objects": {
+    "messageformat": "วัตถุ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Symbols": {
+    "messageformat": "สัญลักษณ์"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Flags": {
+    "messageformat": "ธง"
+  },
+  "icu:FunPanelStickers__SearchLabel": {
+    "messageformat": "หาสติกเกอร์"
+  },
+  "icu:FunPanelStickers__SearchPlaceholder": {
+    "messageformat": "หาสติกเกอร์"
+  },
+  "icu:FunPanelSticker__SubNavLabel": {
+    "messageformat": "ชุดสติกเกอร์"
+  },
+  "icu:FunPanelStickers__SubNavCategoryLabel--Recents": {
+    "messageformat": "เพิ่งใช้"
+  },
+  "icu:FunPanelStickers__SectionTitle--SearchResults": {
+    "messageformat": "ผลการค้นหา"
+  },
+  "icu:FunPanelStickers__SectionTitle--Recents": {
+    "messageformat": "เพิ่งใช้"
+  },
+  "icu:FunPanelStickers__SearchResults__EmptyHeading": {
+    "messageformat": "ไม่พบสติกเกอร์"
+  },
+  "icu:FunPanelStickers__LightboxDialog__Label": {
+    "messageformat": "Sticker Preview"
+  },
+  "icu:FunPanelGifs__SearchLabel--Tenor": {
+    "messageformat": "ค้นหาไฟล์ GIF จากใน Tenor"
+  },
+  "icu:FunPanelGifs__SearchPlaceholder--Tenor": {
+    "messageformat": "ค้นหาใน Tenor"
+  },
+  "icu:FunPanelGifs__SubNavLabel": {
+    "messageformat": "หมวดหมู่ของ GIF"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Recents": {
+    "messageformat": "เพิ่งใช้"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Trending": {
+    "messageformat": "กำลังเป็นที่นิยม"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Celebrate": {
+    "messageformat": "เฉลิมฉลอง"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Love": {
+    "messageformat": "รัก"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--ThumbsUp": {
+    "messageformat": "ยอดเยี่ยม"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Surprised": {
+    "messageformat": "เซอร์ไพรส์"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Excited": {
+    "messageformat": "ตื่นเต้น"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Sad": {
+    "messageformat": "เศร้า"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Angry": {
+    "messageformat": "โกรธ"
+  },
+  "icu:FunPanelGifs__SearchResults__LoadingLabel": {
+    "messageformat": "กำลังโหลดไฟล์ GIF"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorHeading": {
+    "messageformat": "ไม่สามารถโหลดไฟล์ GIF ตรวจสอบการเชื่อมต่อของคุณแล้วลองอีกครั้ง"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorRetryButton": {
+    "messageformat": "ลองอีกครั้ง"
+  },
+  "icu:FunPanelGifs__SearchResults__EmptyHeading": {
+    "messageformat": "ไม่พบไฟล์ GIF"
+  },
+  "icu:FunPanelGifs__LightboxDialog__Label": {
+    "messageformat": "GIF Preview"
+  },
+  "icu:FunSearch__ClearButtonLabel": {
+    "messageformat": "Clear Search"
+  },
+  "icu:FunSkinTones__List": {
+    "messageformat": "Skin tone"
+  },
+  "icu:FunSkinTones__ListItem--None": {
+    "messageformat": "None"
+  },
+  "icu:FunSkinTones__ListItem--Light": {
+    "messageformat": "Light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumLight": {
+    "messageformat": "Medium-light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Medium": {
+    "messageformat": "Medium skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumDark": {
+    "messageformat": "Medium-dark skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Dark": {
+    "messageformat": "Dark skin tone"
+  },
   "icu:confirmation-dialog--Cancel": {
     "messageformat": "ยกเลิก"
   },
@@ -2291,8 +2510,14 @@
   "icu:Message--tap-to-view-expired": {
     "messageformat": "เห็นแล้ว"
   },
+  "icu:Message--tap-to-view--viewed": {
+    "messageformat": "เห็นแล้ว"
+  },
   "icu:Message--tap-to-view--outgoing": {
     "messageformat": "สื่อ"
+  },
+  "icu:Message--tap-to-view--media": {
+    "messageformat": "สื่อที่ดูได้ครั้งเดียว"
   },
   "icu:Message--tap-to-view--incoming--expired-toast": {
     "messageformat": "คุณเคยดูข้อความนี้แล้ว"
@@ -2305,6 +2530,15 @@
   },
   "icu:Message--tap-to-view--incoming-video": {
     "messageformat": "ดูวิดีโอ"
+  },
+  "icu:Message--tap-to-view--video": {
+    "messageformat": "ไฟล์วิดีโอแบบที่ดูได้ครั้งเดียว"
+  },
+  "icu:Message--tap-to-view--photo": {
+    "messageformat": "ไฟล์รูปภาพแบบที่ดูได้ครั้งเดียว"
+  },
+  "icu:Message--tap-to-view--helper-text": {
+    "messageformat": "คลิกเพื่อดู"
   },
   "icu:Conversation--getDraftPreview--attachment": {
     "messageformat": "(แฟ้มแนบ)"
@@ -2498,6 +2732,9 @@
   "icu:Keyboard--toggle-video": {
     "messageformat": "ตัวเลือกเปิดและปิดวิดีโอ"
   },
+  "icu:Keyboard--toggle-preview": {
+    "messageformat": "เปิดปิดการขยายมุมมองของหน้าต่าง"
+  },
   "icu:Keyboard--accept-video-call": {
     "messageformat": "รับสายโดยเปิดวิดีโอ (เฉพาะวิดีโอคอล)"
   },
@@ -2560,6 +2797,12 @@
   },
   "icu:SafetyTipsModal__Description": {
     "messageformat": "โปรดใช้ความระมัดระวังในการตอบรับคำขอส่งข้อความจากคนที่คุณไม่รู้จัก ลองตรวจสอบตามข้อสังเกตนี้:"
+  },
+  "icu:SafetyTipsModal__TipTitle--Fake": {
+    "messageformat": "Fake names and accounts"
+  },
+  "icu:SafetyTipsModal__TipDescription--Fake": {
+    "messageformat": "Signal will never contact you for your registration code or PIN. Be cautious of requests that impersonate others. Profile names are chosen by their account holder and aren't verified."
   },
   "icu:SafetyTipsModal__TipTitle--Crypto": {
     "messageformat": "การหลอกลวงทางการเงินหรือคริปโต"
@@ -2693,6 +2936,12 @@
   "icu:MessageRequests--accept": {
     "messageformat": "ตอบรับ"
   },
+  "icu:MessageRequests--accept-confirm-title": {
+    "messageformat": "Accept Request?"
+  },
+  "icu:MessageRequests--accept-confirm-body": {
+    "messageformat": "Review requests carefully. Profile names are chosen by their account owner and aren't verified."
+  },
   "icu:MessageRequests--continue": {
     "messageformat": "ดำเนินการต่อ"
   },
@@ -2704,6 +2953,21 @@
   },
   "icu:ConversationHero--members": {
     "messageformat": "{count, plural, other {สมาชิก {count,number} คน}}"
+  },
+  "icu:ConversationHero--review-carefully": {
+    "messageformat": "Review carefully"
+  },
+  "icu:ConversationHero--group-names": {
+    "messageformat": "<clickable>Group names</clickable> are not verified"
+  },
+  "icu:ConversationHero--profile-names": {
+    "messageformat": "<clickable>Profile names</clickable> are not verified"
+  },
+  "icu:ConversationHero--signal-official-chat": {
+    "messageformat": "This is the official and only chat from Signal"
+  },
+  "icu:ConversationHero--release-notes": {
+    "messageformat": "Keep up to date with news and release notes."
   },
   "icu:member-of-1-group": {
     "messageformat": "สมาชิกของ {group}"
@@ -2917,6 +3181,12 @@
   },
   "icu:calling__pip--off": {
     "messageformat": "โทรเต็มจอ"
+  },
+  "icu:calling__preview--maximize": {
+    "messageformat": "ขยายหน้าต่าง"
+  },
+  "icu:calling__preview--minimize": {
+    "messageformat": "ย่อหน้าต่าง"
   },
   "icu:calling__change-view": {
     "messageformat": "เปลี่ยนมุมมอง"
@@ -3698,18 +3968,6 @@
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "ลองอีกครั้ง"
   },
-  "icu:BackupImportScreen__skip": {
-    "messageformat": "ข้าม"
-  },
-  "icu:BackupImportScreen__skip-confirmation__title": {
-    "messageformat": "ข้ามการถ่ายโอนข้อความใช่หรือไม่"
-  },
-  "icu:BackupImportScreen__skip-confirmation__body": {
-    "messageformat": "หากข้ามการถ่ายโอน คุณจะไม่สามารถเข้าถึงข้อความหรือไฟล์สื่อบนอุปกรณ์เครื่องนี้ โดยคุณสามารถเริ่มถ่ายโอนได้ใหม่ โดยไปที่การตั้งค่า > แชท > การถ่ายโอน"
-  },
-  "icu:BackupImportScreen__skip-confirmation__cancel": {
-    "messageformat": "ยกเลิก"
-  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "กำลังกู้คืนไฟล์สื่อ"
   },
@@ -3772,6 +4030,18 @@
   },
   "icu:CompositionArea__edit-action--send": {
     "messageformat": "ส่งข้อความที่แก้ไข"
+  },
+  "icu:CompositionArea__FunButtonLabel": {
+    "messageformat": "เพิ่มอีโมจิ สติกเกอร์ หรือไฟล์ GIF"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Title": {
+    "messageformat": "Replace attachment?"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Body": {
+    "messageformat": "Adding this GIF will replace the item in your current draft message."
+  },
+  "icu:CompositionArea__ConfirmGifSelection__ReplaceButton": {
+    "messageformat": "Replace"
   },
   "icu:CompositionInput__editing-message": {
     "messageformat": "แก้ไขข้อความ"
@@ -4193,9 +4463,6 @@
   "icu:ShareCallLinkViaSignal__DraftMessageText": {
     "messageformat": "ใช้ลิงก์นี้เพื่อเข้าร่วมการโทรของ Signal: {url}"
   },
-  "icu:MessageRequestWarning__learn-more": {
-    "messageformat": "เรียนรู้เพิ่มเติม"
-  },
   "icu:MessageRequestWarning__safety-tips": {
     "messageformat": "คำแนะนำเพื่อความปลอดภัย"
   },
@@ -4350,7 +4617,7 @@
     "messageformat": "สิ้นสุดการไล่สี"
   },
   "icu:GIF--download": {
-    "messageformat": "Download GIF attachment"
+    "messageformat": "ดาวน์โหลดไฟล์แนบ GIF"
   },
   "icu:customDisappearingTimeOption": {
     "messageformat": "กำหนดเวลา…"
@@ -4655,6 +4922,27 @@
   "icu:Preferences__button--privacy": {
     "messageformat": "ความเป็นส่วนตัว"
   },
+  "icu:Preferences__button--data-usage": {
+    "messageformat": "การใช้ข้อมูล"
+  },
+  "icu:Preferences__media-auto-download": {
+    "messageformat": "ดาวน์โหลดสื่ออัตโนมัติ"
+  },
+  "icu:Preferences__media-auto-download__photos": {
+    "messageformat": "รูปภาพ"
+  },
+  "icu:Preferences__media-auto-download__videos": {
+    "messageformat": "วิดีโอ"
+  },
+  "icu:Preferences__media-auto-download__audio": {
+    "messageformat": "เสียง"
+  },
+  "icu:Preferences__media-auto-download__documents": {
+    "messageformat": "เอกสาร"
+  },
+  "icu:Preferences__media-auto-download__description": {
+    "messageformat": "ระบบจะดาวน์โหลดข้อความเสียงและสติกเกอร์โดยอัตโนมัติเสมอ"
+  },
   "icu:Preferences--lastSynced": {
     "messageformat": "นำเข้าครั้งสุดท้ายเมื่อ {date} {time}"
   },
@@ -4811,6 +5099,18 @@
   "icu:DialogUpdate__downloaded": {
     "messageformat": "ดาวน์โหลดการอัปเดตแล้ว"
   },
+  "icu:CriticalIdlePrimaryDevice__title": {
+    "messageformat": "เปิด Signal บนโทรศัพท์ของคุณ"
+  },
+  "icu:CriticalIdlePrimaryDevice__body": {
+    "messageformat": "หากไม่มีการเปิด Signal บนโทรศัพท์ บัญชีของคุณจะถูกลบในอีกไม่ช้า โดยข้อความนี้จะหายไปเมื่อคุณดำเนินการสำเร็จ <learnMoreLink>เรียนรู้เพิ่มเติม</learnMoreLink>"
+  },
+  "icu:IdlePrimaryDevice__body": {
+    "messageformat": "เปิด Signal บนโทรศัพท์เพื่อรักษาสถานะการใช้งานบัญชีของคุณ"
+  },
+  "icu:IdlePrimaryDevice__learnMore": {
+    "messageformat": "เรียนรู้เพิ่มเติม"
+  },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal กำลังพบกับอุปสรรคทางเทคนิค เรากำลังทำงานอย่างหนักเพื่อให้สามารถกลับมาให้บริการได้โดยเร็วที่สุดเท่าที่จะเป็นไปได้"
   },
@@ -4951,6 +5251,30 @@
   },
   "icu:MediaEditor__crop-preset--9-16": {
     "messageformat": "9:16"
+  },
+  "icu:MediaPermissionsModal__title--microphone": {
+    "messageformat": "อนุญาตให้เข้าถึงไมโครโฟนของคุณ"
+  },
+  "icu:MediaPermissionsModal__title--camera": {
+    "messageformat": "อนุญาตให้เข้าถึงกล้องของคุณ"
+  },
+  "icu:MediaPermissionsModal__subtitle--call": {
+    "messageformat": "วิธีการเข้าร่วมหรือเริ่มต้นการโทร:"
+  },
+  "icu:MediaPermissionsModal__subtitle--call--camera": {
+    "messageformat": "วิธีการเปิดใช้งานวิดีโอ:"
+  },
+  "icu:MediaPermissionsModal__subtitle--voice-note": {
+    "messageformat": "วิธีส่งข้อความเสียง:"
+  },
+  "icu:MediaPermissionsModal__step-1": {
+    "messageformat": "คลิกที่ “{buttonName}” ด้านล่าง"
+  },
+  "icu:MediaPermissionsModal__step-2": {
+    "messageformat": "เปิดใช้งาน “Signal”"
+  },
+  "icu:MediaPermissionsModal__open": {
+    "messageformat": "ไปที่การตั้งค่า"
   },
   "icu:MyStories__title": {
     "messageformat": "สตอรี่ของฉัน"
@@ -5610,6 +5934,15 @@
   "icu:MessageMetadata__edited": {
     "messageformat": "แก้ไข"
   },
+  "icu:DraftGifMessageSendModal__Title": {
+    "messageformat": "Add a message"
+  },
+  "icu:DraftGifMessageSendModal__SendButtonLabel": {
+    "messageformat": "Send"
+  },
+  "icu:DraftGifMessageSendModal__CancelButtonLabel": {
+    "messageformat": "Cancel"
+  },
   "icu:EditHistoryMessagesModal__title": {
     "messageformat": "ประวัติการแก้ไข"
   },
@@ -5829,6 +6162,30 @@
   "icu:WhoCanFindMeReadOnlyToast": {
     "messageformat": "หากต้องการเปลี่ยนการตั้งค่านี้ ให้ไปที่หัวข้อ “คนที่สามารถเห็นหมายเลขโทรศัพท์ของฉัน” แล้วเลือก “ไม่อนุญาตให้ใครเห็น”"
   },
+  "icu:ProfileNameWarningModal__description--direct": {
+    "messageformat": "Profile names on Signal are chosen by their account holder:"
+  },
+  "icu:ProfileNameWarningModal__list--item1--direct": {
+    "messageformat": "Profile names aren't verified"
+  },
+  "icu:ProfileNameWarningModal__list--item2--direct": {
+    "messageformat": "Be cautious of accounts that impersonate others"
+  },
+  "icu:ProfileNameWarningModal__list--item3--direct": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
+  "icu:ProfileNameWarningModal__description--group": {
+    "messageformat": "Group names are chosen by members of the group."
+  },
+  "icu:ProfileNameWarningModal__list--item1--group": {
+    "messageformat": "Be cautious of groups that impersonate organizations and businesses"
+  },
+  "icu:ProfileNameWarningModal__list--item2--group": {
+    "messageformat": "Profile names of members in groups are not verified"
+  },
+  "icu:ProfileNameWarningModal__list--item3--group": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
   "icu:WhatsNew__modal-title": {
     "messageformat": "ฟีเจอร์และบริการใหม่ๆ"
   },
@@ -5860,10 +6217,13 @@
     "messageformat": "มีการปรับเปลี่ยนเล็กน้อย พร้อมแก้ไขบั๊ก และการพัฒนาประสิทธิภาพให้ดียิ่งขึ้น ขอขอบคุณที่เลือกใช้ Signal!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.44--0": {
-    "messageformat": "เราแก้ไขบั๊กเกี่ยวกับภาพเคลื่อนไหวที่อาจเคยสร้างความรำคาญใจในระหว่างสายโทรกลุ่ม"
+  "icu:WhatsNew__v7.47--0": {
+    "messageformat": "พัฒนาให้คุณสามารถขยายหน้าต่างวิดีโอของตัวเองในระหว่างโทรได้ง่ายและสะดวกขึ้นอีก"
   },
-  "icu:WhatsNew__v7.45--0": {
-    "messageformat": "Stickers should feel sticky, not stuck, so now you can click on a sticker on a newly linked Signal Desktop and that sticker download will automatically get prioritized even when other attachments are downloading too."
+  "icu:WhatsNew__v7.48--0": {
+    "messageformat": "เราเพิ่มฟีเจอร์ทางลัดที่จะทำให้คุณสามารถเอามือลงได้อย่างสะดวกและทันใจเมื่อถึงคิวได้พูดในสายโทรกลุ่มของ Signal"
+  },
+  "icu:WhatsNew__v7.49--0": {
+    "messageformat": "If you link a new Desktop on Signal Android and choose to transfer your message history, now you can also selectively transfer old attachments from your primary device too. Bring the past into the present by scrolling back in time and clicking on the download icon. As always, the transfer process is end-to-end encrypted and secure."
   }
 }

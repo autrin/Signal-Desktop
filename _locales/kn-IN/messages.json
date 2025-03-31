@@ -38,6 +38,9 @@
   "icu:Preferences__sent-media-quality": {
     "messageformat": "ಮಾಧ್ಯಮ ಗುಣಮಟ್ಟವನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ"
   },
+  "icu:Preferences__sent-media-quality__description": {
+    "messageformat": "ಉನ್ನತ ಗುಣಮಟ್ಟದ ಮಾಧ್ಯಮವನ್ನು ಕಳುಹಿಸುವಿಕೆಯು ಹೆಚ್ಚು ಡೇಟಾವನ್ನು ಬಳಸಲಿದೆ."
+  },
   "icu:sentMediaQualityStandard": {
     "messageformat": "ಪ್ರಮಾಣಿತ"
   },
@@ -68,6 +71,12 @@
   "icu:unknownGroup": {
     "messageformat": "ತಿಳಿದಿಲ್ಲದ ಗುಂಪು"
   },
+  "icu:cantOpenSignalError": {
+    "messageformat": "Can’t Open Signal"
+  },
+  "icu:cantOpenSignalError__detail": {
+    "messageformat": "To help fix the issue, follow the recovery guide on the support page or contact Signal support to help fix the issue.\n\nIf you need to use Signal right away, you can delete your data and relink this desktop. You will have the option to transfer message history from your phone."
+  },
   "icu:databaseError": {
     "messageformat": "ಡೇಟಾಬೇಸಿನಲ್ಲಿ ದೋಷ"
   },
@@ -78,10 +87,10 @@
     "messageformat": "ಡೇಟಾವನ್ನು ಅಳಿಸಿ ಮತ್ತು ಮರುಪ್ರಾರಂಭಿಸಿ"
   },
   "icu:databaseError__deleteDataConfirmation": {
-    "messageformat": "ಎಲ್ಲಾ ಡೇಟಾವನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಬೇಕೆ?"
+    "messageformat": "Permanently Delete All Data"
   },
   "icu:databaseError__deleteDataConfirmation__detail": {
-    "messageformat": "ನಿಮ್ಮ ಎಲ್ಲಾ ಮೆಸೇಜಿಂಗ್ ಇತಿಹಾಸ ಮತ್ತು ಮೀಡಿಯಾವನ್ನು ಶಾಶ್ವತವಾಗಿ ಈ ಸಾಧನದಿಂದ ಅಳಿಸಲಾಗುತ್ತದೆ. ಸಾಧನವನ್ನು ಮರುಲಿಂಕ್ ಮಾಡಿದ ನಂತರ ನಿಮಗೆ Signal ಅನ್ನು ಈ ಸಾಧನದಲ್ಲಿ ಬಳಸಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ. ಇದು ನಿಮ್ಮ ಫೋನ್‌ನಿಂದ ಯಾವುದೇ ಡೇಟಾವನ್ನು ಅಳಿಸುವುದಿಲ್ಲ."
+    "messageformat": "All of your message history and media will be permanently deleted from this device. This will not delete any data from your phone.\n\nYou will be able to use Signal on this device after relinking it. You will have the option to transfer message history from your phone."
   },
   "icu:databaseError__startOldVersion": {
     "messageformat": "ನಿಮ್ಮ ಡೇಟಾಬೇಸ್‌ನ ಈ ಆವೃತ್ತಿಯು Signal ನ ಈ ಆವೃತ್ತಿಗೆ ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ. ನಿಮ್ಮ ಕಂಪ್ಯೂಟರ್‌ನಲ್ಲಿ Signal ನ ಹೊಚ್ಚಹೊಸ ಆವೃತ್ತಿಯನ್ನು ತೆರೆಯುತ್ತಿರುವುದನ್ನು ಖಾತ್ರಿಗೊಳಿಸಿ."
@@ -214,9 +223,6 @@
   },
   "icu:optimizingApplication": {
     "messageformat": "ಅಪ್ಲಿಕೇಶನ್ ಆಪ್ಟಿಮೈಸ್ ಮಾಡಲಾಗುತ್ತಿದೆ..."
-  },
-  "icu:migratingToSQLCipher": {
-    "messageformat": "ಸಂದೇಶಗಳನ್ನು ಆಪ್ಟಿಮೈಸ್ ಮಾಡಲಾಗುತ್ತಿದೆ... {status} ಪೂರ್ಣಗೊಂಡಿದೆ."
   },
   "icu:archivedConversations": {
     "messageformat": "ಆರ್ಕೈವ್ ಮಾಡಿದ ಚಾಟ್‌ಗಳು"
@@ -407,9 +413,6 @@
   "icu:unreadMessages": {
     "messageformat": "{count, plural, one {{count,number} ಓದದಿರುವ ಸಂದೇಶ} other {{count,number} ಓದದಿರುವ ಸಂದೇಶಗಳು}}"
   },
-  "icu:messageHistoryUnsynced": {
-    "messageformat": "ನಿಮ್ಮ ಸುರಕ್ಷತೆಗಾಗಿ, ಚಾಟ್ ಇತಿಹಾಸವನ್ನು ಹೊಸ ಲಿಂಕ್ ಆದ ಸಾಧನಗಳಿಗೆ ವರ್ಗಾವಣೆ ಮಾಡಿಲ್ಲ."
-  },
   "icu:youMarkedAsVerified": {
     "messageformat": "{name} ಜೊತೆಗೆ ನಿಮ್ಮ ಸುರಕ್ಷತೆ ಸಂಖ್ಯೆಯನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ ಎಂದು ಗುರುತು ಮಾಡಿದ್ದೀರಿ"
   },
@@ -588,7 +591,7 @@
     "messageformat": "Failed to send message with endorsements"
   },
   "icu:Toast--InvalidStorageServiceHeaders": {
-    "messageformat": "Received invalid response from storage service. Please share your logs."
+    "messageformat": "ಅಮಾನ್ಯ ಸರ್ವರ್ ಪ್ರತಿಕ್ರಿಯೆ. ನಿಮ್ಮ ಲಾಗ್‌ಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ."
   },
   "icu:Toast--FailedToImportBackup": {
     "messageformat": "Failed to process some frames during backup import. Please share your logs."
@@ -706,9 +709,6 @@
   },
   "icu:noSearchResultsOnlyUnreadFilter": {
     "messageformat": "ಓದದಿರುವ ಯಾವುದೇ ಚಾಟ್‌ಗಳಿಲ್ಲ"
-  },
-  "icu:noSearchResults--sms-only": {
-    "messageformat": "ಡೆಸ್ಕ್‌ಟಾಪ್‌ನಲ್ಲಿ ಎಸ್ಎಂಎಸ್/ಎಂಎಂಎಸ್ ಸಂಪರ್ಕಗಳು ಲಭ್ಯವಿಲ್ಲ."
   },
   "icu:noSearchResultsInConversation": {
     "messageformat": "{conversationName}ನಲ್ಲಿ \"{searchTerm}\" ಗೆ ಯಾವುದೇ ಫಲಿತಾಂಶಗಳಿಲ್ಲ"
@@ -1145,9 +1145,6 @@
   "icu:mediaNotAvailable": {
     "messageformat": "ಈ ಮೀಡಿಯಾ ಲಭ್ಯವಿಲ್ಲ"
   },
-  "icu:mediaNotAvailable--short": {
-    "messageformat": "ಮೀಡಿಯಾ ಲಭ್ಯವಿಲ್ಲ"
-  },
   "icu:attachmentNoLongerAvailable__learnMore": {
     "messageformat": "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ"
   },
@@ -1162,6 +1159,12 @@
   },
   "icu:attachmentNotAvailable__voice": {
     "messageformat": "ಈ ಧ್ವನಿ ಸಂದೇಶ ಲಭ್ಯವಿಲ್ಲ"
+  },
+  "icu:attachmentNotAvailable__tapToView": {
+    "messageformat": "ಏಕ ವೀಕ್ಷಣೆ ಮೀಡಿಯಾ ಲಭ್ಯವಿಲ್ಲ"
+  },
+  "icu:attachmentNotAvailable__tapToViewCannotDownload": {
+    "messageformat": "ಏಕ ವೀಕ್ಷಣೆ ಮೀಡಿಯಾವನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ"
   },
   "icu:AttachmentNotAvailableModal__title--file": {
     "messageformat": "ಫೈಲ್ ಲಭ್ಯವಿಲ್ಲ"
@@ -1192,6 +1195,21 @@
   },
   "icu:AttachmentNotAvailableModal__body--voice-message": {
     "messageformat": "ಈ ಸಾಧನವನ್ನು ಲಿಂಕ್ ಮಾಡಿದಾಗ ಈ ಧ್ವನಿ ಸಂದೇಶವನ್ನು ನಿಮ್ಮ ಫೋನ್‌ನಿಂದ ವರ್ಗಾಯಿಸಲಾಗಿಲ್ಲ. ಸಾಧನ ಲಿಂಕ್ ಮಾಡುವ ಸಮಯದಲ್ಲಿ 45 ದಿನಗಳಿಗಿಂತ ಹಳೆಯದಾದ ಮೀಡಿಯಾ ಮತ್ತು ಫೈಲ್‌ಗಳನ್ನು ಸಿಂಕ್ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ."
+  },
+  "icu:TapToViewNotAvailableModal__body--expired": {
+    "messageformat": "ಈ ಏಕ ವೀಕ್ಷಣೆ ಮೀಡಿಯಾ ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಇನ್ನು ಮುಂದೆ ಲಭ್ಯವಿರುವುದಿಲ್ಲ. ಅದನ್ನು ಮತ್ತೆ ಕಳುಹಿಸಲು {name} ಅವರಿಗೆ ಕೇಳಿ."
+  },
+  "icu:TapToViewNotAvailableModal__body--error": {
+    "messageformat": "ಏಕ ವೀಕ್ಷಣೆ ಮೀಡಿಯಾವನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. {name} ಅವರು ಇದನ್ನು ಮತ್ತೆ ಕಳುಹಿಸಬೇಕಾಗಿದೆ."
+  },
+  "icu:BackfillFailureModal__title": {
+    "messageformat": "Can’t download media"
+  },
+  "icu:BackfillFailureModal__body--timeout": {
+    "messageformat": "Check your desktop and phone’s internet connection. Open Signal on your phone, then try downloading again."
+  },
+  "icu:BackfillFailureModal__body--not-found": {
+    "messageformat": "This media is no longer available on your phone and can’t be downloaded."
   },
   "icu:save": {
     "messageformat": "ಉಳಿಸಿ"
@@ -1258,6 +1276,9 @@
   },
   "icu:Preferences--device-name__description": {
     "messageformat": "ಈ ಸಾಧನದ ಹೆಸರನ್ನು ಬದಲಾಯಿಸಲು, ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ Signal ತೆರೆಯಿರಿ ಮತ್ತು ಸೆಟ್ಟಿಂಗ್‌ಗಳು > ಲಿಂಕ್ ಮಾಡಲಾದ ಸಾಧನಗಳು ಎಂಬಲ್ಲಿಗೆ ನ್ಯಾವಿಗೇಟ್ ಮಾಡಿ"
+  },
+  "icu:Preferences__EmojiSkinToneDefaultSetting__Label": {
+    "messageformat": "Emoji skin tone"
   },
   "icu:chooseDeviceName": {
     "messageformat": "ಈ ಸಾಧನದ ಹೆಸರು ಆಯ್ಕೆ ಮಾಡಿ"
@@ -1814,6 +1835,18 @@
   "icu:ConversationDetails__HeaderButton--Message": {
     "messageformat": "ಮೆಸೇಜ್"
   },
+  "icu:ConversationDetails--help-section": {
+    "messageformat": "Help"
+  },
+  "icu:ConversationDetails--support-center": {
+    "messageformat": "Support Center"
+  },
+  "icu:ConversationDetails--contact-us": {
+    "messageformat": "Contact us"
+  },
+  "icu:ConversationDetails--donate": {
+    "messageformat": "Donate to Signal"
+  },
   "icu:SafetyNumberNotification__viewSafetyNumber": {
     "messageformat": "ಸುರಕ್ಷತಾ ಸಂಖ್ಯೆ ವೀಕ್ಷಿಸಿ"
   },
@@ -1873,6 +1906,9 @@
   },
   "icu:Toast--failed-to-fetch-phone-number": {
     "messageformat": "ಫೋನ್ ನಂಬರ್ ಪಡೆಯಲು ವಿಫಲವಾಗಿದೆ. ನಿಮ್ಮ ಸಂಪರ್ಕ ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ."
+  },
+  "icu:Toast--download-failed": {
+    "messageformat": "ಡೌನ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ"
   },
   "icu:ToastManager__CannotEditMessage_24": {
     "messageformat": "ನೀವು ಈ ಮೆಸೇಜ್ ಕಳುಹಿಸಿದ 24 ಗಂಟೆಗಳ ಒಳಗೆ ಮಾತ್ರ ಎಡಿಟ್‌ಗಳು ಅನ್ವಯಿಸಬಹುದು."
@@ -2252,6 +2288,189 @@
   "icu:EmojiPicker__button--flag": {
     "messageformat": "ಫ್ಲ್ಯಾಗ್"
   },
+  "icu:FunPicker__Tab--Emojis": {
+    "messageformat": "ಎಮೋಜಿ"
+  },
+  "icu:FunPicker__Tab--Stickers": {
+    "messageformat": "ಸ್ಟಿಕ್ಕರುಗಳು"
+  },
+  "icu:FunPicker__Tab--Gifs": {
+    "messageformat": "GIFಗಳು"
+  },
+  "icu:FunPanelEmojis__SearchLabel": {
+    "messageformat": "ಎಮೋಜಿ ಹುಡುಕಿ"
+  },
+  "icu:FunPanelEmojis__SearchPlaceholder": {
+    "messageformat": "ಎಮೋಜಿ ಹುಡುಕಿ"
+  },
+  "icu:FunPanelEmojis__SubNavLabel": {
+    "messageformat": "ಎಮೋಜಿ ವರ್ಗಗಳು"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Recents": {
+    "messageformat": "ಇತ್ತೀಚೆಗೆ ಬಳಸಲಾಗಿದೆ"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--SmileysAndPeople": {
+    "messageformat": "ಸ್ಮೈಲೀಗಳು ಮತ್ತು ಜನರು"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--AnimalsAndNature": {
+    "messageformat": "ಪ್ರಾಣಿಗಳು ಮತ್ತು ಪ್ರಕೃತಿ"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--FoodAndDrink": {
+    "messageformat": "ಆಹಾರ ಮತ್ತು ಪಾನೀಯ"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Activities": {
+    "messageformat": "ಚಟುವಟಿಕೆಗಳು"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--TravelAndPlaces": {
+    "messageformat": "ಪ್ರಯಾಣ ಮತ್ತು ಸ್ಥಳಗಳು"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Objects": {
+    "messageformat": "ವಸ್ತುಗಳು"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Symbols": {
+    "messageformat": "ಚಿಹ್ನೆಗಳು"
+  },
+  "icu:FunPanelEmojis__SubNavCategoryLabel--Flags": {
+    "messageformat": "ಫ್ಲ್ಯಾಗ್‌ಗಳು"
+  },
+  "icu:FunPanelEmojis__SearchResults__EmptyHeading": {
+    "messageformat": "ಯಾವುದೇ ಎಮೋಜಿ ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "icu:FunPanelEmojis__ChangeSkinToneButtonLabel": {
+    "messageformat": "ಸ್ಕಿನ್ ಟೋನ್ ಆದ್ಯತೆಯನ್ನು ಬದಲಾಯಿಸಿ"
+  },
+  "icu:FunPanelEmojis__SkinTonePicker__ChooseDefaultLabel": {
+    "messageformat": "ನಿಮ್ಮ ಡೀಫಾಲ್ಟ್ ಸ್ಕಿನ್‌ಟೋನ್ ಆಯ್ಕೆಮಾಡಿ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SearchResults": {
+    "messageformat": "ಹುಡುಕಾಟದ ಫಲಿತಾಂಶಗಳು"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Recents": {
+    "messageformat": "ಇತ್ತೀಚೆಗೆ ಬಳಸಲಾಗಿದೆ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--SmileysAndPeople": {
+    "messageformat": "ಸ್ಮೈಲೀಗಳು ಮತ್ತು ಜನರು"
+  },
+  "icu:FunPanelEmojis__SectionTitle--AnimalsAndNature": {
+    "messageformat": "ಪ್ರಾಣಿಗಳು ಮತ್ತು ಪ್ರಕೃತಿ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--FoodAndDrink": {
+    "messageformat": "ಆಹಾರ ಮತ್ತು ಪಾನೀಯ"
+  },
+  "icu:FunPanelEmojis__SectionTitle--TravelAndPlaces": {
+    "messageformat": "ಪ್ರಯಾಣ ಮತ್ತು ಸ್ಥಳಗಳು"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Activities": {
+    "messageformat": "ಚಟುವಟಿಕೆಗಳು"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Objects": {
+    "messageformat": "ವಸ್ತುಗಳು"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Symbols": {
+    "messageformat": "ಚಿಹ್ನೆಗಳು"
+  },
+  "icu:FunPanelEmojis__SectionTitle--Flags": {
+    "messageformat": "ಫ್ಲ್ಯಾಗ್‌ಗಳು"
+  },
+  "icu:FunPanelStickers__SearchLabel": {
+    "messageformat": "ಸ್ಟಿಕ್ಕರ್‌ಗಳ ಹುಡುಕಾಟ"
+  },
+  "icu:FunPanelStickers__SearchPlaceholder": {
+    "messageformat": "ಸ್ಟಿಕ್ಕರ್‌ಗಳ ಹುಡುಕಾಟ"
+  },
+  "icu:FunPanelSticker__SubNavLabel": {
+    "messageformat": "ಸ್ಟಿಕ್ಕರ್ ಪ್ಯಾಕ್‌ಗಳು"
+  },
+  "icu:FunPanelStickers__SubNavCategoryLabel--Recents": {
+    "messageformat": "ಇತ್ತೀಚೆಗೆ ಬಳಸಲಾಗಿದೆ"
+  },
+  "icu:FunPanelStickers__SectionTitle--SearchResults": {
+    "messageformat": "ಹುಡುಕಾಟದ ಫಲಿತಾಂಶಗಳು"
+  },
+  "icu:FunPanelStickers__SectionTitle--Recents": {
+    "messageformat": "ಇತ್ತೀಚೆಗೆ ಬಳಸಲಾಗಿದೆ"
+  },
+  "icu:FunPanelStickers__SearchResults__EmptyHeading": {
+    "messageformat": "ಯಾವುದೇ ಸ್ಟಿಕ್ಕರ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "icu:FunPanelStickers__LightboxDialog__Label": {
+    "messageformat": "Sticker Preview"
+  },
+  "icu:FunPanelGifs__SearchLabel--Tenor": {
+    "messageformat": "Tenor ಮೂಲಕ GIF ಗಳನ್ನು ಹುಡುಕಿ"
+  },
+  "icu:FunPanelGifs__SearchPlaceholder--Tenor": {
+    "messageformat": "Tenor ನಲ್ಲಿ ಹುಡುಕಿ"
+  },
+  "icu:FunPanelGifs__SubNavLabel": {
+    "messageformat": "GIF ವರ್ಗಗಳು"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Recents": {
+    "messageformat": "ಇತ್ತೀಚೆಗೆ ಬಳಸಲಾಗಿದೆ"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Trending": {
+    "messageformat": "ಟ್ರೆಂಡಿಂಗ್"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Celebrate": {
+    "messageformat": "ಸಂಭ್ರಮಿಸಿ"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Love": {
+    "messageformat": "ಪ್ರೀತಿ"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--ThumbsUp": {
+    "messageformat": "ಥಂಬ್ಸ್ ಅಪ್"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Surprised": {
+    "messageformat": "ಅಚ್ಚರಿ"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Excited": {
+    "messageformat": "ಉತ್ಸುಕ"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Sad": {
+    "messageformat": "ದುಃಖ"
+  },
+  "icu:FunPanelGifs__SubNavCategoryLabel--Angry": {
+    "messageformat": "ಕೋಪ"
+  },
+  "icu:FunPanelGifs__SearchResults__LoadingLabel": {
+    "messageformat": "GIF ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorHeading": {
+    "messageformat": "GIF ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ನಿಮ್ಮ ಕನೆಕ್ಷನ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಪುನಃ ಪ್ರಯತ್ನಿಸಿ"
+  },
+  "icu:FunPanelGifs__SearchResults__ErrorRetryButton": {
+    "messageformat": "ಮರುಪ್ರಯತ್ನಿಸಿ"
+  },
+  "icu:FunPanelGifs__SearchResults__EmptyHeading": {
+    "messageformat": "ಯಾವುದೇ GIF ಗಳು ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "icu:FunPanelGifs__LightboxDialog__Label": {
+    "messageformat": "GIF Preview"
+  },
+  "icu:FunSearch__ClearButtonLabel": {
+    "messageformat": "Clear Search"
+  },
+  "icu:FunSkinTones__List": {
+    "messageformat": "Skin tone"
+  },
+  "icu:FunSkinTones__ListItem--None": {
+    "messageformat": "None"
+  },
+  "icu:FunSkinTones__ListItem--Light": {
+    "messageformat": "Light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumLight": {
+    "messageformat": "Medium-light skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Medium": {
+    "messageformat": "Medium skin tone"
+  },
+  "icu:FunSkinTones__ListItem--MediumDark": {
+    "messageformat": "Medium-dark skin tone"
+  },
+  "icu:FunSkinTones__ListItem--Dark": {
+    "messageformat": "Dark skin tone"
+  },
   "icu:confirmation-dialog--Cancel": {
     "messageformat": "ರದ್ದುಮಾಡಿ"
   },
@@ -2291,8 +2510,14 @@
   "icu:Message--tap-to-view-expired": {
     "messageformat": "ವೀಕ್ಷಿಸಲಾಗಿದೆ"
   },
+  "icu:Message--tap-to-view--viewed": {
+    "messageformat": "ವೀಕ್ಷಿಸಲಾಗಿದೆ"
+  },
   "icu:Message--tap-to-view--outgoing": {
     "messageformat": "ಮಾಧ್ಯಮ"
+  },
+  "icu:Message--tap-to-view--media": {
+    "messageformat": "ಒಮ್ಮೆ ವೀಕ್ಷಿಸಬಹುದಾದ ಮೀಡಿಯಾ"
   },
   "icu:Message--tap-to-view--incoming--expired-toast": {
     "messageformat": "ನೀವು ಈಗಾಗಲೇ ಈ ಸಂದೇಶವನ್ನು ವೀಕ್ಷಿಸಿದ್ದೀರಿ."
@@ -2305,6 +2530,15 @@
   },
   "icu:Message--tap-to-view--incoming-video": {
     "messageformat": "ನೋಟ ವೀಡಿಯೊ"
+  },
+  "icu:Message--tap-to-view--video": {
+    "messageformat": "ಏಕ ವೀಕ್ಷಣೆ ವೀಡಿಯೊ"
+  },
+  "icu:Message--tap-to-view--photo": {
+    "messageformat": "ಏಕ ವೀಕ್ಷಣೆ ಫೋಟೋ"
+  },
+  "icu:Message--tap-to-view--helper-text": {
+    "messageformat": "ವೀಕ್ಷಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ"
   },
   "icu:Conversation--getDraftPreview--attachment": {
     "messageformat": "(ಅಟ್ಯಾಚ್‌ಮೆಂಟ್)"
@@ -2498,6 +2732,9 @@
   "icu:Keyboard--toggle-video": {
     "messageformat": "ವೀಡಿಯೊ ಟಾಗಲ್ ಅನ್ನು ಆನ್ ಮತ್ತು ಆಫ್ ಮಾಡಿ"
   },
+  "icu:Keyboard--toggle-preview": {
+    "messageformat": "ವಿಸ್ತಿರಿಸಿದ ಪ್ರಿವ್ಯೂ ಆನ್ ಅಥವಾ ಆಫ್ ಅನ್ನು ಟಾಗಲ್ ಮಾಡಿ"
+  },
   "icu:Keyboard--accept-video-call": {
     "messageformat": "ವೀಡಿಯೋದೊಂದಿಗೆ ಕರೆಗೆ ಉತ್ತರಿಸಿ (ವೀಡಿಯೋ ಕರೆಗಳು ಮಾತ್ರ)"
   },
@@ -2560,6 +2797,12 @@
   },
   "icu:SafetyTipsModal__Description": {
     "messageformat": "ನಿಮಗೆ ಪರಿಚಯವಿಲ್ಲದವರಿಂದ ಮೆಸೇಜ್ ವಿನಂತಿಗಳನ್ನು ಸ್ವೀಕರಿಸುವಾಗ ಎಚ್ಚರವಹಿಸಿ. ಇವುಗಳ ಬಗ್ಗೆ ಎಚ್ಚರವಹಿಸಿ:"
+  },
+  "icu:SafetyTipsModal__TipTitle--Fake": {
+    "messageformat": "Fake names and accounts"
+  },
+  "icu:SafetyTipsModal__TipDescription--Fake": {
+    "messageformat": "Signal will never contact you for your registration code or PIN. Be cautious of requests that impersonate others. Profile names are chosen by their account holder and aren't verified."
   },
   "icu:SafetyTipsModal__TipTitle--Crypto": {
     "messageformat": "ಕ್ರಿಪ್ಟೊ ಅಥವಾ ಹಣದ ಹಗರಣಗಳು"
@@ -2693,6 +2936,12 @@
   "icu:MessageRequests--accept": {
     "messageformat": "ಒಪ್ಪಿಕೊಳ್ಳಿ"
   },
+  "icu:MessageRequests--accept-confirm-title": {
+    "messageformat": "Accept Request?"
+  },
+  "icu:MessageRequests--accept-confirm-body": {
+    "messageformat": "Review requests carefully. Profile names are chosen by their account owner and aren't verified."
+  },
   "icu:MessageRequests--continue": {
     "messageformat": "ಮುಂದುವರಿಸಿ"
   },
@@ -2704,6 +2953,21 @@
   },
   "icu:ConversationHero--members": {
     "messageformat": "{count, plural, one {1 ಸದಸ್ಯ} other {{count,number} ಸದಸ್ಯರು}}"
+  },
+  "icu:ConversationHero--review-carefully": {
+    "messageformat": "Review carefully"
+  },
+  "icu:ConversationHero--group-names": {
+    "messageformat": "<clickable>Group names</clickable> are not verified"
+  },
+  "icu:ConversationHero--profile-names": {
+    "messageformat": "<clickable>Profile names</clickable> are not verified"
+  },
+  "icu:ConversationHero--signal-official-chat": {
+    "messageformat": "This is the official and only chat from Signal"
+  },
+  "icu:ConversationHero--release-notes": {
+    "messageformat": "Keep up to date with news and release notes."
   },
   "icu:member-of-1-group": {
     "messageformat": "{group} ರ ಸದಸ್ಯ"
@@ -2917,6 +3181,12 @@
   },
   "icu:calling__pip--off": {
     "messageformat": "ಫುಲ್‌ಸ್ಕ್ರೀನ್ ಕಾಲ್"
+  },
+  "icu:calling__preview--maximize": {
+    "messageformat": "ಪ್ರಿವ್ಯೂವನ್ನು ಗರಿಷ್ಠಗೊಳಿಸಿ"
+  },
+  "icu:calling__preview--minimize": {
+    "messageformat": "ಪ್ರಿವ್ಯೂವನ್ನು ಕನಿಷ್ಠಗೊಳಿಸಿ"
   },
   "icu:calling__change-view": {
     "messageformat": "ವೀಕ್ಷಣೆಯನ್ನು ಬದಲಾಯಿಸಿ"
@@ -3698,18 +3968,6 @@
   "icu:BackupImportScreen__error__confirm": {
     "messageformat": "ಮರುಪ್ರಯತ್ನಿಸಿ"
   },
-  "icu:BackupImportScreen__skip": {
-    "messageformat": "ಬಿಟ್ಟು ಮುಂದುವರಿಯಿರಿ"
-  },
-  "icu:BackupImportScreen__skip-confirmation__title": {
-    "messageformat": "ಸಂದೇಶ ವರ್ಗಾವಣೆ ಸ್ಕಿಪ್ ಮಾಡೋಣವೇ?"
-  },
-  "icu:BackupImportScreen__skip-confirmation__body": {
-    "messageformat": "ನೀವು ಸ್ಕಿಪ್ ಆಯ್ಕೆ ಮಾಡಿದರೆ, ಈ ಸಾಧನದಲ್ಲಿ ಯಾವುದೇ ಸಂದೇಶ ಅಥವಾ ಮೀಡಿಯಾಗಳಿಗೆ ನಿಮಗೆ ಆಕ್ಸೆಸ್ ಇರುವುದಿಲ್ಲ. ಸೆಟ್ಟಿಂಗ್ಸ್ > ಚಾಟ್ಸ್ > ವರ್ಗಾವಣೆ ಸ್ಕಿಪ್ ಮಾಡಿದ ನಂತರ ಪುನಃ ಹೊಸ ವರ್ಗಾವಣೆ ಆರಂಭಿಸಬಹುದು"
-  },
-  "icu:BackupImportScreen__skip-confirmation__cancel": {
-    "messageformat": "ರದ್ದುಮಾಡಿ"
-  },
   "icu:BackupMediaDownloadProgress__title-in-progress": {
     "messageformat": "ಮೀಡಿಯಾ ರಿಸ್ಟೋರ್ ಮಾಡಲಾಗುತ್ತಿದೆ"
   },
@@ -3772,6 +4030,18 @@
   },
   "icu:CompositionArea__edit-action--send": {
     "messageformat": "ಎಡಿಟ್ ಮಾಡಿದ ಮೆಸೇಜ್ ಕಳುಹಿಸಿ"
+  },
+  "icu:CompositionArea__FunButtonLabel": {
+    "messageformat": "ಎಮೋಜಿ, ಸ್ಟಿಕ್ಕರ್ ಅಥವಾ GIF ಅನ್ನು ಸೇರಿಸಿ"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Title": {
+    "messageformat": "Replace attachment?"
+  },
+  "icu:CompositionArea__ConfirmGifSelection__Body": {
+    "messageformat": "Adding this GIF will replace the item in your current draft message."
+  },
+  "icu:CompositionArea__ConfirmGifSelection__ReplaceButton": {
+    "messageformat": "Replace"
   },
   "icu:CompositionInput__editing-message": {
     "messageformat": "ಮೆಸೇಜ್ ಎಡಿಟ್ ಮಾಡಿ"
@@ -4193,9 +4463,6 @@
   "icu:ShareCallLinkViaSignal__DraftMessageText": {
     "messageformat": "Signal ಕರೆಗೆ ಸೇರಲು ಈ ಲಿಂಕ್ ಅನ್ನು ಬಳಸಿ: {url}"
   },
-  "icu:MessageRequestWarning__learn-more": {
-    "messageformat": "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ"
-  },
   "icu:MessageRequestWarning__safety-tips": {
     "messageformat": "ಸುರಕ್ಷತಾ ಸಲಹೆಗಳು"
   },
@@ -4350,7 +4617,7 @@
     "messageformat": "ಗ್ರೇಡಿಯೆಂಟ್ ಮುಕ್ತಾಯ"
   },
   "icu:GIF--download": {
-    "messageformat": "Download GIF attachment"
+    "messageformat": "GIF ಅಟ್ಯಾಚ್‌ಮೆಂಟ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ"
   },
   "icu:customDisappearingTimeOption": {
     "messageformat": "ಕಸ್ಟಮ್ ಸಮಯ…"
@@ -4655,6 +4922,27 @@
   "icu:Preferences__button--privacy": {
     "messageformat": "ಖಾಸಗಿತನ"
   },
+  "icu:Preferences__button--data-usage": {
+    "messageformat": "ಡೇಟಾ ಬಳಕೆ"
+  },
+  "icu:Preferences__media-auto-download": {
+    "messageformat": "ಮೀಡಿಯಾ ಆಟೋ ಡೌನ್‌ಲೋಡ್"
+  },
+  "icu:Preferences__media-auto-download__photos": {
+    "messageformat": "ಫೋಟೋಗಳು"
+  },
+  "icu:Preferences__media-auto-download__videos": {
+    "messageformat": "ವೀಡಿಯೊಗಳು"
+  },
+  "icu:Preferences__media-auto-download__audio": {
+    "messageformat": "ಆಡಿಯೊ"
+  },
+  "icu:Preferences__media-auto-download__documents": {
+    "messageformat": "ದಾಖಲೆಗಳು"
+  },
+  "icu:Preferences__media-auto-download__description": {
+    "messageformat": "ಧ್ವನಿ ಸಂದೇಶಗಳು ಮತ್ತು ಸ್ಟಿಕ್ಕರ್‌ಗಳು ಯಾವಾಗಲೂ ಸ್ವಯಂ-ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತವೆ."
+  },
   "icu:Preferences--lastSynced": {
     "messageformat": "ಈ ಹಿಂದೆ ಇಂಪೋರ್ಟ್ ಮಾಡಿದ್ದು: {date} {time}"
   },
@@ -4811,6 +5099,18 @@
   "icu:DialogUpdate__downloaded": {
     "messageformat": "ಅಪ್‌ಡೇಟ್ ಡೌನ್‌ಲೋಡ್ ಆಗಿದೆ"
   },
+  "icu:CriticalIdlePrimaryDevice__title": {
+    "messageformat": "ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ Signal ತೆರೆಯಿರಿ"
+  },
+  "icu:CriticalIdlePrimaryDevice__body": {
+    "messageformat": "ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ ನೀವು Signal ಅನ್ನು ತೆರೆಯದ ಹೊರತು ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಶೀಘ್ರದಲ್ಲೇ ಅಳಿಸಲಾಗುತ್ತದೆ. ನೀವು ಇದನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಮಾಡಿದ್ದರೆ ಈ ಮೆಸೇಜ್ ಹೊರಟು ಹೋಗುತ್ತದೆ. <learnMoreLink>ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ</learnMoreLink>"
+  },
+  "icu:IdlePrimaryDevice__body": {
+    "messageformat": "ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಸಕ್ರಿಯವಾಗಿಡಲು ನಿಮ್ಮ ಫೋನ್‌ನಲ್ಲಿ Signal ತೆರೆಯಿರಿ"
+  },
+  "icu:IdlePrimaryDevice__learnMore": {
+    "messageformat": "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ"
+  },
   "icu:DialogNetworkStatus__outage": {
     "messageformat": "Signal ತಾಂತ್ರಿಕ ತೊಂದರೆಗಳನ್ನು ಎದುರಿಸುತ್ತಿದೆ. ಸಾಧ್ಯವಾದಷ್ಟು ಬೇಗ ಸೇವೆಯನ್ನು ಮರುಸ್ಥಾಪಿಸಲು ನಾವು ಶ್ರಮಿಸುತ್ತಿದ್ದೇವೆ."
   },
@@ -4951,6 +5251,30 @@
   },
   "icu:MediaEditor__crop-preset--9-16": {
     "messageformat": "9:16"
+  },
+  "icu:MediaPermissionsModal__title--microphone": {
+    "messageformat": "ನಿಮ್ಮ ಮೈಕ್ರೋಫೋನ್‌ಗೆ ಆಕ್ಸೆಸ್‍ ಅನ್ನು ಅನುಮತಿಸಿ"
+  },
+  "icu:MediaPermissionsModal__title--camera": {
+    "messageformat": "ನಿಮ್ಮ ಕ್ಯಾಮರಾಕ್ಕೆ ಆ್ಯಕ್ಸೆಸ್ ಅನುಮತಿಸಿ"
+  },
+  "icu:MediaPermissionsModal__subtitle--call": {
+    "messageformat": "ಕರೆಗೆ ಸೇರಿಕೊಳ್ಳಲು ಅಥವಾ ಕರೆಯನ್ನು ಪ್ರಾರಂಭಿಸಲು:"
+  },
+  "icu:MediaPermissionsModal__subtitle--call--camera": {
+    "messageformat": "ನಿಮ್ಮ ವೀಡಿಯೊವನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲು:"
+  },
+  "icu:MediaPermissionsModal__subtitle--voice-note": {
+    "messageformat": "ಧ್ವನಿ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಲು:"
+  },
+  "icu:MediaPermissionsModal__step-1": {
+    "messageformat": "ಕೆಳಗಿನ “{buttonName}” ಕ್ಲಿಕ್ ಮಾಡಿ"
+  },
+  "icu:MediaPermissionsModal__step-2": {
+    "messageformat": "“Signal” ಅನ್ನು ಆನ್ ಮಾಡಿ"
+  },
+  "icu:MediaPermissionsModal__open": {
+    "messageformat": "ಸೆಟ್ಟಿಂಗ್‌ಗಳಿಗೆ ಹೋಗಿ"
   },
   "icu:MyStories__title": {
     "messageformat": "ನನ್ನ ಸ್ಟೋರೀಸ್"
@@ -5610,6 +5934,15 @@
   "icu:MessageMetadata__edited": {
     "messageformat": "ಎಡಿಟ್ ಮಾಡಲಾಗಿದೆ"
   },
+  "icu:DraftGifMessageSendModal__Title": {
+    "messageformat": "Add a message"
+  },
+  "icu:DraftGifMessageSendModal__SendButtonLabel": {
+    "messageformat": "Send"
+  },
+  "icu:DraftGifMessageSendModal__CancelButtonLabel": {
+    "messageformat": "Cancel"
+  },
   "icu:EditHistoryMessagesModal__title": {
     "messageformat": "ಎಡಿಟ್‌ನ ಇತಿಹಾಸ"
   },
@@ -5829,6 +6162,30 @@
   "icu:WhoCanFindMeReadOnlyToast": {
     "messageformat": "ಈ ಸೆಟ್ಟಿಂಗ್ ಅನ್ನು ಬದಲಾಯಿಸಲು, ”ನನ್ನ ಸಂಖ್ಯೆಯನ್ನು ಯಾರು ನೋಡಬಹುದು“ ಎಂಬುದನ್ನು “ಯಾರೂ ಇಲ್ಲ” ಎಂಬುದಾಗಿ ಹೊಂದಿಸಿ."
   },
+  "icu:ProfileNameWarningModal__description--direct": {
+    "messageformat": "Profile names on Signal are chosen by their account holder:"
+  },
+  "icu:ProfileNameWarningModal__list--item1--direct": {
+    "messageformat": "Profile names aren't verified"
+  },
+  "icu:ProfileNameWarningModal__list--item2--direct": {
+    "messageformat": "Be cautious of accounts that impersonate others"
+  },
+  "icu:ProfileNameWarningModal__list--item3--direct": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
+  "icu:ProfileNameWarningModal__description--group": {
+    "messageformat": "Group names are chosen by members of the group."
+  },
+  "icu:ProfileNameWarningModal__list--item1--group": {
+    "messageformat": "Be cautious of groups that impersonate organizations and businesses"
+  },
+  "icu:ProfileNameWarningModal__list--item2--group": {
+    "messageformat": "Profile names of members in groups are not verified"
+  },
+  "icu:ProfileNameWarningModal__list--item3--group": {
+    "messageformat": "Don't share personal information with people you don't know"
+  },
   "icu:WhatsNew__modal-title": {
     "messageformat": "ಹೊಸತೇನಿದೆ"
   },
@@ -5860,10 +6217,13 @@
     "messageformat": "ಸಣ್ಣ ಟ್ವೀಕ್‌ಗಳು, ಬಗ್ ಫಿಕ್ಸ್‌ಗಳು ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆ ವರ್ಧನೆಗಳು. Signal ಬಳಸುತ್ತಿರುವುದಕ್ಕಾಗಿ ಧನ್ಯವಾದಗಳು!",
     "ignoreUnused": true
   },
-  "icu:WhatsNew__v7.44--0": {
-    "messageformat": "ಗುಂಪು ಕರೆಗಳ ಸಮಯದಲ್ಲಿ ನಾವು ಸಣ್ಣ ಅನಿಮೇಷನ್ ಬಗ್ ಅನ್ನು ಸರಿಪಡಿಸಿದ್ದೇವೆ. ಮೀಟಿಂಗ್ ಸಮಯದಲ್ಲಿ ಗ್ರಿಡ್ ವೀಕ್ಷಣೆಗೆ ಬದಲಾಯಿಸುವುದು ಮತ್ತು ತಡವಾಗಿ ಸೇರಿಕೊಂಡ ಜನರ ವೀಡಿಯೊ ಸ್ಕ್ವೇರ್‌ಗಳು ಕೆಲವೊಮ್ಮೆ ನಿಮ್ಮ ಬಾಸ್ ಪ್ರಸ್ತುತಪಡಿಸುತ್ತಿದ್ದ ಸ್ಲೈಡ್ ಡೆಕ್ ಅನ್ನು ಭಾಗಶಃ ಮರೆಮಾಡುವ ಕ್ಷಣವನ್ನು ಸೆರೆಹಿಡಿಯಲು ಪ್ರಯತ್ನಿಸುವುದು ನಿಮ್ಮ ದಿನದ ಅತ್ಯಂತ ರೋಮಾಂಚಕಾರಿ ಭಾಗವಾಗಿದ್ದರೆ ನಾವು ಮುಂಚಿತವಾಗಿ ಕ್ಷಮೆಯಾಚಿಸುತ್ತೇವೆ."
+  "icu:WhatsNew__v7.47--0": {
+    "messageformat": "ನಿಮ್ಮನ್ನು ಉತ್ತಮವಾಗಿ ನೋಡಲು ಅಥವಾ ನೀವು ಯಾರೆಂದು ಪ್ರತಿಬಿಂಬಿಸಲು ಈಗ ನೀವು ಕರೆಯ ಸಮಯದಲ್ಲಿ ನಿಮ್ಮ ಸ್ಥಳೀಯ ವೀಡಿಯೊ ಪ್ರಿವ್ಯೂವನ್ನು ವಿಸ್ತರಿಸಬಹುದು."
   },
-  "icu:WhatsNew__v7.45--0": {
-    "messageformat": "Stickers should feel sticky, not stuck, so now you can click on a sticker on a newly linked Signal Desktop and that sticker download will automatically get prioritized even when other attachments are downloading too."
+  "icu:WhatsNew__v7.48--0": {
+    "messageformat": "Signal ಗುಂಪು ಕರೆಯ ಸಮಯದಲ್ಲಿ ನೀವು ಮಾತನಾಡಲು ಪ್ರಾರಂಭಿಸಿದ ನಂತರ ನಿಮ್ಮ ಕೈಯನ್ನು ತ್ವರಿತವಾಗಿ ಕೆಳಕ್ಕೆ ಇಳಿಸಲು ನಾವು ಅನುಕೂಲಕರ ಶಾರ್ಟ್‌ಕಟ್ ಅನ್ನು ಸೇರಿಸಿದ್ದೇವೆ. ಇದರ ಕೈಕೆಳಗಿಳಿಸುವ ಫೀಚರ್ ಈ ಆವೃತ್ತಿಯಲ್ಲಿ ನಮ್ಮ ನೆಚ್ಚಿನದ್ದಾಗಿದೆ."
+  },
+  "icu:WhatsNew__v7.49--0": {
+    "messageformat": "If you link a new Desktop on Signal Android and choose to transfer your message history, now you can also selectively transfer old attachments from your primary device too. Bring the past into the present by scrolling back in time and clicking on the download icon. As always, the transfer process is end-to-end encrypted and secure."
   }
 }
