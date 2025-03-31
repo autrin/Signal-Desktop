@@ -63,6 +63,7 @@ export const sendTypesEnum = z.enum([
   'readSync', // urgent
   'sentSync',
   'stickerPackSync',
+  'stickerUsageSync',
   'verificationSync',
   'viewOnceSync',
   'viewSync',
