@@ -2366,6 +2366,42 @@ export default class MessageSender {
     return this.server.getStickerPackManifest(packId);
   }
 
+  public static getStickerUsageSync({
+    packId,
+    stickerId,
+    timestamp,
+  }: {
+    packId: string;
+    stickerId: number;
+    timestamp: number;
+  }): SingleProtoJobData {
+    const myAci = window.textsecure.storage.user.getCheckedAci();
+    const { ContentHint } = Proto.UnidentifiedSenderMessage.Message;
+    
+    const syncMessage = MessageSender.createSyncMessage();
+    const stickerUsageSync = new Proto.SyncMessage.StickerUsageSync();
+    
+    stickerUsageSync.packId = Bytes.fromHex(packId);
+    stickerUsageSync.stickerId = stickerId;
+    stickerUsageSync.timestamp = Long.fromNumber(timestamp);
+    
+    syncMessage.stickerUsageSync = stickerUsageSync;
+    
+    const contentMessage = new Proto.Content();
+    contentMessage.syncMessage = syncMessage;
+    
+    return {
+      contentHint: ContentHint.RESENDABLE,
+      serviceId: myAci,
+      isSyncMessage: true,
+      protoBase64: Bytes.toBase64(
+        Proto.Content.encode(contentMessage).finish()
+      ),
+      type: 'stickerUsageSync',
+      urgent: false,
+    };
+  }
+
   async createGroup(
     group: Readonly<Proto.IGroup>,
     options: Readonly<GroupCredentialsType>
