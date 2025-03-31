@@ -3129,21 +3129,23 @@ export default class MessageReceiver
       );
     }
 
-    if(syncMessage.stickerUsageSync) {
+    if (syncMessage.stickerUsageSync) {
       const { packId, stickerId, timestamp } = syncMessage.stickerUsageSync;
-  
-      const packIdHex = packId ? Bytes.toHex(packId) : ''; // might need to improve this and the script below which would be conditional on this
+      
+      // Convert binary packId to hex string
+      const packIdHex = packId ? Bytes.toHex(packId) : '';
 
+      
       log.info(
-        'MessageReceiver: processing sticker usage sync for',
+        'MessageReceiver: processing sticker usage sync',
         `${redactPackId(packIdHex)} ${stickerId}`
       );
-
+      
       // Update the local database with the sticker usage information
       await updateStickerLastUsed(
-        packIdHex,
-        stickerId || 0,
-        timestamp || Date.now()
+        packIdHex, 
+        Number(stickerId), 
+        Number(timestamp)
       );
     }
 
