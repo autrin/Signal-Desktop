@@ -2125,7 +2125,8 @@ app.on('ready', async () => {
   // We use this event only a single time to log the startup time of the app
   // from when it's first ready until the loading screen disappears.
   ipc.once('signal-app-loaded', (event, info) => {
-    const { preloadTime, connectTime, processedCount } = info;
+    const { preloadCompileTime, preloadTime, connectTime, processedCount } =
+      info;
 
     const loadTime = Date.now() - startTime;
     const sqlInitTime = sqlInitTimeEnd - sqlInitTimeStart;
@@ -2136,6 +2137,7 @@ app.on('ready', async () => {
     const innerLogger = getLogger();
     innerLogger.info('App loaded - time:', loadTime);
     innerLogger.info('SQL init - time:', sqlInitTime);
+    innerLogger.info('Preload Compile - time:', preloadCompileTime);
     innerLogger.info('Preload - time:', preloadTime);
     innerLogger.info('WebSocket connect - time:', connectTime);
     innerLogger.info('Processed count:', processedCount);
@@ -2146,6 +2148,7 @@ app.on('ready', async () => {
     event.sender.send('ci:event', 'app-loaded', {
       loadTime,
       sqlInitTime,
+      preloadCompileTime,
       preloadTime,
       connectTime,
       processedCount,
@@ -2181,7 +2184,8 @@ app.on('ready', async () => {
     logger.info(
       'media access status',
       getMediaAccessStatus('microphone'),
-      getMediaAccessStatus('camera')
+      getMediaAccessStatus('camera'),
+      getMediaAccessStatus('screen')
     );
   }
 
@@ -3020,7 +3024,7 @@ ipc.handle('get-media-access-status', async (_event, value) => {
 
 ipc.handle(
   'open-system-media-permissions',
-  async (_event, mediaType: 'camera' | 'microphone') => {
+  async (_event, mediaType: 'camera' | 'microphone' | 'screenCapture') => {
     if (!OS.isMacOS()) {
       return;
     }
@@ -3031,6 +3035,10 @@ ipc.handle(
     } else if (mediaType === 'microphone') {
       await shell.openExternal(
         'x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone'
+      );
+    } else if (mediaType === 'screenCapture') {
+      await shell.openExternal(
+        'x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture'
       );
     } else {
       throw missingCaseError(mediaType);

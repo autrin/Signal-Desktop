@@ -2,11 +2,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import {
-  hasScreenCapturePermission,
-  openSystemPreferences,
-} from 'mac-screen-capture-permissions';
-import { isSupported as isNativeMacScreenShareSupported } from '@indutny/mac-screen-share';
 import { omit } from 'lodash';
 import type { ReadonlyDeep } from 'type-fest';
 import {
@@ -22,6 +17,7 @@ import { missingCaseError } from '../../util/missingCaseError';
 import { drop } from '../../util/drop';
 import {
   DesktopCapturer,
+  isNativeMacScreenShareSupported,
   type DesktopCapturerBaton,
 } from '../../util/desktopCapturer';
 import { calling } from '../../services/calling';
@@ -147,6 +143,7 @@ export type DirectCallStateType = {
   isIncoming: boolean;
   isSharingScreen?: boolean;
   isVideoCall: boolean;
+  hasRemoteAudio?: boolean;
   hasRemoteVideo?: boolean;
   remoteAudioLevel: number;
 };
@@ -345,6 +342,10 @@ export type RemoteVideoChangeType = ReadonlyDeep<{
   conversationId: string;
   hasVideo: boolean;
 }>;
+export type RemoteAudioChangeType = ReadonlyDeep<{
+  conversationId: string;
+  hasAudio: boolean;
+}>;
 
 type RemoteSharingScreenChangeType = ReadonlyDeep<{
   conversationId: string;
@@ -355,13 +356,19 @@ export type RemoveClientType = ReadonlyDeep<{
   demuxId: number;
 }>;
 
-export type SetLocalAudioType = ReadonlyDeep<{
-  enabled: boolean;
-}>;
+// eslint-disable-next-line local-rules/type-alias-readonlydeep
+export type SetLocalAudioType = (
+  payload?: ReadonlyDeep<{
+    enabled: boolean;
+  }>
+) => void;
 
-export type SetLocalVideoType = ReadonlyDeep<{
-  enabled: boolean;
-}>;
+// eslint-disable-next-line local-rules/type-alias-readonlydeep
+export type SetLocalVideoType = (
+  payload: ReadonlyDeep<{
+    enabled: boolean;
+  }>
+) => void;
 
 export type SetGroupCallVideoRequestType = ReadonlyDeep<{
   conversationId: string;
@@ -642,6 +649,7 @@ const OUTGOING_CALL = 'calling/OUTGOING_CALL';
 const PEEK_GROUP_CALL_FULFILLED = 'calling/PEEK_GROUP_CALL_FULFILLED';
 const RAISE_HAND_GROUP_CALL = 'calling/RAISE_HAND_GROUP_CALL';
 const REFRESH_IO_DEVICES = 'calling/REFRESH_IO_DEVICES';
+const REMOTE_AUDIO_CHANGE = 'calling/REMOTE_AUDIO_CHANGE';
 const REMOTE_SHARING_SCREEN_CHANGE = 'calling/REMOTE_SHARING_SCREEN_CHANGE';
 const REMOTE_VIDEO_CHANGE = 'calling/REMOTE_VIDEO_CHANGE';
 const REMOVE_CLIENT = 'calling/REMOVE_CLIENT';
@@ -872,8 +880,12 @@ type RemoteSharingScreenChangeActionType = ReadonlyDeep<{
 }>;
 
 type RemoteVideoChangeActionType = ReadonlyDeep<{
-  type: 'calling/REMOTE_VIDEO_CHANGE';
+  type: typeof REMOTE_VIDEO_CHANGE;
   payload: RemoteVideoChangeType;
+}>;
+type RemoteAudioChangeActionType = ReadonlyDeep<{
+  type: typeof REMOTE_AUDIO_CHANGE;
+  payload: RemoteAudioChangeType;
 }>;
 
 type RemoveClientActionType = ReadonlyDeep<{
@@ -895,12 +907,12 @@ type SelectPresentingSourceActionType = ReadonlyDeep<{
 
 type SetLocalAudioActionType = ReadonlyDeep<{
   type: 'calling/SET_LOCAL_AUDIO_FULFILLED';
-  payload: SetLocalAudioType;
+  payload: Parameters<SetLocalAudioType>[0];
 }>;
 
 type SetLocalVideoFulfilledActionType = ReadonlyDeep<{
   type: 'calling/SET_LOCAL_VIDEO_FULFILLED';
-  payload: SetLocalVideoType;
+  payload: Parameters<SetLocalVideoType>[0];
 }>;
 
 type SetPresentingFulfilledActionType = ReadonlyDeep<{
@@ -997,6 +1009,7 @@ export type CallingActionType =
   | OutgoingCallActionType
   | PeekGroupCallFulfilledActionType
   | RefreshIODevicesActionType
+  | RemoteAudioChangeActionType
   | RemoteSharingScreenChangeActionType
   | RemoteVideoChangeActionType
   | RemoveClientActionType
@@ -1360,7 +1373,7 @@ function getPresentingSources(): ThunkAction<
     const needsPermission =
       platform === 'darwin' &&
       !isNativeMacScreenShareSupported &&
-      !hasScreenCapturePermission();
+      (await window.IPC.getMediaAccessStatus('screen')) === 'denied';
 
     const capturer = new DesktopCapturer({
       i18n,
@@ -1746,7 +1759,7 @@ function openSystemPreferencesAction(): ThunkAction<
   never
 > {
   return () => {
-    void openSystemPreferences();
+    drop(window.IPC.openSystemMediaPermissions('screenCapture'));
   };
 }
 
@@ -1849,6 +1862,14 @@ function remoteSharingScreenChange(
   };
 }
 
+function remoteAudioChange(
+  payload: RemoteAudioChangeType
+): RemoteAudioChangeActionType {
+  return {
+    type: REMOTE_AUDIO_CHANGE,
+    payload,
+  };
+}
 function remoteVideoChange(
   payload: RemoteVideoChangeType
 ): RemoteVideoChangeActionType {
@@ -1888,26 +1909,28 @@ function setRendererCanvas(
 }
 
 function setLocalAudio(
-  payload: SetLocalAudioType
+  payload?: Parameters<SetLocalAudioType>[0]
 ): ThunkAction<void, RootStateType, unknown, SetLocalAudioActionType> {
   return (dispatch, getState) => {
-    const activeCall = getActiveCall(getState().calling);
-    if (!activeCall) {
+    const { activeCallState } = getState().calling;
+    if (!activeCallState || activeCallState.state !== 'Active') {
       log.warn('Trying to set local audio when no call is active');
       return;
     }
 
-    calling.setOutgoingAudio(activeCall.conversationId, payload.enabled);
-
+    const enabled = payload?.enabled ?? !activeCallState.hasLocalAudio;
+    calling.setOutgoingAudio(activeCallState.conversationId, enabled);
     dispatch({
       type: SET_LOCAL_AUDIO_FULFILLED,
-      payload,
+      payload: {
+        enabled,
+      },
     });
   };
 }
 
 function setLocalVideo(
-  payload: SetLocalVideoType
+  payload: Parameters<SetLocalVideoType>[0]
 ): ThunkAction<void, RootStateType, unknown, SetLocalVideoFulfilledActionType> {
   return async (dispatch, getState) => {
     const activeCall = getActiveCall(getState().calling);
@@ -1916,7 +1939,7 @@ function setLocalVideo(
       return;
     }
 
-    let enabled: boolean;
+    let enabled = payload?.enabled;
     if (await requestCameraPermissions()) {
       if (
         isGroupOrAdhocCallState(activeCall) ||
@@ -1924,14 +1947,13 @@ function setLocalVideo(
       ) {
         await calling.setOutgoingVideo(
           activeCall.conversationId,
-          payload.enabled
+          Boolean(payload?.enabled)
         );
-      } else if (payload.enabled) {
-        await calling.enableLocalCamera();
+      } else if (payload?.enabled) {
+        await calling.enableLocalCamera(activeCall.callMode);
       } else {
         calling.disableLocalVideo();
       }
-      ({ enabled } = payload);
     } else {
       enabled = false;
     }
@@ -1939,8 +1961,7 @@ function setLocalVideo(
     dispatch({
       type: SET_LOCAL_VIDEO_FULFILLED,
       payload: {
-        ...payload,
-        enabled,
+        enabled: Boolean(enabled),
       },
     });
   };
@@ -2756,6 +2777,7 @@ export const actions = {
   receiveIncomingDirectCall,
   receiveIncomingGroupCall,
   refreshIODevices,
+  remoteAudioChange,
   remoteSharingScreenChange,
   remoteVideoChange,
   removeClient,
@@ -3932,6 +3954,25 @@ export function reducer(
       },
     };
   }
+  if (action.type === REMOTE_AUDIO_CHANGE) {
+    const { conversationId, hasAudio } = action.payload;
+    const call = getOwn(state.callsByConversation, conversationId);
+    if (call?.callMode !== CallMode.Direct) {
+      log.warn('Cannot update remote audio for a non-direct call');
+      return state;
+    }
+
+    return {
+      ...state,
+      callsByConversation: {
+        ...callsByConversation,
+        [conversationId]: {
+          ...call,
+          hasRemoteAudio: hasAudio,
+        },
+      },
+    };
+  }
 
   if (action.type === RETURN_TO_ACTIVE_CALL) {
     const { activeCallState } = state;
@@ -3959,7 +4000,7 @@ export function reducer(
       ...state,
       activeCallState: {
         ...state.activeCallState,
-        hasLocalAudio: action.payload.enabled,
+        hasLocalAudio: Boolean(action.payload?.enabled),
       },
     };
   }
@@ -3974,7 +4015,7 @@ export function reducer(
       ...state,
       activeCallState: {
         ...state.activeCallState,
-        hasLocalVideo: action.payload.enabled,
+        hasLocalVideo: Boolean(action.payload?.enabled),
       },
     };
   }

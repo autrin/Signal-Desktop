@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 
 import React from 'react';
-import FocusTrap from 'focus-trap-react';
 import classNames from 'classnames';
+import { FocusScope } from 'react-aria';
 import type {
   SetLocalAudioType,
   SetLocalVideoType,
@@ -72,8 +72,8 @@ export type PropsType = {
   onJoinCall: () => void;
   outgoingRing: boolean;
   peekedParticipants: Array<ConversationType>;
-  setLocalAudio: (_: SetLocalAudioType) => void;
-  setLocalVideo: (_: SetLocalVideoType) => void;
+  setLocalAudio: SetLocalAudioType;
+  setLocalVideo: SetLocalVideoType;
   setLocalPreviewContainer: (container: HTMLDivElement | null) => void;
   setOutgoingRing: (_: boolean) => void;
   showParticipantsList: boolean;
@@ -253,16 +253,7 @@ export function CallingLobby({
   useWasInitiallyMutedToast(hasLocalAudio, i18n);
 
   return (
-    <FocusTrap
-      focusTrapOptions={{
-        allowOutsideClick: ({ target }) => {
-          if (!target || !(target instanceof HTMLElement)) {
-            return false;
-          }
-          return target.matches('.Toast, .Toast *');
-        },
-      }}
-    >
+    <FocusScope contain restoreFocus>
       <div className="module-calling__container dark-theme">
         {shouldShowLocalVideo ? (
           <div
@@ -387,7 +378,7 @@ export function CallingLobby({
           <div className="module-calling__spacer CallControls__OuterSpacer" />
         </div>
       </div>
-    </FocusTrap>
+    </FocusScope>
   );
 }
 

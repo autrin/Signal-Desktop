@@ -1,16 +1,14 @@
 // Copyright 2025 Signal Messenger, LLC
 // SPDX-License-Identifier: AGPL-3.0-only
-import Fuse from 'fuse.js';
-import { sortBy } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
 import { z } from 'zod';
-import * as log from '../../../logging/log';
-import * as Errors from '../../../types/errors';
-import type { LocaleEmojiListType } from '../../../types/emoji';
-import type { LocalizerType } from '../../../types/I18N';
+import emojiRegex from 'emoji-regex';
 import { strictAssert } from '../../../util/assert';
-import { drop } from '../../../util/drop';
 import { parseUnknown } from '../../../util/schemas';
+import type {
+  FunEmojiSearchIndex,
+  FunEmojiSearchIndexEntry,
+} from '../useFunEmojiSearch';
+import type { FunEmojiLocalizerIndex } from '../useFunEmojiLocalizer';
 
 // Import emoji-datasource dynamically to avoid costly typechecking.
 // eslint-disable-next-line import/no-dynamic-require, @typescript-eslint/no-var-requires
@@ -236,40 +234,36 @@ const RAW_EMOJI_DATA = parseUnknown(
   return a.sort_order - b.sort_order;
 });
 
-type EmojiSearchIndexEntry = Readonly<{
-  key: EmojiParentKey;
-  rank: number | null;
-  shortName: string;
-  shortNames: ReadonlyArray<string>;
-  emoticon: string | null;
-  emoticons: ReadonlyArray<string>;
-}>;
-
-type EmojiSearchIndex = ReadonlyArray<EmojiSearchIndexEntry>;
-
+/** @internal */
 type EmojiIndex = Readonly<{
   // raw data
-  parentByKey: Record<EmojiParentKey, EmojiParentData>;
-  parentKeysByName: Record<EmojiEnglishShortName, EmojiParentKey>;
-  parentKeysByValue: Record<EmojiParentValue, EmojiParentKey>;
-  parentKeysByVariantKeys: Record<EmojiVariantKey, EmojiParentKey>;
+  parentByKey: Map<EmojiParentKey, EmojiParentData>;
+  parentKeysByName: Map<EmojiEnglishShortName, EmojiParentKey>;
+  parentKeysByValue: Map<EmojiParentValue, EmojiParentKey>;
+  parentKeysByValueNonQualified: Map<EmojiParentValue, EmojiParentKey>;
+  parentKeysByVariantKeys: Map<EmojiVariantKey, EmojiParentKey>;
 
-  variantByKey: Record<EmojiVariantKey, EmojiVariantData>;
-  variantKeysByValue: Record<EmojiVariantValue, EmojiVariantKey>;
+  variantByKey: Map<EmojiVariantKey, EmojiVariantData>;
+  variantKeysByValue: Map<EmojiVariantValue, EmojiVariantKey>;
+  variantKeysByValueNonQualified: Map<EmojiVariantValue, EmojiVariantKey>;
 
   unicodeCategories: Record<EmojiUnicodeCategory, Array<EmojiParentKey>>;
   pickerCategories: Record<EmojiPickerCategory, Array<EmojiParentKey>>;
 
-  defaultEnglishSearchIndex: Array<EmojiSearchIndexEntry>;
+  defaultEnglishSearchIndex: Array<FunEmojiSearchIndexEntry>;
+  defaultEnglishLocalizerIndex: Map<EmojiParentKey, string>;
 }>;
 
+/** @internal */
 const EMOJI_INDEX: EmojiIndex = {
-  parentByKey: {},
-  parentKeysByValue: {},
-  parentKeysByName: {},
-  parentKeysByVariantKeys: {},
-  variantByKey: {},
-  variantKeysByValue: {},
+  parentByKey: new Map(),
+  parentKeysByValue: new Map(),
+  parentKeysByValueNonQualified: new Map(),
+  parentKeysByName: new Map(),
+  parentKeysByVariantKeys: new Map(),
+  variantByKey: new Map(),
+  variantKeysByValue: new Map(),
+  variantKeysByValueNonQualified: new Map(),
   unicodeCategories: {
     [EmojiUnicodeCategory.SmileysAndEmotion]: [],
     [EmojiUnicodeCategory.PeopleAndBody]: [],
@@ -293,22 +287,27 @@ const EMOJI_INDEX: EmojiIndex = {
     [EmojiPickerCategory.Flags]: [],
   },
   defaultEnglishSearchIndex: [],
+  defaultEnglishLocalizerIndex: new Map(),
 };
 
 function addParent(parent: EmojiParentData, rank: number) {
-  EMOJI_INDEX.parentByKey[parent.key] = parent;
-  EMOJI_INDEX.parentKeysByValue[parent.value] = parent.key;
+  EMOJI_INDEX.parentByKey.set(parent.key, parent);
+  EMOJI_INDEX.parentKeysByValue.set(parent.value, parent.key);
   if (parent.valueNonqualified != null) {
-    EMOJI_INDEX.parentKeysByValue[parent.valueNonqualified] = parent.key;
+    EMOJI_INDEX.parentKeysByValue.set(parent.valueNonqualified, parent.key);
+    EMOJI_INDEX.parentKeysByValueNonQualified.set(
+      parent.valueNonqualified,
+      parent.key
+    );
   }
-  EMOJI_INDEX.parentKeysByName[parent.englishShortNameDefault] = parent.key;
+  EMOJI_INDEX.parentKeysByName.set(parent.englishShortNameDefault, parent.key);
   EMOJI_INDEX.unicodeCategories[parent.unicodeCategory].push(parent.key);
   if (parent.pickerCategory != null) {
     EMOJI_INDEX.pickerCategories[parent.pickerCategory].push(parent.key);
   }
 
   for (const englishShortName of parent.englishShortNames) {
-    EMOJI_INDEX.parentKeysByName[englishShortName] = parent.key;
+    EMOJI_INDEX.parentKeysByName.set(englishShortName, parent.key);
   }
 
   EMOJI_INDEX.defaultEnglishSearchIndex.push({
@@ -319,14 +318,23 @@ function addParent(parent: EmojiParentData, rank: number) {
     emoticon: parent.emoticonDefault,
     emoticons: parent.emoticons,
   });
+
+  EMOJI_INDEX.defaultEnglishLocalizerIndex.set(
+    parent.key,
+    parent.englishShortNameDefault
+  );
 }
 
 function addVariant(parentKey: EmojiParentKey, variant: EmojiVariantData) {
-  EMOJI_INDEX.parentKeysByVariantKeys[variant.key] = parentKey;
-  EMOJI_INDEX.variantByKey[variant.key] = variant;
-  EMOJI_INDEX.variantKeysByValue[variant.value] = variant.key;
+  EMOJI_INDEX.parentKeysByVariantKeys.set(variant.key, parentKey);
+  EMOJI_INDEX.variantByKey.set(variant.key, variant);
+  EMOJI_INDEX.variantKeysByValue.set(variant.value, variant.key);
   if (variant.valueNonqualified) {
-    EMOJI_INDEX.variantKeysByValue[variant.valueNonqualified] = variant.key;
+    EMOJI_INDEX.variantKeysByValue.set(variant.valueNonqualified, variant.key);
+    EMOJI_INDEX.variantKeysByValueNonQualified.set(
+      variant.valueNonqualified,
+      variant.key
+    );
   }
 }
 
@@ -404,36 +412,42 @@ for (const rawEmoji of RAW_EMOJI_DATA) {
 }
 
 export function isEmojiParentKey(input: string): input is EmojiParentKey {
-  return Object.hasOwn(EMOJI_INDEX.parentByKey, input);
+  return EMOJI_INDEX.parentByKey.has(input as EmojiParentKey);
 }
 
 export function isEmojiVariantKey(input: string): input is EmojiVariantKey {
-  return Object.hasOwn(EMOJI_INDEX.variantByKey, input);
+  return EMOJI_INDEX.variantByKey.has(input as EmojiVariantKey);
 }
 
 export function isEmojiParentValue(input: string): input is EmojiParentValue {
-  return Object.hasOwn(EMOJI_INDEX.parentKeysByValue, input);
+  return EMOJI_INDEX.parentKeysByValue.has(input as EmojiParentValue);
 }
 
 export function isEmojiVariantValue(input: string): input is EmojiVariantValue {
-  return Object.hasOwn(EMOJI_INDEX.variantKeysByValue, input);
+  return EMOJI_INDEX.variantKeysByValue.has(input as EmojiVariantValue);
+}
+
+export function isEmojiVariantValueNonQualified(
+  input: EmojiVariantValue
+): boolean {
+  return EMOJI_INDEX.variantKeysByValueNonQualified.has(input);
 }
 
 /** @deprecated Prefer EmojiKey for refs, load short names from translations */
 export function isEmojiEnglishShortName(
   input: string
 ): input is EmojiEnglishShortName {
-  return Object.hasOwn(EMOJI_INDEX.parentKeysByName, input);
+  return EMOJI_INDEX.parentKeysByName.has(input as EmojiEnglishShortName);
 }
 
 export function getEmojiParentByKey(key: EmojiParentKey): EmojiParentData {
-  const data = EMOJI_INDEX.parentByKey[key];
+  const data = EMOJI_INDEX.parentByKey.get(key);
   strictAssert(data, `Missing emoji parent data for key "${key}"`);
   return data;
 }
 
 export function getEmojiVariantByKey(key: EmojiVariantKey): EmojiVariantData {
-  const data = EMOJI_INDEX.variantByKey[key];
+  const data = EMOJI_INDEX.variantByKey.get(key);
   strictAssert(data, `Missing emoji variant data for key "${key}"`);
   return data;
 }
@@ -441,7 +455,7 @@ export function getEmojiVariantByKey(key: EmojiVariantKey): EmojiVariantData {
 export function getEmojiParentKeyByValue(
   value: EmojiParentValue
 ): EmojiParentKey {
-  const key = EMOJI_INDEX.parentKeysByValue[value];
+  const key = EMOJI_INDEX.parentKeysByValue.get(value);
   strictAssert(key, `Missing emoji parent key for value "${value}"`);
   return key;
 }
@@ -449,7 +463,7 @@ export function getEmojiParentKeyByValue(
 export function getEmojiVariantKeyByValue(
   value: EmojiVariantValue
 ): EmojiVariantKey {
-  const key = EMOJI_INDEX.variantKeysByValue[value];
+  const key = EMOJI_INDEX.variantKeysByValue.get(value);
   strictAssert(key, `Missing emoji variant key for value "${value}"`);
   return key;
 }
@@ -457,7 +471,7 @@ export function getEmojiVariantKeyByValue(
 export function getEmojiParentKeyByVariantKey(
   key: EmojiVariantKey
 ): EmojiParentKey {
-  const parentKey = EMOJI_INDEX.parentKeysByVariantKeys[key];
+  const parentKey = EMOJI_INDEX.parentKeysByVariantKeys.get(key);
   strictAssert(parentKey, `Missing parent key for variant key "${key}"`);
   return parentKey;
 }
@@ -483,16 +497,12 @@ export function getEmojiPickerCategoryParentKeys(
  */
 export function getEmojiVariantByParentKeyAndSkinTone(
   key: EmojiParentKey,
-  skinTone: EmojiSkinTone | null
+  skinTone: EmojiSkinTone
 ): EmojiVariantData {
   const parent = getEmojiParentByKey(key);
   const skinToneVariants = parent.defaultSkinToneVariants;
 
-  if (
-    skinTone == null ||
-    skinTone === EmojiSkinTone.None ||
-    skinToneVariants == null
-  ) {
+  if (skinTone === EmojiSkinTone.None || skinToneVariants == null) {
     return getEmojiVariantByKey(parent.defaultVariant);
   }
 
@@ -506,9 +516,17 @@ export function getEmojiVariantByParentKeyAndSkinTone(
 export function getEmojiParentKeyByEnglishShortName(
   englishShortName: EmojiEnglishShortName
 ): EmojiParentKey {
-  const emojiKey = EMOJI_INDEX.parentKeysByName[englishShortName];
+  const emojiKey = EMOJI_INDEX.parentKeysByName.get(englishShortName);
   strictAssert(emojiKey, `Missing emoji info for ${englishShortName}`);
   return emojiKey;
+}
+
+export function getEmojiDefaultEnglishSearchIndex(): FunEmojiSearchIndex {
+  return EMOJI_INDEX.defaultEnglishSearchIndex;
+}
+
+export function getEmojiDefaultEnglishLocalizerIndex(): FunEmojiLocalizerIndex {
+  return EMOJI_INDEX.defaultEnglishLocalizerIndex;
 }
 
 /** Exported for testing */
@@ -534,142 +552,67 @@ export function emojiVariantConstant(input: string): EmojiVariantData {
 }
 
 /**
- * Search
+ * Emojify
  */
 
-export type EmojiSearch = (
-  query: string,
-  limit?: number
-) => Array<EmojiParentKey>;
+function isSafeEmojifyEmoji(value: string): value is EmojiVariantValue {
+  return isEmojiVariantValue(value) && !isEmojiVariantValueNonQualified(value);
+}
 
-function createEmojiSearchIndex(
-  localeEmojiList: LocaleEmojiListType
-): EmojiSearchIndex {
-  const results: Array<EmojiSearchIndexEntry> = [];
+export type EmojiSpan = Readonly<{
+  index: number;
+  length: number;
+  emoji: EmojiVariantValue;
+}>;
 
-  for (const localeEmoji of localeEmojiList) {
-    if (!isEmojiParentValue(localeEmoji.emoji)) {
-      // Skipping unknown emoji, most likely apple doesn't support it
-      continue;
-    }
+export type EmojifyData = Readonly<{
+  text: string;
+  emojiCount: number;
+  isEmojiOnlyText: boolean;
+}>;
 
-    const parentKey = getEmojiParentKeyByValue(localeEmoji.emoji);
-    const emoji = getEmojiParentByKey(parentKey);
-    results.push({
-      key: parentKey,
-      rank: localeEmoji.rank,
-      shortName: localeEmoji.shortName,
-      shortNames: localeEmoji.tags,
-      emoticon: emoji.emoticonDefault,
-      emoticons: emoji.emoticons,
-    });
+export function getEmojifyData(input: string): EmojifyData {
+  // Fast path, and treat empty strings like they have non-emoji text
+  if (input === '' || input.trim() === '') {
+    return { text: input, emojiCount: 0, isEmojiOnlyText: false };
   }
 
-  return results;
-}
+  let hasEmojis = false;
+  let hasNonEmojis = false;
+  let emojiCount = 0;
 
-const FuseKeys: Array<Fuse.FuseOptionKey> = [
-  { name: 'shortName', weight: 100 },
-  { name: 'shortNames', weight: 1 },
-  { name: 'emoticon', weight: 50 },
-  { name: 'emoticons', weight: 1 },
-];
+  const regex = emojiRegex();
 
-const FuseFuzzyOptions: Fuse.IFuseOptions<EmojiSearchIndexEntry> = {
-  shouldSort: false,
-  threshold: 0.2,
-  minMatchCharLength: 1,
-  keys: FuseKeys,
-  includeScore: true,
-};
+  let match = regex.exec(input);
+  let lastIndex = 0;
+  while (match) {
+    const value = match[0];
 
-const FuseExactOptions: Fuse.IFuseOptions<EmojiSearchIndexEntry> = {
-  shouldSort: false,
-  threshold: 0,
-  minMatchCharLength: 1,
-  keys: FuseKeys,
-  includeScore: true,
-};
-
-function createEmojiSearch(emojiSearchIndex: EmojiSearchIndex): EmojiSearch {
-  const fuseIndex = Fuse.createIndex(FuseKeys, emojiSearchIndex);
-  const fuseFuzzy = new Fuse(emojiSearchIndex, FuseFuzzyOptions, fuseIndex);
-  const fuseExact = new Fuse(emojiSearchIndex, FuseExactOptions, fuseIndex);
-
-  return function emojiSearch(query, limit = 200) {
-    // Prefer exact matches at 2 characters
-    const fuse = query.length < 2 ? fuseExact : fuseFuzzy;
-
-    const rawResults = fuse.search(query.substring(0, 32), {
-      limit: limit * 2,
-    });
-
-    const rankedResults = rawResults.map(result => {
-      const rank = result.item.rank ?? 1e9;
-
-      // Exact prefix matches in [0,1] range
-      if (result.item.shortName.startsWith(query)) {
-        return {
-          score: result.item.shortName.length / query.length,
-          item: result.item,
-        };
+    // Only consider safe emojis as matches
+    if (isSafeEmojifyEmoji(value)) {
+      const { index } = match;
+      hasEmojis = true;
+      // Track if we skipped over any text
+      if (index > lastIndex) {
+        hasNonEmojis = true;
+        lastIndex += index;
       }
-
-      // Other matches in [1,], ordered by score and rank
-      return {
-        score: 1 + (result.score ?? 0) + rank / emojiSearchIndex.length,
-        item: result.item,
-      };
-    });
-
-    const sortedResults = sortBy(rankedResults, result => {
-      return result.score;
-    });
-
-    const truncatedResults = sortedResults.slice(0, limit);
-
-    return truncatedResults.map(result => {
-      return result.item.key;
-    });
-  };
-}
-
-export function useEmojiSearch(i18n: LocalizerType): EmojiSearch {
-  const locale = i18n.getLocale();
-  const [localeIndex, setLocaleIndex] = useState<EmojiSearchIndex | null>(null);
-
-  useEffect(() => {
-    let canceled = false;
-
-    async function run() {
-      try {
-        const list = await window.SignalContext.getLocalizedEmojiList(locale);
-        if (!canceled) {
-          const result = createEmojiSearchIndex(list);
-          setLocaleIndex(result);
-        }
-      } catch (error) {
-        log.error(
-          `Failed to get localized emoji list for ${locale}`,
-          Errors.toLogFormat(error)
-        );
-      }
+      emojiCount += 1;
+      // Needs to be the value.length not the match.length
+      lastIndex = index + value.length;
     }
 
-    drop(run());
+    match = regex.exec(input);
+  }
 
-    return () => {
-      canceled = true;
-    };
-  }, [locale]);
+  // Track if we had any remaining text
+  if (lastIndex === 0 || lastIndex < input.length) {
+    hasNonEmojis = true;
+  }
 
-  const searchIndex = useMemo(() => {
-    return localeIndex ?? EMOJI_INDEX.defaultEnglishSearchIndex;
-  }, [localeIndex]);
-
-  const emojiSearch = useMemo(() => {
-    return createEmojiSearch(searchIndex);
-  }, [searchIndex]);
-
-  return emojiSearch;
+  return {
+    text: input,
+    emojiCount,
+    isEmojiOnlyText: hasEmojis && !hasNonEmojis,
+  };
 }

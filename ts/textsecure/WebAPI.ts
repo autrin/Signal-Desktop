@@ -15,10 +15,7 @@ import { v4 as getGuid } from 'uuid';
 import { z } from 'zod';
 import type { Readable } from 'stream';
 
-import { Net } from '@signalapp/libsignal-client';
 import { assertDev, strictAssert } from '../util/assert';
-import { drop } from '../util/drop';
-import { isRecord } from '../util/isRecord';
 import * as durations from '../util/durations';
 import type { ExplodePromiseResultType } from '../util/explodePromise';
 import { explodePromise } from '../util/explodePromise';
@@ -70,8 +67,8 @@ import * as log from '../logging/log';
 import { maybeParseUrl, urlPathFromComponents } from '../util/url';
 import { HOUR, MINUTE, SECOND } from '../util/durations';
 import { safeParseNumber } from '../util/numbers';
-import { isStagingServer } from '../util/isStagingServer';
 import type { IWebSocketResource } from './WebsocketResources';
+import { getLibsignalNet } from './preconnect';
 import type { GroupSendToken } from '../types/GroupSendEndorsements';
 import { parseUnknown, safeParseUnknown } from '../util/schemas';
 import type {
@@ -79,8 +76,6 @@ import type {
   ProfileFetchUnauthRequestOptions,
 } from '../services/profiles';
 import { isMockServer } from '../util/isMockServer';
-import { getMockServerPort } from '../util/getMockServerPort';
-import { pemToDer } from '../util/pemToDer';
 import { ToastType } from '../types/Toast';
 import { isProduction } from '../util/version';
 import type { ServerAlert } from '../util/handleServerAlerts';
@@ -91,43 +86,6 @@ import { isAbortError } from '../util/isAbortError';
 //   debugging failed requests.
 const DEBUG = false;
 const DEFAULT_TIMEOUT = 30 * SECOND;
-
-// Libsignal has internally configured values for domain names
-// (and other connectivity params) of the services.
-function resolveLibsignalNet(
-  url: string,
-  version: string,
-  certificateAuthority?: string
-): Net.Net {
-  const userAgent = getUserAgent(version);
-  log.info(`libsignal net url: ${url}`);
-  if (isStagingServer(url)) {
-    log.info('libsignal net environment resolved to staging');
-    return new Net.Net({
-      env: Net.Environment.Staging,
-      userAgent,
-    });
-  }
-
-  if (isMockServer(url) && certificateAuthority !== undefined) {
-    const DISCARD_PORT = 9; // Reserved by RFC 863.
-    log.info('libsignal net environment resolved to mock');
-    return new Net.Net({
-      localTestServer: true,
-      userAgent,
-      TESTING_localServer_chatPort: parseInt(getMockServerPort(url), 10),
-      TESTING_localServer_cdsiPort: DISCARD_PORT,
-      TESTING_localServer_svr2Port: DISCARD_PORT,
-      TESTING_localServer_rootCertificateDer: pemToDer(certificateAuthority),
-    });
-  }
-
-  log.info('libsignal net environment resolved to prod');
-  return new Net.Net({
-    env: Net.Environment.Production,
-    userAgent,
-  });
-}
 
 function _createRedactor(
   ...toReplace: ReadonlyArray<string | undefined | null>
@@ -212,6 +170,7 @@ type PromiseAjaxOptionsType = {
     | 'jsonwithdetails'
     | 'bytes'
     | 'byteswithdetails'
+    | 'raw'
     | 'stream'
     | 'streamwithdetails';
   stack?: string;
@@ -249,6 +208,33 @@ type StreamWithDetailsType = {
   stream: Readable;
   contentType: string | null;
   response: Response;
+};
+
+type GetAttachmentArgsType = {
+  cdnPath: string;
+  cdnNumber: number;
+  headers?: Record<string, string>;
+  redactor: RedactUrl;
+  options?: {
+    disableRetries?: boolean;
+    timeout?: number;
+    downloadOffset?: number;
+    onProgress?: (currentBytes: number, totalBytes: number) => void;
+    abortSignal?: AbortSignal;
+  };
+};
+
+type GetAttachmentFromBackupTierArgsType = {
+  mediaId: string;
+  backupDir: string;
+  mediaDir: string;
+  cdnNumber: number;
+  headers: Record<string, string>;
+  options?: {
+    disableRetries?: boolean;
+    timeout?: number;
+    downloadOffset?: number;
+  };
 };
 
 export const multiRecipient200ResponseSchema = z.object({
@@ -466,6 +452,8 @@ async function _promiseAjax(
       options.responseType === 'streamwithdetails'
     ) {
       result = response.body;
+    } else if (options.responseType === 'raw') {
+      result = response;
     } else {
       result = await response.textConverted();
     }
@@ -619,6 +607,10 @@ function _outerAjax(
   providedUrl: string | null,
   options: PromiseAjaxOptionsType & { responseType: 'streamwithdetails' }
 ): Promise<StreamWithDetailsType>;
+function _outerAjax(
+  providedUrl: string | null,
+  options: PromiseAjaxOptionsType & { responseType: 'raw' }
+): Promise<Response>;
 function _outerAjax(
   providedUrl: string | null,
   options: PromiseAjaxOptionsType
@@ -923,6 +915,7 @@ export type IceServerGroupType = Readonly<{
   urls?: ReadonlyArray<string>;
   urlsWithIps?: ReadonlyArray<string>;
   hostname?: string;
+  ttl?: number;
 }>;
 
 export type GetSenderCertificateResultType = Readonly<{ certificate: string }>;
@@ -1353,6 +1346,29 @@ export type ProxiedRequestParams = Readonly<{
   signal?: AbortSignal;
 }>;
 
+const backupFileHeadersSchema = z.object({
+  'content-length': z.coerce.number(),
+  'last-modified': z.coerce.date(),
+});
+
+type BackupFileHeadersType = z.infer<typeof backupFileHeadersSchema>;
+
+const subscriptionResponseSchema = z.object({
+  subscription: z.object({
+    level: z.number(),
+    billingCycleAnchor: z.coerce.date().optional(),
+    endOfCurrentPeriod: z.coerce.date().optional(),
+    active: z.boolean(),
+    cancelAtPeriodEnd: z.boolean().optional(),
+    currency: z.string().optional(),
+    amount: z.number().nonnegative().optional(),
+  }),
+});
+
+export type SubscriptionResponseType = z.infer<
+  typeof subscriptionResponseSchema
+>;
+
 export type WebAPIType = {
   startRegistration(): unknown;
   finishRegistration(baton: unknown): void;
@@ -1370,19 +1386,9 @@ export type WebAPIType = {
     version: string,
     imageFiles: Array<string>
   ) => Promise<Array<Uint8Array>>;
-  getAttachmentFromBackupTier: (args: {
-    mediaId: string;
-    backupDir: string;
-    mediaDir: string;
-    cdnNumber: number;
-    headers: Record<string, string>;
-    options?: {
-      disableRetries?: boolean;
-      timeout?: number;
-      downloadOffset?: number;
-      abortSignal: AbortSignal;
-    };
-  }) => Promise<Readable>;
+  getAttachmentFromBackupTier: (
+    args: GetAttachmentFromBackupTierArgsType
+  ) => Promise<Readable>;
   getAttachment: (args: {
     cdnKey: string;
     cdnNumber?: number;
@@ -1443,6 +1449,9 @@ export type WebAPIType = {
   getSubscriptionConfiguration: (
     userLanguages: ReadonlyArray<string>
   ) => Promise<unknown>;
+  getSubscription: (
+    subscriberId: Uint8Array
+  ) => Promise<SubscriptionResponseType>;
   getProvisioningResource: (
     handler: IRequestHandler,
     timeout?: number
@@ -1571,6 +1580,12 @@ export type WebAPIType = {
     headers: BackupPresentationHeadersType
   ) => Promise<GetBackupInfoResponseType>;
   getBackupStream: (options: GetBackupStreamOptionsType) => Promise<Readable>;
+  getBackupFileHeaders: (
+    options: Pick<
+      GetBackupStreamOptionsType,
+      'cdn' | 'backupDir' | 'backupName' | 'headers'
+    >
+  ) => Promise<{ 'content-length': number; 'last-modified': Date }>;
   getEphemeralBackupStream: (
     options: GetEphemeralBackupStreamOptionsType
   ) => Promise<Readable>;
@@ -1704,45 +1719,7 @@ export type TopLevelType = {
 
 type InflightCallback = (error: Error) => unknown;
 
-// `libsignalNet` is an instance of a class from libsignal that is responsible
-// for providing network layer API and related functionality.
-// It's important to have a single instance of this class as it holds
-// resources that are shared across all other use cases.
-let libsignalNet: Net.Net;
-
-// Not definied in tests
-if (window.SignalContext.config?.serverUrl) {
-  const { config } = window.SignalContext;
-
-  libsignalNet = resolveLibsignalNet(
-    config.serverUrl,
-    config.version,
-    config.certificateAuthority
-  );
-
-  libsignalNet.setIpv6Enabled(!config.disableIPv6);
-  if (config.proxyUrl) {
-    log.info('WebAPI: Setting libsignal proxy');
-    try {
-      libsignalNet.setProxyFromUrl(config.proxyUrl);
-    } catch (error) {
-      log.error(`WebAPI: Failed to set proxy: ${error}`);
-      libsignalNet.clearProxy();
-    }
-  }
-
-  drop(
-    (async () => {
-      try {
-        log.info('WebAPI: preconnect start');
-        await libsignalNet.preconnectChat();
-        log.info('WebAPI: preconnect done');
-      } catch (error) {
-        log.error(`WebAPI: Failed to preconnect: ${toLogFormat(error)}`);
-      }
-    })()
-  );
-}
+const libsignalNet = getLibsignalNet();
 
 // We first set up the data that won't change during this session of the app
 export function initialize({
@@ -1949,6 +1926,7 @@ export function initialize({
       getBackupCDNCredentials,
       getBackupInfo,
       getBackupStream,
+      getBackupFileHeaders,
       getBackupMediaUploadForm,
       getBackupUploadForm,
       getBadgeImageFile,
@@ -1984,6 +1962,7 @@ export function initialize({
       getStorageCredentials,
       getStorageManifest,
       getStorageRecords,
+      getSubscription,
       getSubscriptionConfiguration,
       linkDevice,
       logout,
@@ -3243,6 +3222,25 @@ export function initialize({
         },
       });
     }
+    async function getBackupFileHeaders({
+      headers,
+      cdn,
+      backupDir,
+      backupName,
+    }: Pick<
+      GetBackupStreamOptionsType,
+      'headers' | 'cdn' | 'backupDir' | 'backupName'
+    >): Promise<BackupFileHeadersType> {
+      const result = await _getAttachmentHeaders({
+        cdnPath: `/backups/${encodeURIComponent(backupDir)}/${encodeURIComponent(backupName)}`,
+        cdnNumber: cdn,
+        redactor: _createRedactor(backupDir, backupName),
+        headers,
+      });
+      const responseHeaders = Object.fromEntries(result.entries());
+
+      return parseUnknown(backupFileHeadersSchema, responseHeaders as unknown);
+    }
 
     async function getEphemeralBackupStream({
       cdn,
@@ -3973,25 +3971,49 @@ export function initialize({
       cdnNumber,
       headers,
       options,
-    }: {
-      mediaId: string;
-      backupDir: string;
-      mediaDir: string;
-      cdnNumber: number;
-      headers: Record<string, string>;
-      options?: {
-        disableRetries?: boolean;
-        timeout?: number;
-        downloadOffset?: number;
-      };
-    }) {
+    }: GetAttachmentFromBackupTierArgsType) {
       return _getAttachment({
-        cdnPath: `/backups/${backupDir}/${mediaDir}/${mediaId}`,
+        cdnPath: urlPathFromComponents([
+          'backups',
+          backupDir,
+          mediaDir,
+          mediaId,
+        ]),
         cdnNumber,
         headers,
         redactor: _createRedactor(backupDir, mediaDir, mediaId),
         options,
       });
+    }
+
+    function getCheckedCdnUrl(cdnNumber: number, cdnPath: string) {
+      const baseUrl = cdnUrlObject[cdnNumber] ?? cdnUrlObject['0'];
+      const { origin: expectedOrigin } = new URL(baseUrl);
+      const fullCdnUrl = `${baseUrl}${cdnPath}`;
+      const { origin } = new URL(fullCdnUrl);
+
+      strictAssert(origin === expectedOrigin, `Unexpected origin: ${origin}`);
+      return fullCdnUrl;
+    }
+
+    async function _getAttachmentHeaders({
+      cdnPath,
+      cdnNumber,
+      headers = {},
+      redactor,
+    }: Omit<GetAttachmentArgsType, 'options'>): Promise<fetch.Headers> {
+      const fullCdnUrl = getCheckedCdnUrl(cdnNumber, cdnPath);
+      const response = await _outerAjax(fullCdnUrl, {
+        headers,
+        certificateAuthority,
+        proxyUrl,
+        responseType: 'raw',
+        timeout: DEFAULT_TIMEOUT,
+        type: 'HEAD',
+        redactUrl: redactor,
+        version,
+      });
+      return response.headers;
     }
 
     async function _getAttachment({
@@ -4000,21 +4022,8 @@ export function initialize({
       headers = {},
       redactor,
       options,
-    }: {
-      cdnPath: string;
-      cdnNumber: number;
-      headers?: Record<string, string>;
-      redactor: RedactUrl;
-      options?: {
-        disableRetries?: boolean;
-        timeout?: number;
-        downloadOffset?: number;
-        onProgress?: (currentBytes: number, totalBytes: number) => void;
-        abortSignal?: AbortSignal;
-      };
-    }): Promise<Readable> {
+    }: GetAttachmentArgsType): Promise<Readable> {
       const abortController = new AbortController();
-      const cdnUrl = cdnUrlObject[cdnNumber] ?? cdnUrlObject['0'];
 
       let streamWithDetails: StreamWithDetailsType | undefined;
 
@@ -4034,10 +4043,7 @@ export function initialize({
         if (options?.downloadOffset) {
           targetHeaders.range = `bytes=${options.downloadOffset}-`;
         }
-        const { origin: expectedOrigin } = new URL(cdnUrl);
-        const fullCdnUrl = `${cdnUrl}${cdnPath}`;
-        const { origin } = new URL(fullCdnUrl);
-        strictAssert(origin === expectedOrigin, `Unexpected origin: ${origin}`);
+        const fullCdnUrl = getCheckedCdnUrl(cdnNumber, cdnPath);
 
         streamWithDetails = await _outerAjax(fullCdnUrl, {
           headers: targetHeaders,
@@ -4074,7 +4080,7 @@ export function initialize({
           );
           strictAssert(
             !streamWithDetails.contentType?.includes('multipart'),
-            `Expected non-multipart response for ${cdnUrl}${cdnPath}`
+            'Expected non-multipart response'
           );
 
           const range = streamWithDetails.response.headers.get('content-range');
@@ -4685,11 +4691,11 @@ export function initialize({
       };
     }
 
-    async function getHasSubscription(
+    async function getSubscription(
       subscriberId: Uint8Array
-    ): Promise<boolean> {
+    ): Promise<SubscriptionResponseType> {
       const formattedId = toWebSafeBase64(Bytes.toBase64(subscriberId));
-      const data = await _ajax({
+      const response = await _ajax({
         call: 'subscriptions',
         httpType: 'GET',
         urlParameters: `/${formattedId}`,
@@ -4700,11 +4706,14 @@ export function initialize({
         redactUrl: _createRedactor(formattedId),
       });
 
-      return (
-        isRecord(data) &&
-        isRecord(data.subscription) &&
-        Boolean(data.subscription.active)
-      );
+      return parseUnknown(subscriptionResponseSchema, response);
+    }
+
+    async function getHasSubscription(
+      subscriberId: Uint8Array
+    ): Promise<boolean> {
+      const data = await getSubscription(subscriberId);
+      return data.subscription.active;
     }
 
     function getProvisioningResource(

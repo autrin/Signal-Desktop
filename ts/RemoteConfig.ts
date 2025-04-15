@@ -16,7 +16,7 @@ import { getCountryCode } from './types/PhoneNumber';
 import { parseRemoteClientExpiration } from './util/parseRemoteClientExpiration';
 
 export type ConfigKeyType =
-  | 'desktop.calling.ringrtcAdmFull.2'
+  | 'desktop.calling.ringrtcAdmFull.3'
   | 'desktop.calling.ringrtcAdmInternal'
   | 'desktop.calling.ringrtcAdmPreStable'
   | 'desktop.clientExpiration'
@@ -33,7 +33,9 @@ export type ConfigKeyType =
   | 'desktop.experimentalTransportEnabled.prod'
   | 'desktop.cdsiViaLibsignal'
   | 'desktop.cdsiViaLibsignal.disableNewConnectionLogic'
-  | 'desktop.funPicker'
+  | 'desktop.funPicker' // alpha
+  | 'desktop.funPicker.beta'
+  | 'desktop.funPicker.prod'
   | 'desktop.releaseNotes'
   | 'desktop.releaseNotes.beta'
   | 'desktop.releaseNotes.dev'

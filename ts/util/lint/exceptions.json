@@ -1410,9 +1410,9 @@
   {
     "rule": "React-useRef",
     "path": "ts/components/CompositionTextArea.tsx",
-    "line": "  const inputApiRef = React.useRef<InputApi | undefined>();",
+    "line": "  const inputApiRef = useRef<InputApi | undefined>();",
     "reasonCategory": "usageTrusted",
-    "updated": "2022-10-03T16:06:12.837Z"
+    "updated": "2025-04-01T21:15:44.903Z"
   },
   {
     "rule": "React-useRef",
@@ -1427,6 +1427,13 @@
     "line": "  const virtualElement = useRef<VirtualElement>(generateVirtualElement(0, 0));",
     "reasonCategory": "usageTrusted",
     "updated": "2022-08-19T17:09:38.534Z"
+  },
+  {
+    "rule": "React-useRef",
+    "path": "ts/components/CustomizingPreferredReactionsModal.tsx",
+    "line": "  const pickerRef = useRef<HTMLDivElement>(null);",
+    "reasonCategory": "usageTrusted",
+    "updated": "2025-04-07T19:15:28.908Z"
   },
   {
     "rule": "React-useRef",

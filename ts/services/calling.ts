@@ -63,6 +63,8 @@ import { isMe } from '../util/whatTypeOfConversation';
 import type {
   AvailableIODevicesType,
   CallEndedReason,
+  IceServerType,
+  IceServerCacheType,
   MediaDeviceSettings,
   PresentedSource,
 } from '../types/Calling';
@@ -98,6 +100,8 @@ import {
   REQUESTED_VIDEO_WIDTH,
   REQUESTED_VIDEO_HEIGHT,
   REQUESTED_VIDEO_FRAMERATE,
+  REQUESTED_GROUP_VIDEO_WIDTH,
+  REQUESTED_GROUP_VIDEO_HEIGHT,
   REQUESTED_SCREEN_SHARE_WIDTH,
   REQUESTED_SCREEN_SHARE_HEIGHT,
   REQUESTED_SCREEN_SHARE_FRAMERATE,
@@ -180,6 +184,7 @@ const CLEAN_EXPIRED_GROUP_CALL_RINGS_INTERVAL = 10 * durations.MINUTE;
 const OUTGOING_SIGNALING_WAIT = 15 * durations.SECOND;
 
 const ICE_SERVER_IS_IP_LIKE = /(turn|turns|stun):[.\d]+/;
+
 const MAX_CALL_DEBUG_STATS_TABS = 5;
 
 // We send group call update messages to tell other clients to peek, which triggers
@@ -209,6 +214,7 @@ type CallingReduxInterface = Pick<
   | 'receiveIncomingDirectCall'
   | 'receiveIncomingGroupCall'
   | 'refreshIODevices'
+  | 'remoteAudioChange'
   | 'remoteSharingScreenChange'
   | 'remoteVideoChange'
   | 'sendGroupCallRaiseHand'
@@ -404,6 +410,18 @@ function getLogId(
   return `${source}(${idForLogging}${additionalText})`;
 }
 
+const DIRECT_CALL_OPTIONS: GumVideoCaptureOptions = {
+  maxWidth: REQUESTED_VIDEO_WIDTH,
+  maxHeight: REQUESTED_VIDEO_HEIGHT,
+  maxFramerate: REQUESTED_VIDEO_FRAMERATE,
+};
+
+const GROUP_CALL_OPTIONS: GumVideoCaptureOptions = {
+  maxWidth: REQUESTED_GROUP_VIDEO_WIDTH,
+  maxHeight: REQUESTED_GROUP_VIDEO_HEIGHT,
+  maxFramerate: REQUESTED_VIDEO_FRAMERATE,
+};
+
 export class CallingClass {
   readonly #videoCapturer: GumVideoCapturer;
 
@@ -417,6 +435,9 @@ export class CallingClass {
 
   public _iceServerOverride?: GetIceServersResultType | string;
 
+  // A cache to limit requests for relay servers.
+  #iceServersCache: IceServerCacheType | undefined;
+
   #lastMediaDeviceSettings?: MediaDeviceSettings;
   #deviceReselectionTimer?: NodeJS.Timeout;
   #callsLookup: { [key: string]: Call | GroupCall };
@@ -429,11 +450,7 @@ export class CallingClass {
   #sendProfileKeysForAdhocCallCache: Set<AciString>;
 
   constructor() {
-    this.#videoCapturer = new GumVideoCapturer({
-      maxWidth: REQUESTED_VIDEO_WIDTH,
-      maxHeight: REQUESTED_VIDEO_HEIGHT,
-      maxFramerate: REQUESTED_VIDEO_FRAMERATE,
-    });
+    this.#videoCapturer = new GumVideoCapturer(DIRECT_CALL_OPTIONS);
     this.videoRenderer = new CanvasVideoRenderer();
 
     this.#callsLookup = {};
@@ -612,7 +629,7 @@ export class CallingClass {
     await this.#startDeviceReselectionTimer();
 
     const enableLocalCameraIfNecessary = hasLocalVideo
-      ? () => drop(this.enableLocalCamera())
+      ? () => drop(this.enableLocalCamera(callMode))
       : noop;
 
     switch (callMode) {
@@ -963,7 +980,7 @@ export class CallingClass {
     groupCall.setOutgoingVideoMuted(!hasLocalVideo);
 
     if (hasLocalVideo) {
-      drop(this.enableLocalCamera());
+      drop(this.enableLocalCamera(CallMode.Group));
     }
 
     return {
@@ -1387,7 +1404,7 @@ export class CallingClass {
 
     groupCall.setOutgoingAudioMuted(!hasLocalAudio);
     groupCall.setOutgoingVideoMuted(!hasLocalVideo);
-    drop(this.enableCaptureAndSend(groupCall, null, logId));
+    drop(this.enableCaptureAndSend(groupCall, undefined, logId));
 
     if (shouldRing) {
       groupCall.ringAll();
@@ -1462,7 +1479,7 @@ export class CallingClass {
           } else if (localDeviceState.videoMuted) {
             this.disableLocalVideo();
           } else {
-            drop(this.enableCaptureAndSend(groupCall, null, logId));
+            drop(this.enableCaptureAndSend(groupCall, undefined, logId));
           }
 
           // Call enters the Joined state, once per call.
@@ -2606,24 +2623,24 @@ export class CallingClass {
     RingRTC.setAudioOutput(device.index);
   }
 
-  async enableLocalCamera(): Promise<void> {
+  async enableLocalCamera(mode: CallMode): Promise<void> {
     await window.reduxActions.globalModals.ensureSystemMediaPermissions(
       'camera',
       'call'
     );
-    await this.#videoCapturer.enableCapture();
+
+    await this.#videoCapturer.enableCapture(
+      mode === CallMode.Direct ? undefined : GROUP_CALL_OPTIONS
+    );
   }
 
   async enableCaptureAndSend(
     call: GroupCall | Call,
-    options?: GumVideoCaptureOptions | null,
-    logId?: string
+    options = call instanceof GroupCall ? GROUP_CALL_OPTIONS : undefined,
+    logId = 'enableCaptureAndSend'
   ): Promise<void> {
     try {
-      await this.#videoCapturer.enableCaptureAndSend(
-        call,
-        options ?? undefined
-      );
+      await this.#videoCapturer.enableCaptureAndSend(call, options);
     } catch (err) {
       log.error(
         `${
@@ -3256,9 +3273,11 @@ export class CallingClass {
 
     // eslint-disable-next-line no-param-reassign
     call.handleRemoteAudioEnabled = () => {
-      // TODO: Implement handling for the remote audio state using call.remoteAudioEnabled
+      reduxInterface.remoteAudioChange({
+        conversationId,
+        hasAudio: call.remoteAudioEnabled,
+      });
     };
-
     // eslint-disable-next-line no-param-reassign
     call.handleRemoteVideoEnabled = () => {
       reduxInterface.remoteVideoChange({
@@ -3396,17 +3415,10 @@ export class CallingClass {
     return null;
   }
 
-  async #handleStartCall(call: Call): Promise<boolean> {
-    type IceServer = {
-      username?: string;
-      password?: string;
-      hostname?: string;
-      urls: Array<string>;
-    };
-
+  async #getIceServers(): Promise<Array<IceServerType>> {
     function iceServerConfigToList(
       iceServerConfig: GetIceServersResultType
-    ): Array<IceServer> {
+    ): Array<IceServerType> {
       if (!iceServerConfig.relays) {
         return [];
       }
@@ -3427,6 +3439,61 @@ export class CallingClass {
       ]);
     }
 
+    const currentTime = Date.now();
+    if (
+      this.#iceServersCache &&
+      currentTime < this.#iceServersCache.expirationTimestamp
+    ) {
+      // Use the cached value for iceServers.
+      return this.#iceServersCache.iceServers;
+    }
+
+    let iceServers: Array<IceServerType> = [];
+    // Set the default cache expiration time to now + 0.
+    let expirationTimestamp = currentTime;
+
+    // The messaging context should have already been checked before entering
+    // this function, so this should be a noop.
+    const { messaging } = window.textsecure;
+    strictAssert(messaging, 'textsecure messaging not available');
+
+    const iceServerConfig = await messaging.server.getIceServers();
+
+    // Advance the next expiration time to the minimum provided ttl value,
+    // or if there were none, use 0 to disable the cache.
+    const minTtl = (iceServerConfig.relays ?? []).reduce(
+      (min, { ttl }) => Math.min(min, ttl ?? 0),
+      Infinity
+    );
+
+    expirationTimestamp += minTtl !== Infinity ? minTtl * durations.SECOND : 0;
+
+    // Prioritize ice servers with IPs to avoid DNS entries and only include
+    // hostname with urlsWithIps.
+    iceServers = iceServerConfigToList(iceServerConfig);
+
+    if (this._iceServerOverride) {
+      if (typeof this._iceServerOverride === 'string') {
+        if (ICE_SERVER_IS_IP_LIKE.test(this._iceServerOverride)) {
+          iceServers[0].urls = [this._iceServerOverride];
+          iceServers = [iceServers[0]];
+        } else {
+          iceServers[1].urls = [this._iceServerOverride];
+          iceServers = [iceServers[1]];
+        }
+      } else {
+        iceServers = iceServerConfigToList(this._iceServerOverride);
+      }
+    }
+
+    if (iceServers.length > 0) {
+      // Update the cached value for iceServers.
+      this.#iceServersCache = { iceServers, expirationTimestamp };
+    }
+    return iceServers;
+  }
+
+  async #handleStartCall(call: Call): Promise<boolean> {
     if (!window.textsecure.messaging) {
       log.error('CallingClass.handleStartCall: offline!');
       return false;
@@ -3453,8 +3520,7 @@ export class CallingClass {
       return false;
     }
 
-    const iceServerConfig =
-      await window.textsecure.messaging.server.getIceServers();
+    const iceServers = await this.#getIceServers();
 
     // We do this again, since getIceServers is a call that can take some time
     if (call.endedReason) {
@@ -3469,24 +3535,6 @@ export class CallingClass {
 
     // If the peer is not a Signal Connection, force IP hiding.
     const isContactUntrusted = !isSignalConnection(conversation.attributes);
-
-    // Prioritize ice servers with IPs to avoid DNS only include
-    // hostname with urlsWithIps.
-    let iceServers = iceServerConfigToList(iceServerConfig);
-
-    if (this._iceServerOverride) {
-      if (typeof this._iceServerOverride === 'string') {
-        if (ICE_SERVER_IS_IP_LIKE.test(this._iceServerOverride)) {
-          iceServers[0].urls = [this._iceServerOverride];
-          iceServers = [iceServers[0]];
-        } else {
-          iceServers[1].urls = [this._iceServerOverride];
-          iceServers = [iceServers[1]];
-        }
-      } else {
-        iceServers = iceServerConfigToList(this._iceServerOverride);
-      }
-    }
 
     const callSettings = {
       iceServers,

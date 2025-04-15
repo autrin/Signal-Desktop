@@ -120,7 +120,7 @@ export type Props = Readonly<{
   isFormattingEnabled: boolean;
   isActive: boolean;
   sendCounter: number;
-  emojiSkinToneDefault: EmojiSkinTone;
+  emojiSkinToneDefault: EmojiSkinTone | null;
   draftText: string | null;
   draftBodyRanges: HydratedBodyRangesType | null;
   moduleClassName?: string;
@@ -694,7 +694,7 @@ export function CompositionInput(props: Props): React.ReactElement {
   React.useEffect(() => {
     const emojiCompletion = emojiCompletionRef.current;
 
-    if (emojiCompletion == null || emojiSkinToneDefault == null) {
+    if (emojiCompletion == null) {
       return;
     }
 

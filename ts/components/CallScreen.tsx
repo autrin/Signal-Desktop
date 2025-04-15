@@ -91,12 +91,11 @@ import { CallingPendingParticipants } from './CallingPendingParticipants';
 import type { CallingImageDataCache } from './CallManager';
 import { FunStaticEmoji } from './fun/FunEmoji';
 import {
-  getEmojiParentByKey,
-  getEmojiParentKeyByVariantKey,
   getEmojiVariantByKey,
   getEmojiVariantKeyByValue,
   isEmojiVariantValue,
 } from './fun/data/emojis';
+import { useFunEmojiLocalizer } from './fun/useFunEmojiLocalizer';
 
 export type PropsType = {
   activeCall: ActiveCallType;
@@ -122,8 +121,8 @@ export type PropsType = {
     _: Array<GroupCallVideoRequest>,
     speakerHeight: number
   ) => void;
-  setLocalAudio: (_: SetLocalAudioType) => void;
-  setLocalVideo: (_: SetLocalVideoType) => void;
+  setLocalAudio: SetLocalAudioType;
+  setLocalVideo: SetLocalVideoType;
   setLocalPreviewContainer: (container: HTMLDivElement | null) => void;
   setRendererCanvas: (_: SetRendererCanvasType) => void;
   stickyControls: boolean;
@@ -371,7 +370,13 @@ export function CallScreen({
       return noop;
     }
     return handleOutsideClick(
-      () => {
+      target => {
+        if (
+          target instanceof Element &&
+          target.closest('.FunPopover') != null
+        ) {
+          return true;
+        }
         setShowReactionPicker(false);
         return true;
       },
@@ -453,6 +458,16 @@ export function CallScreen({
   const syncedLocalHandRaised = isHandRaised(raisedHands, localDemuxId);
 
   const isLonelyInCall = !activeCall.remoteParticipants.length;
+  const isAudioOnly = !hasLocalVideo && !hasRemoteVideo;
+
+  const controlsFadedOut = !showControls && !isAudioOnly && isConnected;
+  const controlsFadeClass = classNames({
+    'module-ongoing-call__controls': true,
+    'module-ongoing-call__controls--fadeIn':
+      (showControls || isAudioOnly) && !isConnected,
+    'module-ongoing-call__controls--fadeOut': controlsFadedOut,
+  });
+
   const handlePreviewClick = useCallback(
     (event?: React.MouseEvent) => {
       event?.preventDefault();
@@ -498,7 +513,10 @@ export function CallScreen({
         ref={setLocalPreviewContainer}
       />
     ) : (
-      <CallBackgroundBlur avatarUrl={me.avatarUrl}>
+      <CallBackgroundBlur
+        className="module-ongoing-call__local-preview__background"
+        avatarUrl={me.avatarUrl}
+      >
         <Avatar
           avatarPlaceholderGradient={me.avatarPlaceholderGradient}
           avatarUrl={me.avatarUrl}
@@ -528,7 +546,7 @@ export function CallScreen({
           activeCall.selfViewExpanded
             ? 'module-ongoing-call__local-preview--expanded'
             : undefined,
-          !showControls
+          controlsFadedOut
             ? 'module-ongoing-call__local-preview--controls-hidden'
             : undefined
         )}
@@ -599,16 +617,6 @@ export function CallScreen({
   const audioButtonType = hasLocalAudio
     ? CallingButtonType.AUDIO_ON
     : CallingButtonType.AUDIO_OFF;
-
-  const isAudioOnly = !hasLocalVideo && !hasRemoteVideo;
-
-  const controlsFadedOut = !showControls && !isAudioOnly && isConnected;
-  const controlsFadeClass = classNames({
-    'module-ongoing-call__controls': true,
-    'module-ongoing-call__controls--fadeIn':
-      (showControls || isAudioOnly) && !isConnected,
-    'module-ongoing-call__controls--fadeOut': controlsFadedOut,
-  });
 
   const isGroupCall = isGroupOrAdhocActiveCall(activeCall);
 
@@ -993,13 +1001,13 @@ export function CallScreen({
             activeCall.selfViewExpanded
               ? 'module-ongoing-call__direct-call-speaking-indicator--self-view-expanded'
               : undefined,
-            activeCall.selfViewExpanded && !showControls
+            activeCall.selfViewExpanded && controlsFadedOut
               ? 'module-ongoing-call__direct-call-speaking-indicator--expanded-no-controls'
               : undefined
           )}
         >
           <CallingAudioIndicator
-            hasAudio
+            hasAudio={activeCall.hasRemoteAudio}
             audioLevel={activeCall.remoteAudioLevel}
             shouldShowSpeaking={activeCall.remoteAudioLevel > 0}
           />
@@ -1234,6 +1242,7 @@ function useReactionsToast(props: UseReactionsToastType): void {
   >(new Map());
   const burstsShown = useRef<Map<string, number>>(new Map());
   const { showToast } = useCallingToasts();
+  const emojiLocalizer = useFunEmojiLocalizer();
 
   useEffect(() => {
     setPreviousReactions(reactions);
@@ -1253,8 +1262,6 @@ function useReactionsToast(props: UseReactionsToastType): void {
       strictAssert(isEmojiVariantValue(value), 'Expected a valid emoji value');
       const emojiVariantKey = getEmojiVariantKeyByValue(value);
       const emojiVariant = getEmojiVariantByKey(emojiVariantKey);
-      const emojiParentKey = getEmojiParentKeyByVariantKey(emojiVariantKey);
-      const emojiParent = getEmojiParentByKey(emojiParentKey);
 
       showToast({
         key,
@@ -1264,7 +1271,7 @@ function useReactionsToast(props: UseReactionsToastType): void {
           <span className="CallingReactionsToasts__reaction">
             <FunStaticEmoji
               role="img"
-              aria-label={emojiParent.englishShortNameDefault}
+              aria-label={emojiLocalizer(emojiVariantKey)}
               size={28}
               emoji={emojiVariant}
             />
@@ -1381,6 +1388,7 @@ function useReactionsToast(props: UseReactionsToastType): void {
     localDemuxId,
     i18n,
     ourServiceId,
+    emojiLocalizer,
   ]);
 }
 

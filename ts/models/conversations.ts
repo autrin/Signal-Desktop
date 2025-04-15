@@ -26,7 +26,7 @@ import { getNotificationTextForMessage } from '../util/getNotificationTextForMes
 import { getNotificationDataForMessage } from '../util/getNotificationDataForMessage';
 import type { ProfileNameChangeType } from '../util/getStringForProfileChange';
 import type { AttachmentType, ThumbnailType } from '../types/Attachment';
-import { MAX_SAFE_TIMEOUT_DELAY, toDayMillis } from '../util/timestamp';
+import { toDayMillis } from '../util/timestamp';
 import { areWeAdmin } from '../util/areWeAdmin';
 import { isBlocked } from '../util/isBlocked';
 import { getAboutText } from '../util/getAboutText';
@@ -192,6 +192,7 @@ import { queueAttachmentDownloadsForMessage } from '../util/queueAttachmentDownl
 import { cleanupMessages } from '../util/cleanup';
 import { MessageModel } from './messages';
 import { applyNewAvatar } from '../groups';
+import { safeSetTimeout } from '../util/timeout';
 
 /* eslint-disable more/no-then */
 window.Whisper = window.Whisper || {};
@@ -3932,7 +3933,7 @@ export class ConversationModel extends window.Backbone
       if (!dontAddMessage) {
         this.#doAddSingleMessage(message, { isJustSent: true });
       }
-      const notificationData = getNotificationDataForMessage(message);
+
       const draftProperties = dontClearDraft
         ? {}
         : {
@@ -3941,19 +3942,13 @@ export class ConversationModel extends window.Backbone
             draftBodyRanges: [],
             draftTimestamp: null,
             quotedMessageId: undefined,
-            lastMessageAuthor: getMessageAuthorText(message),
-            lastMessageBodyRanges: message.bodyRanges,
-            lastMessage:
-              notificationData?.text ||
-              getNotificationTextForMessage(message) ||
-              '',
-            lastMessageStatus: 'sending' as const,
           };
-
+      const lastMessageProperties = this.getLastMessageData(message, message);
       const isEditMessage = Boolean(message.editHistory);
 
       this.set({
         ...draftProperties,
+        ...lastMessageProperties,
         ...(enabledProfileSharing ? { profileSharing: true } : {}),
         ...(dontAddMessage
           ? {}
@@ -4294,12 +4289,6 @@ export class ConversationModel extends window.Backbone
       return;
     }
 
-    const ourConversationId =
-      window.ConversationController.getOurConversationId();
-    if (!ourConversationId) {
-      throw new Error('updateLastMessage: Failed to fetch ourConversationId');
-    }
-
     const conversationId = this.id;
 
     const stats = await DataReader.getConversationMessageStats({
@@ -4352,50 +4341,69 @@ export class ConversationModel extends window.Backbone
       return;
     }
 
+    this.set(
+      this.getLastMessageData(preview?.attributes, activity?.attributes)
+    );
+
+    await DataWriter.updateConversation(this.attributes);
+  }
+
+  getLastMessageData(
+    preview?: MessageAttributesType,
+    activity?: MessageAttributesType
+  ): Pick<
+    ConversationAttributesType,
+    | 'lastMessage'
+    | 'lastMessageBodyRanges'
+    | 'lastMessagePrefix'
+    | 'lastMessageAuthor'
+    | 'lastMessageStatus'
+    | 'lastMessageReceivedAt'
+    | 'lastMessageReceivedAtMs'
+    | 'timestamp'
+    | 'lastMessageDeletedForEveryone'
+  > {
+    const ourConversationId =
+      window.ConversationController.getOurConversationId();
+    if (!ourConversationId) {
+      throw new Error('getLastMessageData: Failed to fetch ourConversationId');
+    }
+
     let timestamp = this.get('timestamp') || null;
     let lastMessageReceivedAt = this.get('lastMessageReceivedAt');
     let lastMessageReceivedAtMs = this.get('lastMessageReceivedAtMs');
     if (activity) {
-      const { callId } = activity.attributes;
+      const { callId } = activity;
       const callHistory = callId
         ? getCallHistorySelector(window.reduxStore.getState())(callId)
         : undefined;
 
-      timestamp =
-        callHistory?.timestamp || activity.get('sent_at') || timestamp;
-      lastMessageReceivedAt =
-        activity.get('received_at') || lastMessageReceivedAt;
+      timestamp = callHistory?.timestamp || activity.sent_at || timestamp;
+      lastMessageReceivedAt = activity.received_at || lastMessageReceivedAt;
       lastMessageReceivedAtMs =
-        activity.get('received_at_ms') || lastMessageReceivedAtMs;
+        activity.received_at_ms || lastMessageReceivedAtMs;
     }
 
     const notificationData = preview
-      ? getNotificationDataForMessage(preview.attributes)
+      ? getNotificationDataForMessage(preview)
       : undefined;
 
-    this.set({
+    return {
       lastMessage:
         notificationData?.text ||
-        (preview
-          ? getNotificationTextForMessage(preview.attributes)
-          : undefined) ||
+        (preview ? getNotificationTextForMessage(preview) : undefined) ||
         '',
       lastMessageBodyRanges: notificationData?.bodyRanges,
       lastMessagePrefix: notificationData?.emoji,
-      lastMessageAuthor: preview
-        ? getMessageAuthorText(preview.attributes)
-        : undefined,
+      lastMessageAuthor: preview ? getMessageAuthorText(preview) : undefined,
       lastMessageStatus: preview
-        ? getMessagePropStatus(preview.attributes, ourConversationId)
+        ? getMessagePropStatus(preview, ourConversationId)
         : undefined,
       lastMessageReceivedAt,
       lastMessageReceivedAtMs,
       timestamp,
-      lastMessageDeletedForEveryone:
-        preview?.get('deletedForEveryone') || false,
-    });
-
-    await DataWriter.updateConversation(this.attributes);
+      lastMessageDeletedForEveryone: preview?.deletedForEveryone || false,
+    };
   }
 
   setArchived(isArchived: boolean): void {
@@ -5410,14 +5418,8 @@ export class ConversationModel extends window.Backbone
         return;
       }
 
-      if (delay > MAX_SAFE_TIMEOUT_DELAY) {
-        log.warn(
-          'startMuteTimer: timeout is larger than maximum setTimeout delay'
-        );
-        return;
-      }
-
-      this.#muteTimer = setTimeout(() => this.setMuteExpiration(0), delay);
+      this.#muteTimer =
+        safeSetTimeout(() => this.setMuteExpiration(0), delay) ?? undefined;
     }
   }
 
