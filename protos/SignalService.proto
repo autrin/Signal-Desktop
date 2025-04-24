@@ -516,7 +516,7 @@ message SyncMessage {
   }
   
   optional StickerUsageSync stickerUsageSync = 26;
-}
+
 
   message ViewOnceOpen {
     reserved /*senderE164*/ 1;
