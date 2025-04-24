@@ -1802,7 +1802,6 @@ export default class MessageReceiver
     );
     const unsealedPlaintext = await this.#storage.protocol.enqueueSessionJob(
       address,
-      `sealedSenderDecryptMessage(${address.toString()})`,
       () =>
         sealedSenderDecryptMessage(
           Buffer.from(ciphertext),
@@ -1897,7 +1896,6 @@ export default class MessageReceiver
 
       const plaintext = await this.#storage.protocol.enqueueSessionJob(
         address,
-        `signalDecrypt(${address.toString()})`,
         async () =>
           this.#unpad(
             await signalDecrypt(
@@ -1929,7 +1927,6 @@ export default class MessageReceiver
 
       const plaintext = await this.#storage.protocol.enqueueSessionJob(
         address,
-        `signalDecryptPreKey(${address.toString()})`,
         async () =>
           this.#unpad(
             await signalDecryptPreKey(
