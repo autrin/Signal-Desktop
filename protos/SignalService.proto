@@ -515,7 +515,7 @@ message SyncMessage {
     optional int64 timestamp = 3;
   }
   
-  optional StickerUsageSync stickerUsageSync = 25;
+  optional StickerUsageSync stickerUsageSync = 26;
 }
 
   message ViewOnceOpen {
